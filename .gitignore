@@ -1,0 +1,17 @@
+# IDE & Editor
+.trae/
+.arts/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Rust build artifacts
+target/
+**/target/
+
+# Environment
+.env
+.env.local
