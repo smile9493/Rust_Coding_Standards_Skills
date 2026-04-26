@@ -3,7 +3,7 @@ name: rust-architecture-guide
 description: Comprehensive Rust engineering guide covering priority pyramid, architecture decisions, and coding style. Invoke when starting Rust projects, making trade-offs, or writing idiomatic code.
 version: 3.0.0
 user-invocable: true
-argument-hint: "[priority|conflict|state-machine|newtype|data-arch|error-handling|concurrency|async|api-design|non-exhaustive|sealed-trait|performance|allocator|cache-layout|lock-free|property-test|fuzz|loom|miri|control-flow|iterators|traits|borrowing|review|metaprogramming|macro|const-fn|ffi|interop|cbindgen|bindgen|poll|pin|executor|tracing|metrics|observability|panic|coredump|workspace|feature-flags|cargo-deny|progressive] [target]"
+argument-hint: "[priority|conflict|state-machine|newtype|data-arch|error-handling|concurrency|async|select|cancellation|api-design|non-exhaustive|sealed-trait|deprecated|object-safety|performance|allocator|cache-layout|lock-free|smallvec|pgo|property-test|fuzz|loom|miri|control-flow|iterators|traits|borrowing|interior-mutability|review|metaprogramming|macro|const-fn|ffi|interop|cxx|cbindgen|bindgen|poll|pin|executor|tracing|metrics|observability|panic|coredump|workspace|feature-flags|cargo-deny|rustfmt|ci|progressive] [target]"
 license: MIT
 ---
 
@@ -392,51 +392,80 @@ pub fn setup_panic_hook() {
 17. **Iterators**: Manual `for` + `push`? → Convert to iterator chains
 18. **Traits**: Implemented `From` not `Into`? → Always implement `From`
 19. **Borrowing**: Can `mut` scope be reduced? → Use shadowing
+20. **Interior Mutability**: Need mutation behind `&self`? → `Cell` for Copy, `RefCell` for single-threaded, `Mutex` for multi-threaded
+21. **Split Borrowing**: Borrowing disjoint fields? → Prefer field-level borrows over struct-level
+
+### API & Evolution
+
+22. **API Evolution**: Public types may evolve? → Mark `#[non_exhaustive]`, use sealed traits
+23. **Deprecation**: Removing public API? → `#[deprecated]` with migration note, remove only in major version
+24. **Object Safety**: Need `dyn Trait`? → Design trait for object safety (no `Self` return, no generics)
+25. **Workspace**: Slow incremental compilation? → Split into independent crates with Cargo Workspace
+26. **Feature Flags**: Heavy optional dependencies? → Use `[features]` to isolate serde/tokio etc.
+27. **Supply Chain**: Dependency vulnerabilities or license issues? → Run `cargo deny check`
+
+### Concurrency (Extended)
+
+28. **RwLock vs Mutex**: Read-heavy access? → `RwLock`; balanced or write-heavy? → `Mutex`
+29. **parking_lot**: Production system? → Prefer `parking_lot` (smaller, faster, no poisoning)
+30. **Deadlock**: Multiple locks needed? → Prefer channels; if locks, always same acquisition order
+31. **Synchronization**: Need one-time init? → `OnceLock`; need barrier? → `Barrier`
 
 ### Performance (P3 - Only After Profiling)
 
-20. **Memory**: Using appropriate allocator? Pre-allocated collections?
-21. **Cache**: Data layout cache-friendly (SoA)? Avoided pointer chasing?
-22. **Concurrency**: Lock-free where needed? Sharded locks for hot paths?
-23. **Unsafe**: Profiling-justified? SAFETY comments present?
+32. **Memory**: Using appropriate allocator? Pre-allocated collections?
+33. **Cache**: Data layout cache-friendly (SoA)? Avoided pointer chasing?
+34. **Concurrency**: Lock-free where needed? Sharded locks for hot paths?
+35. **Unsafe**: Profiling-justified? SAFETY comments present?
+36. **Small Collections**: Hot path with usually-small Vec? → `SmallVec` for stack allocation
+37. **PGO**: Latency-critical service? → Profile-Guided Optimization for 5-15% gain
 
 ### Testing & QA (P0 Safety Verification)
 
-24. **Property Tests**: Core algorithms have invariant tests?
-25. **Fuzzing**: External parsers have fuzz targets?
-26. **Loom**: Concurrent code model-checked?
-27. **Miri**: Unsafe code passes UB detection?
+38. **Property Tests**: Core algorithms have invariant tests?
+39. **Fuzzing**: External parsers have fuzz targets?
+40. **Loom**: Concurrent code model-checked?
+41. **Miri**: Unsafe code passes UB detection?
 
 ### Metaprogramming & Const
 
-28. **Macro Decision**: Can generics/traits/functions solve this? Use macros only as last resort
-29. **Macro Hygiene**: All identifiers explicitly passed as parameters?
-30. **Procedural Macro**: Isolated in `proc-macro = true` crate? Using `syn::Error::new_spanned`?
-31. **Const Functions**: Pure functions with `const fn`? Using `[T; N]` over `Vec<T>`?
+42. **Macro Decision**: Can generics/traits/functions solve this? Use macros only as last resort
+43. **Macro Hygiene**: All identifiers explicitly passed as parameters?
+44. **Procedural Macro**: Isolated in `proc-macro = true` crate? Using `syn::Error::new_spanned`?
+45. **Const Functions**: Pure functions with `const fn`? Using `[T; N]` over `Vec<T>`?
 
 ### FFI & Interoperability (P0 Safety at Boundaries)
 
-32. **Crate Separation**: Two-crate design (`-sys` + wrapper)? No business logic in `-sys`?
-33. **Pointer Safety**: Raw pointers converted to `&'a [u8]` at boundary?
-34. **Memory Ownership**: Symmetric allocation/deallocation? Paired `create_xxx`/`destroy_xxx`?
-35. **Panic Containment**: All `extern "C"` wrapped in `catch_unwind`? Error codes instead of unwinds?
+46. **Crate Separation**: Two-crate design (`-sys` + wrapper)? No business logic in `-sys`?
+47. **Pointer Safety**: Raw pointers converted to `&'a [u8]` at boundary?
+48. **Memory Ownership**: Symmetric allocation/deallocation? Paired `create_xxx`/`destroy_xxx`?
+49. **Panic Containment**: All `extern "C"` wrapped in `catch_unwind`? Error codes instead of unwinds?
+50. **C++ Interop**: Need C++ bindings? → Use `cxx` for type-safe interop over raw FFI
+51. **Callbacks**: C callback with Rust closure? → Trampoline + user_data pattern, never cast closures
 
 ### Async Internals & Runtime (Deep Performance)
 
-36. **Future Size**: No large variables across `.await`? Box large objects before await?
-37. **Async Recursion**: Recursive `async fn` wrapped in `Box::pin()`?
-38. **Blocking Prevention**: No blocking operations in async context? Using `spawn_blocking`?
-39. **Custom Poll**: Following polling rules (non-blocking → register waker → return Pending)?
-40. **no_std Async**: Using Embassy or custom executor? ISR only sets wake flag?
-41. **C10M Performance**: Thread-per-core (monoio/glommio) for extreme concurrency?
+52. **Future Size**: No large variables across `.await`? Box large objects before await?
+53. **Async Recursion**: Recursive `async fn` wrapped in `Box::pin()`?
+54. **Blocking Prevention**: No blocking operations in async context? Using `spawn_blocking`?
+55. **Custom Poll**: Following polling rules (non-blocking → register waker → return Pending)?
+56. **no_std Async**: Using Embassy or custom executor? ISR only sets wake flag?
+57. **C10M Performance**: Thread-per-core (monoio/glommio) for extreme concurrency?
+58. **select!/join!**: Using `select!`? → Handle `else` branch, check cancellation safety, use `biased;` for priority
+59. **Cancellation**: Future dropped on cancel? → Ensure I/O handles partial writes, check cancellation safety
 
 ### Observability & Production Diagnostics (Ops)
 
-42. **Tracing**: All `pub async fn` annotated with `#[tracing::instrument]`? Large fields skipped?
-43. **Metrics**: Hot paths use atomic counters? Prometheus pull on bypass port?
-44. **Distributed Context**: W3C Trace Context propagation via Headers?
-45. **Panic Hook**: Global panic hook installed? Backtrace captured? Synchronous write?
-46. **Core Dump**: `ulimit -c unlimited` set? `core_pattern` configured?
+60. **Tracing**: All `pub async fn` annotated with `#[tracing::instrument]`? Large fields skipped?
+61. **Metrics**: Hot paths use atomic counters? Prometheus pull on bypass port?
+62. **Distributed Context**: W3C Trace Context propagation via Headers?
+63. **Panic Hook**: Global panic hook installed? Backtrace captured? Synchronous write?
+64. **Core Dump**: `ulimit -c unlimited` set? `core_pattern` configured?
+
+### Toolchain & CI
+
+65. **rustfmt**: `rustfmt.toml` committed? `cargo fmt -- --check` in CI?
+66. **CI Speed**: CI under 10 minutes? Heavy checks (miri, bench) on merge only?
 
 ---
 

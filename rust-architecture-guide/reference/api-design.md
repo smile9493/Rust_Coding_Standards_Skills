@@ -151,6 +151,61 @@ impl Processor for FastProcessor {
 - Preserves your right to add methods to the Trait without breaking compatibility
 - Clear boundary: "this Trait is for internal dispatch, not for extension"
 
+## Deprecation Migration: `#[deprecated]`
+
+### Rule: Graceful Migration Path
+
+When removing or renaming a public API, use `#[deprecated]` with a clear migration hint:
+
+```rust
+// ✅ Deprecated with migration path
+#[deprecated(since = "2.1.0", note = "use `process_batch` instead — handles empty input correctly")]
+pub fn process_all(items: &[Item]) -> Result<()> {
+    process_batch(items)
+}
+
+// ✅ Deprecated type alias for renamed type
+#[deprecated(since = "3.0.0", note = "renamed to `OrderId` — use the new name for clarity")]
+pub type OrderId = crate::domain::OrderId;
+```
+
+### Migration Strategy
+
+| Phase | Action | Duration |
+|-------|--------|----------|
+| 1. Deprecate | Add `#[deprecated]` with `note` pointing to replacement | 1 minor version |
+| 2. Warn | Clippy `deprecated` lint fires for all users | 1+ minor versions |
+| 3. Remove | Delete in next major version with changelog entry | Major bump |
+
+**Rule**: Never remove a deprecated API in a minor/patch version — only in a major semver bump.
+
+## Trait Object Safety
+
+Not all traits can be used as `dyn Trait`. A trait is **object-safe** only if:
+
+- All methods have `&self` or `&mut self` receiver
+- No method returns `Self` (the concrete type is unknown at runtime)
+- No method has generic type parameters (no `fn foo<T>(&self, t: T)`)
+- The trait does not have `Sized` as a supertrait
+
+```rust
+// ❌ NOT object-safe: returns Self
+trait Cloneable: Clone {
+    fn duplicate(&self) -> Self;  // Error: returns Self
+}
+
+// ✅ Object-safe: all methods use &self, no Self in return
+trait Processor {
+    fn process(&self, data: &[u8]) -> Result<Output>;
+    fn name(&self) -> &str;
+}
+
+// Can now use as dyn trait
+let processors: Vec<Box<dyn Processor>> = vec![/* ... */];
+```
+
+**Rule**: If you need `dyn Trait`, design the trait for object safety from the start. Use associated types instead of generics where possible.
+
 ## Trade-offs
 
 **Ergonomics vs Compile time**: Generic APIs are pleasant to use but slow compilation.
@@ -159,8 +214,11 @@ impl Processor for FastProcessor {
 
 **Stability vs Flexibility**: `#[non_exhaustive]` adds minor boilerplate for downstream but guarantees forward compatibility.
 
+**Object safety vs Generics**: Object-safe traits enable `dyn Trait` but restrict method signatures. Use associated types to bridge the gap.
+
 ## Related
 
 - [error-handling.md](error-handling.md) — Error types in API boundaries
 - [newtype.md](newtype.md) — Type-safe parameters in APIs
 - [toolchain.md](toolchain.md) — Workspace and dependency management
+- [traits.md](traits.md) — Trait design patterns and zero-cost abstractions

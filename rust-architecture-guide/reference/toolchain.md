@@ -148,6 +148,72 @@ cargo deny check
 - **License compliance**: No GPL or other non-compliant licenses contaminating the project
 - **Duplicate versions**: Avoid same library at different versions causing binary bloat
 
+## rustfmt Configuration
+
+### Rule: Commit `rustfmt.toml` to Enforce Consistent Style
+
+```toml
+# rustfmt.toml
+edition = "2021"
+max_width = 100
+use_small_heuristics = "Default"
+fn_params_layout = "Tall"          # One param per line for long signatures
+imports_granularity = "Crate"      # Merge imports at crate level
+group_imports = "StdExternalCrate" # Group: std → external → crate
+reorder_imports = true
+reorder_impl_items = true
+```
+
+### CI Integration
+
+```bash
+# CI: fail if code is not formatted
+cargo fmt -- --check
+```
+
+**Rule**: Never skip `cargo fmt --check` in CI. Unformatted code in main creates merge conflicts and review noise.
+
+## CI Pipeline Design
+
+### Minimum Viable CI
+
+```yaml
+# .github/workflows/ci.yml
+jobs:
+  check:
+    steps:
+      - run: cargo fmt -- --check           # Style consistency
+      - run: cargo clippy -- -D warnings    # Lint enforcement
+      - run: cargo test                     # Correctness
+      - run: cargo deny check               # Supply chain security
+```
+
+### Production CI (Full Pipeline)
+
+```yaml
+jobs:
+  check:
+    steps:
+      - run: cargo fmt -- --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test --all-features
+      - run: cargo deny check
+      - run: cargo miri test                # UB detection (unsafe projects)
+  coverage:
+    steps:
+      - run: cargo tarpaulin --out Stdout   # Code coverage
+  benchmark:
+    steps:
+      - run: cargo bench                    # Performance regression
+```
+
+### Rule: CI Must Be Fast (< 10 minutes)
+
+- **Split jobs** for parallelism (fmt, clippy, test, deny)
+- **Cache `~/.cargo` and `target/`** between runs
+- **Skip heavy checks on PR** (miri, bench) — run on merge to main
+- **Use `cargo check` instead of `cargo build`** where possible
+
 ## Trade-offs
 
 **Strictness vs Flexibility**: `-D warnings` keeps code clean but may block legitimate exceptions.
@@ -156,8 +222,11 @@ cargo deny check
 
 **Workspace granularity**: Too many tiny crates increase maintenance overhead; too few lose incremental compilation benefits.
 
+**CI thoroughness vs speed**: Full miri + bench on every PR is thorough but slow. Run heavy checks on merge, light checks on PR.
+
 ## Related
 
 - [error-handling.md](error-handling.md) — Error types and unsafe error handling
 - [review.md](review.md) — Code review checklist including toolchain compliance
 - [api-design.md](api-design.md) — API evolution and forward compatibility
+- [advanced-testing.md](advanced-testing.md) — Miri and loom CI integration

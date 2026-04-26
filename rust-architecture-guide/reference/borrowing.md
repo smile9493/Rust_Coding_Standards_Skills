@@ -96,7 +96,96 @@ for item in &mut items {
 }
 ```
 
+## Interior Mutability
+
+When you need mutation behind a shared reference, use the standard interior mutability types:
+
+| Type | Thread-Safe | Use When | Overhead |
+|------|------------|----------|----------|
+| `Cell<T>` | No | `T: Copy`, small values (counters, flags) | Zero (no borrow checking) |
+| `RefCell<T>` | No | Single-threaded, dynamic borrow checking | Runtime borrow check (panic on conflict) |
+| `OnceCell<T>` | No | Write-once, read-many (lazy statics, config) | None after first write |
+| `Mutex<T>` | Yes | Multi-threaded, exclusive access | OS lock + poisoning |
+| `RwLock<T>` | Yes | Multi-threaded, read-heavy | OS lock + poisoning |
+| `AtomicU*` | Yes | Simple counters/flags | Lock-free, hardware atomic |
+
+```rust
+use std::cell::{Cell, RefCell, OnceCell};
+
+// ✅ Cell: Copy types, zero-cost mutation
+struct Counter {
+    count: Cell<usize>,
+}
+impl Counter {
+    fn increment(&self) {  // &self, not &mut self!
+        self.count.set(self.count.get() + 1);
+    }
+}
+
+// ✅ RefCell: dynamic borrow checking (single-threaded only!)
+struct Logger {
+    entries: RefCell<Vec<String>>,
+}
+impl Logger {
+    fn log(&self, msg: &str) {  // &self
+        self.entries.borrow_mut().push(msg.to_string());
+    }
+}
+
+// ✅ OnceCell: write-once, read-many
+struct Config {
+    db_url: OnceCell<String>,
+}
+impl Config {
+    fn db_url(&self) -> &str {
+        self.db_url.get_or_init(|| read_from_env("DATABASE_URL"))
+    }
+}
+```
+
+### Rules
+
+- **Never use `RefCell` in multi-threaded code** — use `Mutex`/`RwLock` instead
+- **Prefer `Cell<T>` over `RefCell<T>`** when `T: Copy` — zero overhead, no panic risk
+- **Prefer `OnceCell`** for lazy initialization — no `Option` + `unwrap` pattern
+- **`RefCell::borrow_mut` panics on double borrow** — this is a *debugging feature*, not a production failure mode; fix the logic
+
+## Split Borrowing
+
+Rust allows borrowing disjoint fields simultaneously:
+
+```rust
+struct Player {
+    name: String,
+    score: u32,
+    health: u32,
+}
+
+// ✅ Borrow different fields simultaneously
+fn update(player: &mut Player) {
+    let score = &mut player.score;   // mutable borrow of score
+    let health = &player.health;     // immutable borrow of health
+    // Both valid — disjoint fields
+    *score += 10;
+    println!("health: {}", health);
+}
+```
+
+### Rule: Prefer Field-Level Borrows Over Struct-Level
+
+```rust
+// ❌ Borrows entire struct, blocks all other borrows
+let p = &mut player;
+p.score += 10;
+p.health -= 5;
+
+// ✅ Borrows only what's needed
+player.score += 10;
+player.health -= 5;
+```
+
 ## Related
 
 - [data-struct.md](data-struct.md) — Mutability in construction
 - [iterators.md](iterators.md) — Borrowing in iterator chains
+- [concurrency.md](concurrency.md) — Mutex/RwLock in concurrent contexts

@@ -96,7 +96,73 @@ let result: Vec<_> = items
 - Use `.iter()` for borrowing
 - Use `.iter_mut()` for mutable borrowing
 
+## Custom Iterator Implementation
+
+When built-in combinators aren't enough, implement `Iterator` trait:
+
+```rust
+struct FibIter {
+    prev: u64,
+    curr: u64,
+}
+
+impl FibIter {
+    fn new() -> Self {
+        Self { prev: 0, curr: 1 }
+    }
+}
+
+impl Iterator for FibIter {
+    type Item = u64;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let result = self.prev;
+        let next = self.prev.checked_add(self.curr)?;
+        self.prev = self.curr;
+        self.curr = next;
+        Some(result)
+    }
+}
+
+// Usage: composable with all iterator methods
+let first_10: Vec<u64> = FibIter::new().take(10).collect();
+```
+
+**Rule**: Custom iterators should be small and focused. If the state is complex, consider returning `impl Iterator` from a function instead.
+
+## Advanced Combinators
+
+| Combinator | Use When | Example |
+|-----------|----------|---------|
+| `peekable` | Need to look ahead without consuming | Parsing: peek next token before committing |
+| `scan` | Stateful transformation | Running total, state machines |
+| `partition` | Split into two collections by predicate | Even/odd, valid/invalid |
+| `zip` | Process two iterators in lockstep | Index + value pairs |
+| `enumerate` | Need index alongside value | `for (i, val) in iter.enumerate()` |
+| `fold` | Custom accumulation | Building a map from key-value pairs |
+| `try_fold` | Fallible accumulation | Early exit on error |
+
+```rust
+// ✅ peekable: look ahead in parser
+let mut iter = tokens.iter().peekable();
+while let Some(token) = iter.next() {
+    if iter.peek() == Some(&&Token::Equals) {
+        // Handle assignment
+    }
+}
+
+// ✅ partition: split into two collections
+let (even, odd): (Vec<_>, Vec<_>) = numbers.into_iter().partition(|n| n % 2 == 0);
+
+// ✅ scan: running sum
+let running_sums: Vec<_> = numbers.iter().scan(0, |state, &x| {
+    *state += x;
+    Some(*state)
+}).collect();
+```
+
 ## Related
 
 - [control-flow.md](control-flow.md) — Pattern matching alternatives
 - [traits.md](traits.md) — Implementing Iterator trait
+- [performance-tuning.md](performance-tuning.md) — Iterator performance pitfalls

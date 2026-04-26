@@ -580,10 +580,61 @@ In performance-critical code, check in sequence:
 
 **Remember**: Optimization without profiling is blind; optimization without benchmarking is self-deception.
 
----
+## 7. Stack-Allocated Small Collections
+
+### `smallvec` / `smallstring` — Avoid Heap for Small Sizes
+
+When most instances are small but you need to handle large cases too:
+
+```rust
+use smallvec::SmallVec;
+
+// ✅ Stack-allocated for ≤ 4 items, heap only when exceeded
+let items: SmallVec<[Item; 4]> = SmallVec::new();
+items.push(item1);  // Stack — no allocation
+items.push(item5);  // Still stack
+items.push(item5);  // Exceeds 4 → spills to heap automatically
+```
+
+### Decision: Vec vs SmallVec vs ArrayVec
+
+| Type | Stack | Heap | Use When |
+|------|-------|------|----------|
+| `Vec<T>` | No | Always | Unknown size, large collections |
+| `SmallVec<[T; N]>` | ≤ N items | > N items | Most instances ≤ N, rare large cases |
+| `ArrayVec<T, N>` | Always | Never | Size strictly ≤ N, never exceeds |
+| `[T; N]` | Always | Never | Fixed size known at compile time |
+
+**Rule**: Use `SmallVec` when profiling shows heap allocation in hot paths for collections that are usually small (e.g., function arguments, small buffers, AST node children).
+
+## 8. Profile-Guided Optimization (PGO)
+
+PGO uses runtime profiling data to guide the compiler's optimization decisions:
+
+```bash
+# Step 1: Build instrumented binary
+RUSTFLAGS="-Cprofile-generate=/tmp/pgo-data" cargo build --release
+
+# Step 2: Run representative workload
+./target/release/myapp --benchmark-workload
+
+# Step 3: Build optimized binary with profile data
+RUSTFLAGS="-Cprofile-use=/tmp/pgo-data/merged.profdata" cargo build --release
+```
+
+### When PGO Helps
+
+| Scenario | Expected Improvement |
+|----------|---------------------|
+| Hot branch prediction | 5-15% |
+| Inlining decisions | 3-10% |
+| Function layout (icache) | 2-8% |
+
+**Rule**: Use PGO for latency-critical services where 5-15% improvement matters. Not worth the CI complexity for most applications.
 
 ## Related
 
 - [priority-pyramid.md](priority-pyramid.md) — P3 (Runtime Performance) guidelines
 - [trade-offs.md](trade-offs.md) — When performance optimization is justified
 - [toolchain.md](toolchain.md) — Profiling and benchmarking setup
+- [data-struct.md](data-struct.md) — Memory layout and repr annotations

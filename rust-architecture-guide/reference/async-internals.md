@@ -118,9 +118,116 @@ Before deploying async code to production:
 - [ ] High-concurrency scenarios consider Thread-per-Core runtimes
 - [ ] Complex self-referential structs use `pin-project` for safe projection
 
+## 4. Concurrent Task Composition
+
+### 4.1 `tokio::select!` — Race Multiple Futures
+
+`select!` completes when **any** branch finishes, cancelling the rest.
+
+```rust
+use tokio::sync::mpsc;
+
+async fn event_loop(mut rx: mpsc::Receiver<Event>, shutdown: tokio::sync::watch::Receiver<bool>) {
+    loop {
+        tokio::select! {
+            Some(event) = rx.recv() => {
+                handle_event(event).await;
+            }
+            _ = shutdown.changed() => {
+                tracing::info!("shutting down");
+                break;
+            }
+            else => {
+                // All branches returned None/ended
+                break;
+            }
+        }
+    }
+}
+```
+
+**Rules**:
+- **Always handle the `else` branch** — prevents silent loop exit when all sources close
+- **Borrowed variables must be `&mut`** — `select!` takes ownership by default; use `&mut` for shared state
+- **Never `select!` with side effects on cancellation** — dropped futures may have started work
+
+### 4.2 `tokio::join!` — Run All Futures Concurrently
+
+`join!` waits for **all** futures to complete. No cancellation.
+
+```rust
+// ✅ All three must complete — no cancellation
+let (health, metrics, server) = tokio::join!(
+    health_check(),
+    collect_metrics(),
+    run_server(),
+);
+```
+
+**Rule**: Use `join!` when all branches must complete (e.g., graceful shutdown).
+
+### 4.3 `FuturesUnordered` — Dynamic Collection of Futures
+
+```rust
+use futures::stream::{FuturesUnordered, StreamExt};
+
+let tasks = FuturesUnordered::new();
+for id in 0..100 {
+    tasks.push(process_item(id));
+}
+
+// Process results as they complete (out of order)
+while let Some(result) = tasks.next().await {
+    handle_result(result);
+}
+```
+
+**Rule**: Use `FuturesUnordered` when the number of concurrent tasks is dynamic.
+
+### Decision: select! vs join! vs FuturesUnordered
+
+| Need | Use | Cancellation |
+|------|-----|-------------|
+| First-wins (race) | `select!` | Yes — losers are dropped |
+| All-must-complete | `join!` | No |
+| Dynamic task set | `FuturesUnordered` | Per-task on drop |
+| Rate-limited fan-out | `Stream::buffer_unordered` | Per-task on drop |
+
+## 5. Async Cancellation Semantics
+
+### 5.1 Cancellation is Drop
+
+When a future is cancelled (e.g., `select!` drops the losing branch), its `Drop` impl runs. This means:
+
+- **In-flight I/O may be abandoned** — ensure your I/O library handles partial writes
+- **Held resources are released** — `MutexGuard`, `JoinHandle`, etc. are dropped
+- **No "cancellation point" concept** — unlike C#, Rust cancellation can happen at any `.await`
+
+### 5.2 Cancellation-Safe Patterns
+
+```rust
+// ❌ NOT cancellation-safe: if recv() is cancelled, message is lost
+tokio::select! {
+    msg = channel.recv() => process(msg),
+    _ = shutdown.changed() => {},
+}
+
+// ✅ Cancellation-safe: recv() is documented as safe (message stays in channel)
+tokio::select! {
+    biased; // Prefer first branch — check shutdown first
+    _ = shutdown.changed() => {},
+    msg = channel.recv() => process(msg),
+}
+```
+
+**Rules**:
+- **Check cancellation safety** — read the docs for each future used in `select!`
+- **Use `biased;`** when branch priority matters (e.g., check shutdown before processing)
+- **Wrap non-cancellation-safe operations** in a spawned task to isolate them
+
 ## Related References
 
 - [concurrency.md](concurrency.md) — Concurrency patterns and channel design
 - [performance-tuning.md](performance-tuning.md) — Performance optimization principles
-- [metaprogramming.md](reference/metaprogramming.md) — Compile-time computing
+- [metaprogramming.md](metaprogramming.md) — Compile-time computing
 - [ffi-interop.md](ffi-interop.md) — FFI boundaries and panic containment

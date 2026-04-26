@@ -153,9 +153,68 @@ Before any FFI code goes live:
 - [ ] `cbindgen.toml` configured for C header generation
 - [ ] `bindings.rs` committed to version control (not generated at build time)
 
+## 5. Safe C++ Interop with `cxx`
+
+When interfacing with C++ (not C), prefer `cxx` over raw FFI for type safety:
+
+```rust
+// Rust side: bridge definition
+#[cxx::bridge]
+mod ffi {
+    extern "C++" {
+        include "mylib/engine.h";
+
+        type Engine;  // Opaque C++ type
+
+        fn create_engine() -> UniquePtr<Engine>;
+        fn process(engine: &Engine, data: &[u8]) -> Result<u64>;
+    }
+}
+
+// Usage — fully type-safe, no raw pointers
+let engine = ffi::create_engine();
+let result = ffi::process(&engine, &data)?;
+```
+
+### `cxx` vs Raw FFI
+
+| Feature | Raw FFI | `cxx` |
+|---------|---------|-------|
+| Type safety | Manual (unsafe) | Automatic (safe) |
+| C++ types | Manual opaque pointers | `UniquePtr<T>`, `CxxString` |
+| Error handling | Error codes | `Result<T>` across boundary |
+| Boilerplate | High | Low (bridge macro) |
+| Build integration | Manual | `cc` crate integration |
+
+**Rule**: Use `cxx` for C++ interop. Use raw FFI only for C interop or when `cxx` doesn't support the required C++ feature.
+
+## 6. Callback Functions Across FFI
+
+### Rule: Never Pass Rust Closures as C Function Pointers
+
+```rust
+// ❌ Undefined behavior: Rust closure as C callback
+extern "C" fn register_callback(cb: fn(*const u8)) {
+    // Cannot pass Rust closure — it captures environment
+}
+
+// ✅ Pass data pointer + trampoline function
+extern "C" fn register_callback(cb: extern "C" fn(*const u8, *mut c_void), user_data: *mut c_void);
+
+// Rust trampoline
+extern "C" fn trampoline(data: *const u8, user_data: *mut c_void) {
+    let closure = unsafe { &*(user_data as *mut Box<dyn Fn(&[u8])>) };
+    let slice = unsafe { slice_from_raw_parts(data, len) };
+    closure(slice);
+}
+```
+
+**Rule**: Always use the "trampoline + user_data" pattern for callbacks. Never cast Rust closures to C function pointers.
+
 ## Related References
 
 - [toolchain.md](toolchain.md) — CI configuration and build automation
 - [data-architecture.md](data-architecture.md) — Memory ownership principles
 - [error-handling.md](error-handling.md) — Error handling strategies
 - [concurrency.md](concurrency.md) — Thread safety in FFI callbacks
+- [api-design.md](api-design.md) — API boundary design
