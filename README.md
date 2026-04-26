@@ -38,15 +38,15 @@ Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决
 - 🏛️ **四级优先级金字塔** — P0 安全 → P1 可维护 → P2 编译时 → P3 运行时性能，冲突时高优先级否决低优先级
 - 🧬 **类型驱动架构** — 状态机、Newtype、零成本抽象边界（Marker Traits / PhantomData / 单态化退火）
 - 📦 **所有权分层策略** — 业务层 Owned + `.clone()` 解耦，热点层 `Cow`/`Bytes` 零拷贝
-- ⚠️ **错误处理分层** — 库级 `thiserror` 结构化，应用级 `anyhow` + 惰性上下文
-- 🔄 **并发与异步规范** — 有界通道背压、最小锁区、`Pin`/`Unpin` 语义、自定义 Executor
-- 🛡️ **API 演进防御** — `#[non_exhaustive]`、Sealed Trait、Builder 必填字段
+- ⚠️ **错误处理分层** — 库级 `thiserror` 结构化，应用级 `anyhow` + 惰性上下文 + 重试/退避/熔断
+- 🔄 **并发与异步规范** — 有界通道背压、RwLock/parking_lot 策略、死锁预防、`Pin`/`Unpin` 语义、`select!`/`join!` 组合、取消安全
+- 🛡️ **API 演进防御** — `#[non_exhaustive]`、Sealed Trait、`#[deprecated]` 迁移、Trait Object Safety、Builder 必填字段
 - 🔍 **可观测性三件套** — `tracing::instrument` + 零开销 Metrics + Panic Hook → abort
 - 🧪 **高阶质量保证** — proptest 属性测试 + cargo fuzz + Loom 并发模型 + Miri UB 检测
-- ⚡ **性能深度调优** — jemalloc/mimalloc、SoA 布局、False Sharing 防御、SIMD、LTO
-- 🔗 **FFI 安全边界** — `-sys` crate 分离、不透明句柄、对称分配、`catch_unwind`
-- 🏗️ **工程构建规范** — Cargo Workspace 分治、Feature Flags 隔离、`cargo deny` 供应链审计
-- 🤖 **Agent 自检指令** — Trade-off 分析 + 所有权/并发/错误/安全四类审查清单
+- ⚡ **性能深度调优** — jemalloc/mimalloc、SoA 布局、SmallVec 栈分配、PGO、False Sharing 防御、SIMD、LTO
+- 🔗 **FFI 安全边界** — `-sys` crate 分离、`cxx` 安全 C++ 互操作、回调 trampoline 模式、`catch_unwind`
+- 🏗️ **工程构建规范** — Cargo Workspace 分治、Feature Flags 隔离、`cargo deny` 供应链审计、rustfmt 强制、CI 流水线
+- 🤖 **Agent 自检指令** — Trade-off 分析 + 所有权/并发/错误/安全四类审查清单（66 项）
 
 ---
 
@@ -103,9 +103,13 @@ cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
 | `error-handling` | 错误处理分层规范 | `error-handling.md` |
 | `concurrency` | 并发模型选择与规范 | `concurrency.md` |
 | `async` | 异步运行时与规范 | `async-internals.md` |
+| `select` | `select!`/`join!` 组合与取消安全 | `async-internals.md` |
+| `cancellation` | 异步取消语义与安全模式 | `async-internals.md` |
 | `api-design` | 公共 API 边界设计 | `api-design.md` |
 | `non-exhaustive` | `#[non_exhaustive]` 向前兼容 | `api-design.md` |
 | `sealed-trait` | Sealed Trait 模式 | `api-design.md` |
+| `deprecated` | `#[deprecated]` 迁移策略 | `api-design.md` |
+| `object-safety` | Trait Object Safety 规则 | `api-design.md` |
 
 ### Refactor — 重构路径
 
@@ -115,6 +119,7 @@ cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
 | `iterators` | 迭代器链式重构 | `iterators.md` |
 | `traits` | 惯用 Trait 模式 | `traits.md` |
 | `borrowing` | 借用与可变性优化 | `borrowing.md` |
+| `interior-mutability` | 内部可变性模式（Cell/RefCell/OnceCell） | `borrowing.md` |
 
 ### Evaluate — 质量评估
 
@@ -125,6 +130,8 @@ cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
 | `fuzz` | Fuzz 测试策略 | `advanced-testing.md` |
 | `miri` | Miri UB 检测 | `advanced-testing.md` |
 | `performance` | 性能调优指南 | `performance-tuning.md` |
+| `smallvec` | 栈分配小集合策略 | `performance-tuning.md` |
+| `pgo` | Profile-Guided Optimization | `performance-tuning.md` |
 
 ### Configure — 工程配置
 
@@ -134,8 +141,11 @@ cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
 | `workspace` | Cargo Workspace 分治 | `toolchain.md` |
 | `feature-flags` | Feature Flags 隔离 | `toolchain.md` |
 | `cargo-deny` | 供应链安全审计 | `toolchain.md` |
+| `rustfmt` | 代码格式化配置 | `toolchain.md` |
+| `ci` | CI 流水线设计 | `toolchain.md` |
 | `observability` | 可观测性配置 | `observability.md` |
 | `ffi` / `interop` | FFI 与跨语言互操作 | `ffi-interop.md` |
+| `cxx` | 安全 C++ 互操作 | `ffi-interop.md` |
 | `metaprogramming` | 宏与元编程规范 | `metaprogramming.md` |
 
 ---
@@ -180,11 +190,11 @@ P3: 运行时性能（仅限已证明的瓶颈）— 需 Profiler 数据
 | 领域 | 文档 | 覆盖范围 |
 |------|------|---------|
 | **战略框架** | `priority-pyramid.md` `conflict-resolution.md` `trade-offs.md` `progressive-architecture.md` | 优先级矩阵、冲突解决、权衡分析、渐进式架构 |
-| **架构设计** | `state-machine.md` `newtype.md` `data-architecture.md` `error-handling.md` `concurrency.md` `api-design.md` | 状态机、Newtype、数据架构、错误处理、并发、API 边界 |
-| **异步与互操作** | `async-internals.md` `ffi-interop.md` | Future 状态机、Pin/Unpin、自定义 Executor、FFI 安全边界 |
-| **编码风格** | `control-flow.md` `iterators.md` `traits.md` `errors.md` `data-struct.md` `borrowing.md` | 控制流、迭代器、Trait 惯用法、错误组合子、数据结构、借用 |
-| **性能与质量** | `performance-tuning.md` `advanced-testing.md` `observability.md` | 内存/缓存/锁自由/编译时/unsafe 调优、属性/模糊/并发/UB 测试、Tracing/Metrics/Panic |
-| **元编程与工具链** | `metaprogramming.md` `toolchain.md` | 声明/过程宏、const 泛型、Clippy/Workspace/Feature Flags/cargo deny |
+| **架构设计** | `state-machine.md` `newtype.md` `data-architecture.md` `error-handling.md` `concurrency.md` `api-design.md` | 状态机、Newtype、数据架构、错误处理（重试/退避/分类）、并发（RwLock/parking_lot/死锁）、API 边界（deprecated/object safety） |
+| **异步与互操作** | `async-internals.md` `ffi-interop.md` | Future 状态机、select!/join!、取消安全、Pin/Unpin、cxx 安全 C++ 互操作、回调 trampoline |
+| **编码风格** | `control-flow.md` `iterators.md` `traits.md` `errors.md` `data-struct.md` `borrowing.md` | 控制流、迭代器（自定义/高级组合子）、Trait 惯用法、错误组合子、数据结构（repr/enum 布局/derive）、借用（内部可变性/分割借用） |
+| **性能与质量** | `performance-tuning.md` `advanced-testing.md` `observability.md` | 内存/缓存/锁自由/编译时/unsafe 调优、SmallVec/PGO、属性/模糊/并发/UB 测试、Tracing/Metrics/Panic |
+| **元编程与工具链** | `metaprogramming.md` `toolchain.md` | 声明/过程宏、const 泛型、Clippy/rustfmt/Workspace/Feature Flags/cargo deny/CI 流水线 |
 | **审查与示例** | `review.md` `refactor.md` `usage-examples.md` | 综合审查清单、重构路径、使用示例 |
 
 ---
@@ -202,21 +212,21 @@ rust-architecture-guide/
     newtype.md                      # 类型安全 ID 与凭证
     data-architecture.md            # 所有权、克隆、内存布局
     error-handling.md               # 库级 vs 应用级错误策略
-    concurrency.md                  # 消息传递、通道、锁
-    async-internals.md              # 异步内幕、Pin/Unpin、自定义执行器
-    api-design.md                   # 公共 API 边界、#[non_exhaustive]、Sealed Trait
+    concurrency.md                  # 消息传递、通道、锁、RwLock、parking_lot、死锁预防
+    async-internals.md              # 异步内幕、select!/join!、取消安全、Pin/Unpin、自定义执行器
+    api-design.md                   # 公共 API 边界、#[non_exhaustive]、Sealed Trait、#[deprecated]、Object Safety
     observability.md                # Tracing、Metrics、Panic Hook、Coredump
-    toolchain.md                    # CI、Clippy、unsafe、Workspace、Feature Flags、cargo deny
-    performance-tuning.md           # 完整性能调优指南
+    toolchain.md                    # CI、Clippy、rustfmt、unsafe、Workspace、Feature Flags、cargo deny
+    performance-tuning.md           # 完整性能调优指南（SmallVec、PGO）
     advanced-testing.md             # 属性测试、Fuzzing、Loom、Miri
     metaprogramming.md              # 声明/过程宏、const 泛型
-    ffi-interop.md                  # FFI 边界、C 互操作、Panic 遏制
+    ffi-interop.md                  # FFI 边界、cxx 安全 C++ 互操作、回调 trampoline
     control-flow.md                 # 控制流模式
     iterators.md                    # 迭代器最佳实践
     traits.md                       # Trait 惯用法 + 零成本抽象边界
     errors.md                       # 错误组合子
-    data-struct.md                  # 数据结构模式
-    borrowing.md                    # 借用与可变性
+    data-struct.md                  # 数据结构模式、#[repr] 注解、enum 布局、derive 规范
+    borrowing.md                    # 借用与可变性、内部可变性、分割借用
     trade-offs.md                   # 权衡决策记录
     refactor.md                     # 重构路径
     review.md                       # 综合审查清单
