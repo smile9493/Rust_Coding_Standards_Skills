@@ -77,5 +77,5 @@ fn process_text(input: &str) -> Cow<str> {
 
 ## Related
 
-- [concurrency.md](concurrency.md) — Sharing data across threads
-- [api-design.md](api-design.md) — Ownership in API boundaries
+- [concurrency.md](11-concurrency.md) — Sharing data across threads
+- [api-design.md](13-api-design.md) — Ownership in API boundaries

@@ -68,5 +68,5 @@ struct ApiKey(String);
 
 ## Related
 
-- [state-machine.md](state-machine.md) — Using newtypes within state machines
-- [api-design.md](api-design.md) — Newtypes in public API boundaries
+- [state-machine.md](07-state-machine.md) — Using newtypes within state machines
+- [api-design.md](13-api-design.md) — Newtypes in public API boundaries

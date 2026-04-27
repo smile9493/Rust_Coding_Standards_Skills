@@ -213,8 +213,8 @@ extern "C" fn trampoline(data: *const u8, user_data: *mut c_void) {
 
 ## Related References
 
-- [toolchain.md](toolchain.md) — CI configuration and build automation
-- [data-architecture.md](data-architecture.md) — Memory ownership principles
-- [error-handling.md](error-handling.md) — Error handling strategies
-- [concurrency.md](concurrency.md) — Thread safety in FFI callbacks
-- [api-design.md](api-design.md) — API boundary design
+- [toolchain.md](17-toolchain.md) — CI configuration and build automation
+- [data-architecture.md](09-data-architecture.md) — Memory ownership principles
+- [error-handling.md](10-error-handling.md) — Error handling strategies
+- [concurrency.md](11-concurrency.md) — Thread safety in FFI callbacks
+- [api-design.md](13-api-design.md) — API boundary design

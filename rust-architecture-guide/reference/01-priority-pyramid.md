@@ -150,5 +150,5 @@ let shared = unsafe { ... }; // Never for convenience
 
 ## Related
 
-- [conflict-resolution.md](conflict-resolution.md) — Specific conflict scenarios
-- [trade-offs.md](trade-offs.md) — Detailed trade-off analysis
+- [conflict-resolution.md](02-conflict-resolution.md) — Specific conflict scenarios
+- [trade-offs.md](04-trade-offs.md) — Detailed trade-off analysis

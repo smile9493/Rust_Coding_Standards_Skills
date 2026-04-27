@@ -76,5 +76,5 @@ let name = opt_name.unwrap_or_else(|| "anonymous".to_string());
 
 ## Related
 
-- [traits.md](traits.md) — From trait for error conversion
-- [control-flow.md](control-flow.md) — Pattern matching vs combinators
+- [traits.md](20-traits.md) — From trait for error conversion
+- [control-flow.md](18-control-flow.md) — Pattern matching vs combinators

@@ -1,15 +1,50 @@
 ---
 name: rust-architecture-guide
 description: Comprehensive Rust engineering guide covering priority pyramid, architecture decisions, and coding style. Invoke when starting Rust projects, making trade-offs, or writing idiomatic code.
-version: 3.0.0
+version: 4.0.0
 user-invocable: true
-argument-hint: "[priority|conflict|state-machine|newtype|data-arch|error-handling|concurrency|async|select|cancellation|api-design|non-exhaustive|sealed-trait|deprecated|object-safety|performance|allocator|cache-layout|lock-free|smallvec|pgo|property-test|fuzz|loom|miri|control-flow|iterators|traits|borrowing|interior-mutability|review|metaprogramming|macro|const-fn|ffi|interop|cxx|cbindgen|bindgen|poll|pin|executor|tracing|metrics|observability|panic|coredump|workspace|feature-flags|cargo-deny|rustfmt|ci|progressive] [target]"
+argument-hint: "[mode|priority|conflict|state-machine|newtype|data-arch|error-handling|concurrency|async|select|cancellation|api-design|non-exhaustive|sealed-trait|deprecated|object-safety|performance|allocator|cache-layout|lock-free|smallvec|pgo|property-test|fuzz|loom|miri|control-flow|iterators|traits|borrowing|interior-mutability|review|metaprogramming|macro|const-fn|ffi|interop|cxx|cbindgen|bindgen|poll|pin|executor|tracing|metrics|observability|panic|coredump|workspace|feature-flags|cargo-deny|rustfmt|ci|progressive|glossary|deviation] [target]"
 license: MIT
 ---
 
 # Rust Architecture & Engineering Decision Guide
 
 This document serves as the **constitutional foundation** for Rust engineering decisions. It is structured for deterministic, reproducible decision-making suitable for AI-assisted development.
+
+### Execution Mode
+
+Before applying any rule, determine the execution mode. Rules are enforced relative to the project's lifecycle stage:
+
+- **`rapid`** (prototype): Enforce P0 only; `anyhow` in libraries, unlimited `.clone()`, no doc-tests
+- **`standard`** (default): Enforce P0+P1; warn on P2 violations
+- **`strict`** (production): Enforce P0-P3; all deviations require formal annotation
+
+See [reference/00-mode-guide.md](reference/00-mode-guide.md) for full mode definitions, selection decision tree, and transition checklists.
+
+### Mandatory Output Contract
+
+**Every code generation or review output MUST end with a Decision Summary block:**
+
+```markdown
+## Decision Summary
+- **Mode**: [rapid|standard|strict]
+- **Rules Applied**: [list specific rules from P0-P3]
+- **Conflicts Resolved**: [PX > PY with justification, or "None"]
+- **Deviations**: [list with `// DEVIATION: reason` references, or "None"]
+- **Trade-offs**: [key trade-off decisions made]
+```
+
+For **review outputs**, additionally include a checklist table:
+
+```markdown
+## Review Checklist
+| Category | Items Checked | Issues Found | Status |
+|----------|--------------|-------------|--------|
+| Safety (P0) | 5 | 0 | ✅ |
+| Maintainability (P1) | 8 | 2 | ⚠️ |
+| Compile Time (P2) | 3 | 0 | ✅ |
+| Performance (P3) | 4 | 1 | ⚠️ |
+```
 
 ---
 
@@ -257,7 +292,7 @@ enum OrderState {
 }
 ```
 
-**Decision Framework**: See [reference/progressive-architecture.md](reference/progressive-architecture.md)
+**Decision Framework**: See [reference/03-progressive-architecture.md](reference/03-progressive-architecture.md)
 
 | Signal | Action |
 |--------|--------|
@@ -322,44 +357,47 @@ pub fn setup_panic_hook() {
 
 | Command | Category | Description | Reference |
 |---|---|---|---|
-| `priority [context]` | Strategy | Apply priority matrix to conflicts | [reference/priority-pyramid.md](reference/priority-pyramid.md) |
-| `conflict [scenario]` | Strategy | Resolve typical conflicts | [reference/conflict-resolution.md](reference/conflict-resolution.md) |
-| `progressive [stage]` | Strategy | MVP vs production decisions | [reference/progressive-architecture.md](reference/progressive-architecture.md) |
+| `mode [level]` | Strategy | Set execution mode (rapid/standard/strict) | [reference/00-mode-guide.md](reference/00-mode-guide.md) |
+| `priority [context]` | Strategy | Apply priority matrix to conflicts | [reference/01-priority-pyramid.md](reference/01-priority-pyramid.md) |
+| `conflict [scenario]` | Strategy | Resolve typical conflicts | [reference/02-conflict-resolution.md](reference/02-conflict-resolution.md) |
+| `progressive [stage]` | Strategy | MVP vs production decisions | [reference/03-progressive-architecture.md](reference/03-progressive-architecture.md) |
+| `glossary [term]` | Reference | Look up terminology definitions | [reference/05-glossary.md](reference/05-glossary.md) |
+| `deviation [rule-id]` | Process | Document or review rule deviations | [reference/06-deviation-process.md](reference/06-deviation-process.md) |
 
 ### Architecture Patterns
 
 | Command | Category | Description | Reference |
 |---|---|---|---|
-| `state-machine [entity]` | Design | Design state machine for entities | [reference/state-machine.md](reference/state-machine.md) |
-| `newtype [type]` | Design | Apply newtype pattern | [reference/newtype.md](reference/newtype.md) |
-| `data-arch [structure]` | Design | Design ownership and memory layout | [reference/data-architecture.md](reference/data-architecture.md) |
-| `error-handling [layer]` | Design | Set up error strategy | [reference/error-handling.md](reference/error-handling.md) |
-| `concurrency [pattern]` | Design | Choose concurrency model | [reference/concurrency.md](reference/concurrency.md) |
-| `async [runtime]` | Design | Async internals, custom executors | [reference/async-internals.md](reference/async-internals.md) |
-| `api-design [interface]` | Design | Design public API boundaries | [reference/api-design.md](reference/api-design.md) |
-| `metaprogramming [type]` | Design | Macros, const generics | [reference/metaprogramming.md](reference/metaprogramming.md) |
-| `ffi [language]` | Design | FFI boundaries, C interoperability | [reference/ffi-interop.md](reference/ffi-interop.md) |
-| `observability [type]` | Design | Tracing, metrics, panic hooks | [reference/observability.md](reference/observability.md) |
-| `toolchain [config]` | Configure | Set up CI, Clippy, unsafe guidelines | [reference/toolchain.md](reference/toolchain.md) |
+| `state-machine [entity]` | Design | Design state machine for entities | [reference/07-state-machine.md](reference/07-state-machine.md) |
+| `newtype [type]` | Design | Apply newtype pattern | [reference/08-newtype.md](reference/08-newtype.md) |
+| `data-arch [structure]` | Design | Design ownership and memory layout | [reference/09-data-architecture.md](reference/09-data-architecture.md) |
+| `error-handling [layer]` | Design | Set up error strategy | [reference/10-error-handling.md](reference/10-error-handling.md) |
+| `concurrency [pattern]` | Design | Choose concurrency model | [reference/11-concurrency.md](reference/11-concurrency.md) |
+| `async [runtime]` | Design | Async internals, custom executors | [reference/12-async-internals.md](reference/12-async-internals.md) |
+| `api-design [interface]` | Design | Design public API boundaries | [reference/13-api-design.md](reference/13-api-design.md) |
+| `metaprogramming [type]` | Design | Macros, const generics | [reference/14-metaprogramming.md](reference/14-metaprogramming.md) |
+| `ffi [language]` | Design | FFI boundaries, C interoperability | [reference/15-ffi-interop.md](reference/15-ffi-interop.md) |
+| `observability [type]` | Design | Tracing, metrics, panic hooks | [reference/16-observability.md](reference/16-observability.md) |
+| `toolchain [config]` | Configure | Set up CI, Clippy, unsafe guidelines | [reference/17-toolchain.md](reference/17-toolchain.md) |
 
 ### Coding Style
 
 | Command | Category | Description | Reference |
 |---|---|---|---|
-| `control-flow [code]` | Refactor | Apply `let else`, `matches!` | [reference/control-flow.md](reference/control-flow.md) |
-| `iterators [code]` | Refactor | Convert to iterator chains | [reference/iterators.md](reference/iterators.md) |
-| `traits [impl]` | Refactor | Idiomatic trait patterns | [reference/traits.md](reference/traits.md) |
-| `errors [handling]` | Refactor | Error combinators | [reference/errors.md](reference/errors.md) |
-| `data-struct [definition]` | Refactor | Simplify structures | [reference/data-struct.md](reference/data-struct.md) |
-| `borrowing [code]` | Refactor | Optimize mutability | [reference/borrowing.md](reference/borrowing.md) |
+| `control-flow [code]` | Refactor | Apply `let else`, `matches!` | [reference/18-control-flow.md](reference/18-control-flow.md) |
+| `iterators [code]` | Refactor | Convert to iterator chains | [reference/19-iterators.md](reference/19-iterators.md) |
+| `traits [impl]` | Refactor | Idiomatic trait patterns | [reference/20-traits.md](reference/20-traits.md) |
+| `errors [handling]` | Refactor | Error combinators | [reference/21-errors.md](reference/21-errors.md) |
+| `data-struct [definition]` | Refactor | Simplify structures | [reference/22-data-struct.md](reference/22-data-struct.md) |
+| `borrowing [code]` | Refactor | Optimize mutability | [reference/23-borrowing.md](reference/23-borrowing.md) |
 
 ### Evaluation
 
 | Command | Category | Description | Reference |
 |---|---|---|---|
-| `trade-off [decision]` | Evaluate | Analyze trade-offs | [reference/trade-offs.md](reference/trade-offs.md) |
-| `review [code]` | Evaluate | Comprehensive review | [reference/review.md](reference/review.md) |
-| `refactor [code]` | Refactor | Style refactoring | [reference/refactor.md](reference/refactor.md) |
+| `trade-off [decision]` | Evaluate | Analyze trade-offs | [reference/04-trade-offs.md](reference/04-trade-offs.md) |
+| `review [code]` | Evaluate | Comprehensive review | [reference/27-review.md](reference/27-review.md) |
+| `refactor [code]` | Refactor | Style refactoring | [reference/24-refactor.md](reference/24-refactor.md) |
 
 ---
 
@@ -527,39 +565,41 @@ enum OrderState {
 
 ## 10. Reference Files
 
-All detailed guidelines are in the [reference/](reference/) directory:
+All detailed guidelines are in the [reference/](reference/) directory, organized by decision flow order:
 
-### Strategic Framework (5)
-- [priority-pyramid.md](reference/priority-pyramid.md) — The four-level hierarchy
-- [conflict-resolution.md](reference/conflict-resolution.md) — Typical conflicts and resolutions
-- [progressive-architecture.md](reference/progressive-architecture.md) — MVP to production migration
-- [trade-offs.md](reference/trade-offs.md) — Decision analysis framework
-- [usage-examples.md](reference/usage-examples.md) — Real-world scenarios
+### Execution & Strategy (7)
+- [00-mode-guide.md](reference/00-mode-guide.md) — Execution modes (rapid/standard/strict) and transition checklists
+- [01-priority-pyramid.md](reference/01-priority-pyramid.md) — The four-level hierarchy
+- [02-conflict-resolution.md](reference/02-conflict-resolution.md) — Typical conflicts and resolutions
+- [03-progressive-architecture.md](reference/03-progressive-architecture.md) — MVP to production migration
+- [04-trade-offs.md](reference/04-trade-offs.md) — Decision analysis framework
+- [05-glossary.md](reference/05-glossary.md) — Centralized terminology definitions
+- [06-deviation-process.md](reference/06-deviation-process.md) — Formal rule exception handling (DEVIATION annotation)
 
 ### Architecture Patterns (11)
-- [state-machine.md](reference/state-machine.md) — When and how to use state machines
-- [newtype.md](reference/newtype.md) — Type-safe IDs and credentials
-- [data-architecture.md](reference/data-architecture.md) — Ownership, cloning, memory layout
-- [error-handling.md](reference/error-handling.md) — Library vs application error strategies
-- [concurrency.md](reference/concurrency.md) — Message passing, channels, locking
-- [async-internals.md](reference/async-internals.md) — Async internals, Pin/Unpin, custom executors
-- [api-design.md](reference/api-design.md) — Public API boundaries, `#[non_exhaustive]`, sealed traits
-- [metaprogramming.md](reference/metaprogramming.md) — Declarative/procedural macros, const generics
-- [ffi-interop.md](reference/ffi-interop.md) — FFI boundaries, C interoperability, panic containment
-- [observability.md](reference/observability.md) — Tracing, metrics, panic hooks, coredumps
-- [toolchain.md](reference/toolchain.md) — CI, Clippy, unsafe guidelines, workspace, feature flags, cargo deny
+- [07-state-machine.md](reference/07-state-machine.md) — When and how to use state machines
+- [08-newtype.md](reference/08-newtype.md) — Type-safe IDs and credentials
+- [09-data-architecture.md](reference/09-data-architecture.md) — Ownership, cloning, memory layout
+- [10-error-handling.md](reference/10-error-handling.md) — Library vs application error strategies
+- [11-concurrency.md](reference/11-concurrency.md) — Message passing, channels, locking
+- [12-async-internals.md](reference/12-async-internals.md) — Async internals, Pin/Unpin, custom executors
+- [13-api-design.md](reference/13-api-design.md) — Public API boundaries, `#[non_exhaustive]`, sealed traits
+- [14-metaprogramming.md](reference/14-metaprogramming.md) — Declarative/procedural macros, const generics
+- [15-ffi-interop.md](reference/15-ffi-interop.md) — FFI boundaries, C interoperability, panic containment
+- [16-observability.md](reference/16-observability.md) — Tracing, metrics, panic hooks, coredumps
+- [17-toolchain.md](reference/17-toolchain.md) — CI, Clippy, unsafe guidelines, workspace, feature flags, cargo deny
 
 ### Coding Style (7)
-- [control-flow.md](reference/control-flow.md) — `let else`, `matches!`, pattern matching
-- [iterators.md](reference/iterators.md) — Iterator chains, `filter_map`, functional style
-- [traits.md](reference/traits.md) — `From` vs `Into`, `Default`, idiomatic traits, zero-cost abstraction boundaries (marker traits, PhantomData, monomorphization)
-- [errors.md](reference/errors.md) — `unwrap_or_else`, `map_err`, combinators
-- [data-struct.md](reference/data-struct.md) — Field shorthand, avoiding stuttering
-- [borrowing.md](reference/borrowing.md) — Mutability scoping, slices
-- [refactor.md](reference/refactor.md) — Comprehensive refactoring workflow
+- [18-control-flow.md](reference/18-control-flow.md) — `let else`, `matches!`, pattern matching
+- [19-iterators.md](reference/19-iterators.md) — Iterator chains, `filter_map`, functional style
+- [20-traits.md](reference/20-traits.md) — `From` vs `Into`, `Default`, idiomatic traits, zero-cost abstraction boundaries (marker traits, PhantomData, monomorphization)
+- [21-errors.md](reference/21-errors.md) — `unwrap_or_else`, `map_err`, combinators
+- [22-data-struct.md](reference/22-data-struct.md) — Field shorthand, avoiding stuttering
+- [23-borrowing.md](reference/23-borrowing.md) — Mutability scoping, slices
+- [24-refactor.md](reference/24-refactor.md) — Comprehensive refactoring workflow
 
 ### Performance Deep Dive (1)
-- [performance-tuning.md](reference/performance-tuning.md) — Complete performance tuning guide
+- [25-performance-tuning.md](reference/25-performance-tuning.md) — Complete performance tuning guide
   - Memory & Allocator Strategy (jemalloc, mimalloc, Arena)
   - Cache Locality & Data Layout (SoA, alignment, false sharing)
   - Lock-Free Concurrency (sharded locks, atomics, TLS)
@@ -567,22 +607,30 @@ All detailed guidelines are in the [reference/](reference/) directory:
   - Unsafe Interventions (bounds check elimination, SIMD, MaybeUninit)
 
 ### Testing & Quality Assurance (1)
-- [advanced-testing.md](reference/advanced-testing.md) — Advanced testing & QA strategies
+- [26-advanced-testing.md](reference/26-advanced-testing.md) — Advanced testing & QA strategies
   - Property-based Testing (proptest, invariants, shrinking)
   - Fuzzing (cargo fuzz, coverage-guided, crash detection)
   - Concurrency Model Checking (loom, state explosion control)
   - Undefined Behavior Detection (Miri, UB catches, FFI mocking)
+
+### Review & Examples (2)
+- [27-review.md](reference/27-review.md) — Comprehensive review checklist
+- [28-usage-examples.md](reference/28-usage-examples.md) — Real-world scenarios
 
 ---
 
 ## 11. Constitutional Summary
 
 **No rule is absolute.** The ultimate measure of code quality is whether it matches:
-- Its lifecycle stage (MVP vs production)
+- Its lifecycle stage (MVP vs production) — governed by [execution mode](reference/00-mode-guide.md)
 - Business constraints (deadline vs long-term maintenance)
 - Team context (solo vs large organization)
 
 **The Pragmatic Principle**: 
 > Pursue excellence at system boundaries and hot paths; release mental load for internal flows and cold paths.
 
-**Remember**: This guide is the Agent's **constitutional foundation**. Before each response, generate a **Decision Log** recording rationale for choosing specific implementation paths, ensuring consistency and professional depth.
+**Deviation Protocol**: When breaking a rule is the correct decision, annotate with `// DEVIATION: reason` and record in the Decision Summary. See [deviation-process.md](reference/06-deviation-process.md) for the full protocol.
+
+**Terminology**: All specialized terms used in this guide are defined in [glossary.md](reference/05-glossary.md). Consult it before inferring meaning.
+
+**Remember**: This guide is the Agent's **constitutional foundation**. Before each response, generate a **Decision Summary** (see Mandatory Output Contract) recording rationale for choosing specific implementation paths, ensuring consistency and professional depth.

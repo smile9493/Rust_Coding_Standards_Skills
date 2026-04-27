@@ -184,7 +184,7 @@ fn process_by_name(name: &str, data: &[u8]) -> Result<Output> {
 
 ## Related
 
-- [data-struct.md](data-struct.md) — Struct initialization with Default
-- [errors.md](errors.md) — From trait for error conversion
-- [api-design.md](api-design.md) — Generic vs dynamic dispatch in API boundaries
-- [priority-pyramid.md](priority-pyramid.md) — P2 compile time trade-offs
+- [data-struct.md](22-data-struct.md) — Struct initialization with Default
+- [errors.md](21-errors.md) — From trait for error conversion
+- [api-design.md](13-api-design.md) — Generic vs dynamic dispatch in API boundaries
+- [priority-pyramid.md](01-priority-pyramid.md) — P2 compile time trade-offs

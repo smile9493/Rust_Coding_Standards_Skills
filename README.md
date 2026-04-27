@@ -3,8 +3,8 @@
 # Rust Coding Standards Skills
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skill Version](https://img.shields.io/badge/Skill-3.0.0-brightgreen.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-26%20Docs-orange.svg)]()
+[![Skill Version](https://img.shields.io/badge/Skill-4.0.0-brightgreen.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-29%20Docs-orange.svg)]()
 [![Platform](https://img.shields.io/badge/Platform-Trae%20%7C%20OpenClaw-9cf.svg)]()
 
 **Rust 工程决策宪法 — 让 AI 编码助手输出确定性的、可复现的架构决策**
@@ -36,6 +36,7 @@ Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决
 ## ✨ 核心特性
 
 - 🏛️ **四级优先级金字塔** — P0 安全 → P1 可维护 → P2 编译时 → P3 运行时性能，冲突时高优先级否决低优先级
+- 🔧 **三级执行模式** — `rapid`（原型）/ `standard`（默认）/ `strict`（发布），按项目阶段灵活执行
 - 🧬 **类型驱动架构** — 状态机、Newtype、零成本抽象边界（Marker Traits / PhantomData / 单态化退火）
 - 📦 **所有权分层策略** — 业务层 Owned + `.clone()` 解耦，热点层 `Cow`/`Bytes` 零拷贝
 - ⚠️ **错误处理分层** — 库级 `thiserror` 结构化，应用级 `anyhow` + 惰性上下文 + 重试/退避/熔断
@@ -47,6 +48,9 @@ Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决
 - 🔗 **FFI 安全边界** — `-sys` crate 分离、`cxx` 安全 C++ 互操作、回调 trampoline 模式、`catch_unwind`
 - 🏗️ **工程构建规范** — Cargo Workspace 分治、Feature Flags 隔离、`cargo deny` 供应链审计、rustfmt 强制、CI 流水线
 - 🤖 **Agent 自检指令** — Trade-off 分析 + 所有权/并发/错误/安全四类审查清单（66 项）
+- 📝 **强制输出契约** — 每次输出附带 Decision Summary，记录规则应用、冲突判定、偏离理由
+- 📖 **集中术语表** — 所有专业术语统一定义，避免 Agent 自行解释产生偏差
+- 🚫 **规范偏离流程** — `// DEVIATION: reason` 标注 + 按模式审查 + 周期审计
 
 ---
 
@@ -89,9 +93,12 @@ cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
 
 | 命令 | 说明 | 参考文档 |
 |------|------|---------|
-| `priority` | 应用优先级矩阵判定冲突 | `priority-pyramid.md` |
-| `conflict` | 解决典型冲突场景 | `conflict-resolution.md` |
-| `progressive` | MVP → Production 渐进式架构 | `progressive-architecture.md` |
+| `mode` | 设置执行模式 (rapid/standard/strict) | `00-mode-guide.md` |
+| `priority` | 应用优先级矩阵判定冲突 | `01-priority-pyramid.md` |
+| `conflict` | 解决典型冲突场景 | `02-conflict-resolution.md` |
+| `progressive` | MVP → Production 渐进式架构 | `03-progressive-architecture.md` |
+| `glossary` | 查询术语定义 | `05-glossary.md` |
+| `deviation` | 记录或审查规范偏离 | `06-deviation-process.md` |
 
 ### Design — 架构设计
 
@@ -176,26 +183,28 @@ P3: 运行时性能（仅限已证明的瓶颈）— 需 Profiler 数据
 
 ### Agent 决策日志
 
-每次对话生成 Decision Log，记录：
-1. 面临的冲突与优先级判定
-2. 选择的方案与理由
-3. 被否决的方案与原因
+每次对话生成 **Decision Summary**，记录：
+1. 当前执行模式 (rapid/standard/strict)
+2. 面临的冲突与优先级判定
+3. 选择的方案与理由
+4. 被否决的方案与原因
+5. 规范偏离记录（如有）
 
 ---
 
 ## 📚 参考文档
 
-`reference/` 目录包含 26 份深度参考文档，按领域分类：
+`reference/` 目录包含 29 份深度参考文档，按决策流程顺序编号：
 
 | 领域 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **战略框架** | `priority-pyramid.md` `conflict-resolution.md` `trade-offs.md` `progressive-architecture.md` | 优先级矩阵、冲突解决、权衡分析、渐进式架构 |
-| **架构设计** | `state-machine.md` `newtype.md` `data-architecture.md` `error-handling.md` `concurrency.md` `api-design.md` | 状态机、Newtype、数据架构、错误处理（重试/退避/分类）、并发（RwLock/parking_lot/死锁）、API 边界（deprecated/object safety） |
-| **异步与互操作** | `async-internals.md` `ffi-interop.md` | Future 状态机、select!/join!、取消安全、Pin/Unpin、cxx 安全 C++ 互操作、回调 trampoline |
-| **编码风格** | `control-flow.md` `iterators.md` `traits.md` `errors.md` `data-struct.md` `borrowing.md` | 控制流、迭代器（自定义/高级组合子）、Trait 惯用法、错误组合子、数据结构（repr/enum 布局/derive）、借用（内部可变性/分割借用） |
-| **性能与质量** | `performance-tuning.md` `advanced-testing.md` `observability.md` | 内存/缓存/锁自由/编译时/unsafe 调优、SmallVec/PGO、属性/模糊/并发/UB 测试、Tracing/Metrics/Panic |
-| **元编程与工具链** | `metaprogramming.md` `toolchain.md` | 声明/过程宏、const 泛型、Clippy/rustfmt/Workspace/Feature Flags/cargo deny/CI 流水线 |
-| **审查与示例** | `review.md` `refactor.md` `usage-examples.md` | 综合审查清单、重构路径、使用示例 |
+| **执行与战略** | `00-mode-guide.md` `01-priority-pyramid.md` `02-conflict-resolution.md` `03-progressive-architecture.md` `04-trade-offs.md` `05-glossary.md` `06-deviation-process.md` | 执行模式、优先级矩阵、冲突解决、渐进式架构、权衡分析、术语表、偏离流程 |
+| **架构设计** | `07-state-machine.md` `08-newtype.md` `09-data-architecture.md` `10-error-handling.md` `11-concurrency.md` `13-api-design.md` | 状态机、Newtype、数据架构、错误处理（重试/退避/分类）、并发（RwLock/parking_lot/死锁）、API 边界（deprecated/object safety） |
+| **异步与互操作** | `12-async-internals.md` `15-ffi-interop.md` | Future 状态机、select!/join!、取消安全、Pin/Unpin、cxx 安全 C++ 互操作、回调 trampoline |
+| **编码风格** | `18-control-flow.md` `19-iterators.md` `20-traits.md` `21-errors.md` `22-data-struct.md` `23-borrowing.md` | 控制流、迭代器（自定义/高级组合子）、Trait 惯用法、错误组合子、数据结构（repr/enum 布局/derive）、借用（内部可变性/分割借用） |
+| **性能与质量** | `25-performance-tuning.md` `26-advanced-testing.md` `16-observability.md` | 内存/缓存/锁自由/编译时/unsafe 调优、SmallVec/PGO、属性/模糊/并发/UB 测试、Tracing/Metrics/Panic |
+| **元编程与工具链** | `14-metaprogramming.md` `17-toolchain.md` | 声明/过程宏、const 泛型、Clippy/rustfmt/Workspace/Feature Flags/cargo deny/CI 流水线 |
+| **审查与示例** | `27-review.md` `24-refactor.md` `28-usage-examples.md` | 综合审查清单、重构路径、使用示例 |
 
 ---
 
@@ -204,33 +213,36 @@ P3: 运行时性能（仅限已证明的瓶颈）— 需 Profiler 数据
 ```
 rust-architecture-guide/
   SKILL.md                          # Skill 入口（宪法性定义 + 完整指南）
-  reference/                        # 26 份参考文档
-    priority-pyramid.md             # 四级优先级体系
-    conflict-resolution.md          # 典型冲突与解决方案
-    progressive-architecture.md     # MVP → Production 渐进迁移
-    state-machine.md                # 类型驱动状态机
-    newtype.md                      # 类型安全 ID 与凭证
-    data-architecture.md            # 所有权、克隆、内存布局
-    error-handling.md               # 库级 vs 应用级错误策略
-    concurrency.md                  # 消息传递、通道、锁、RwLock、parking_lot、死锁预防
-    async-internals.md              # 异步内幕、select!/join!、取消安全、Pin/Unpin、自定义执行器
-    api-design.md                   # 公共 API 边界、#[non_exhaustive]、Sealed Trait、#[deprecated]、Object Safety
-    observability.md                # Tracing、Metrics、Panic Hook、Coredump
-    toolchain.md                    # CI、Clippy、rustfmt、unsafe、Workspace、Feature Flags、cargo deny
-    performance-tuning.md           # 完整性能调优指南（SmallVec、PGO）
-    advanced-testing.md             # 属性测试、Fuzzing、Loom、Miri
-    metaprogramming.md              # 声明/过程宏、const 泛型
-    ffi-interop.md                  # FFI 边界、cxx 安全 C++ 互操作、回调 trampoline
-    control-flow.md                 # 控制流模式
-    iterators.md                    # 迭代器最佳实践
-    traits.md                       # Trait 惯用法 + 零成本抽象边界
-    errors.md                       # 错误组合子
-    data-struct.md                  # 数据结构模式、#[repr] 注解、enum 布局、derive 规范
-    borrowing.md                    # 借用与可变性、内部可变性、分割借用
-    trade-offs.md                   # 权衡决策记录
-    refactor.md                     # 重构路径
-    review.md                       # 综合审查清单
-    usage-examples.md               # 使用示例
+  reference/                        # 29 份参考文档（按决策流程编号）
+    00-mode-guide.md                # 执行模式 (rapid/standard/strict)
+    01-priority-pyramid.md          # 四级优先级体系
+    02-conflict-resolution.md       # 典型冲突与解决方案
+    03-progressive-architecture.md  # MVP → Production 渐进迁移
+    04-trade-offs.md                # 权衡决策记录
+    05-glossary.md                  # 集中术语表
+    06-deviation-process.md         # 规范偏离流程
+    07-state-machine.md             # 类型驱动状态机
+    08-newtype.md                   # 类型安全 ID 与凭证
+    09-data-architecture.md         # 所有权、克隆、内存布局
+    10-error-handling.md            # 库级 vs 应用级错误策略
+    11-concurrency.md               # 消息传递、通道、锁、RwLock、parking_lot、死锁预防
+    12-async-internals.md           # 异步内幕、select!/join!、取消安全、Pin/Unpin、自定义执行器
+    13-api-design.md                # 公共 API 边界、#[non_exhaustive]、Sealed Trait、#[deprecated]、Object Safety
+    14-metaprogramming.md           # 声明/过程宏、const 泛型
+    15-ffi-interop.md               # FFI 边界、cxx 安全 C++ 互操作、回调 trampoline
+    16-observability.md             # Tracing、Metrics、Panic Hook、Coredump
+    17-toolchain.md                 # CI、Clippy、rustfmt、unsafe、Workspace、Feature Flags、cargo deny
+    18-control-flow.md              # 控制流模式
+    19-iterators.md                 # 迭代器最佳实践
+    20-traits.md                    # Trait 惯用法 + 零成本抽象边界
+    21-errors.md                    # 错误组合子
+    22-data-struct.md               # 数据结构模式、#[repr] 注解、enum 布局、derive 规范
+    23-borrowing.md                 # 借用与可变性、内部可变性、分割借用
+    24-refactor.md                  # 重构路径
+    25-performance-tuning.md        # 完整性能调优指南（SmallVec、PGO）
+    26-advanced-testing.md          # 属性测试、Fuzzing、Loom、Miri
+    27-review.md                    # 综合审查清单
+    28-usage-examples.md            # 使用示例
 ```
 
 ---

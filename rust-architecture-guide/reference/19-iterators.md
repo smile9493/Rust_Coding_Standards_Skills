@@ -163,6 +163,6 @@ let running_sums: Vec<_> = numbers.iter().scan(0, |state, &x| {
 
 ## Related
 
-- [control-flow.md](control-flow.md) — Pattern matching alternatives
-- [traits.md](traits.md) — Implementing Iterator trait
-- [performance-tuning.md](performance-tuning.md) — Iterator performance pitfalls
+- [control-flow.md](18-control-flow.md) — Pattern matching alternatives
+- [traits.md](20-traits.md) — Implementing Iterator trait
+- [performance-tuning.md](25-performance-tuning.md) — Iterator performance pitfalls

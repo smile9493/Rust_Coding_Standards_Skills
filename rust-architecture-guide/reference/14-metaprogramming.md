@@ -120,7 +120,7 @@ As an architect, you must mandate that your team uses the following tools when d
 
 ## Related References
 
-- [traits.md](traits.md) — Trait design patterns
-- [data-architecture.md](data-architecture.md) — Zero-cost abstraction boundaries
-- [toolchain.md](toolchain.md) — Development toolchain configuration
-- [api-design.md](api-design.md) — API engineering and boundary abstraction
+- [traits.md](20-traits.md) — Trait design patterns
+- [data-architecture.md](09-data-architecture.md) — Zero-cost abstraction boundaries
+- [toolchain.md](17-toolchain.md) — Development toolchain configuration
+- [api-design.md](13-api-design.md) — API engineering and boundary abstraction

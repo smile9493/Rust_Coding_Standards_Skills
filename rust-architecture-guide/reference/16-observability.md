@@ -180,7 +180,7 @@ Before production deployment:
 
 ## Related References
 
-- [concurrency.md](concurrency.md) — Concurrency patterns
-- [async-internals.md](async-internals.md) — Async internals
-- [toolchain.md](toolchain.md) — CI configuration
-- [error-handling.md](error-handling.md) — Error handling strategies
+- [concurrency.md](11-concurrency.md) — Concurrency patterns
+- [async-internals.md](12-async-internals.md) — Async internals
+- [toolchain.md](17-toolchain.md) — CI configuration
+- [error-handling.md](10-error-handling.md) — Error handling strategies

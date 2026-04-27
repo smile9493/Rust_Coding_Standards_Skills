@@ -227,7 +227,7 @@ tokio::select! {
 
 ## Related References
 
-- [concurrency.md](concurrency.md) — Concurrency patterns and channel design
-- [performance-tuning.md](performance-tuning.md) — Performance optimization principles
-- [metaprogramming.md](metaprogramming.md) — Compile-time computing
-- [ffi-interop.md](ffi-interop.md) — FFI boundaries and panic containment
+- [concurrency.md](11-concurrency.md) — Concurrency patterns and channel design
+- [performance-tuning.md](25-performance-tuning.md) — Performance optimization principles
+- [metaprogramming.md](14-metaprogramming.md) — Compile-time computing
+- [ffi-interop.md](15-ffi-interop.md) — FFI boundaries and panic containment

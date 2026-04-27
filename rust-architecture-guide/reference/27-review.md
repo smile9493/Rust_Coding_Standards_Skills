@@ -179,6 +179,6 @@ struct UserContext<'a, 'b, 'c> {
 
 ## Related
 
-- [priority-pyramid.md](priority-pyramid.md) — Strategic framework
-- [control-flow.md](control-flow.md) — Control flow patterns
-- [iterators.md](iterators.md) — Iterator best practices
+- [priority-pyramid.md](01-priority-pyramid.md) — Strategic framework
+- [control-flow.md](18-control-flow.md) — Control flow patterns
+- [iterators.md](19-iterators.md) — Iterator best practices

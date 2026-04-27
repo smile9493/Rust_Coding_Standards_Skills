@@ -186,6 +186,6 @@ player.health -= 5;
 
 ## Related
 
-- [data-struct.md](data-struct.md) — Mutability in construction
-- [iterators.md](iterators.md) — Borrowing in iterator chains
-- [concurrency.md](concurrency.md) — Mutex/RwLock in concurrent contexts
+- [data-struct.md](22-data-struct.md) — Mutability in construction
+- [iterators.md](19-iterators.md) — Borrowing in iterator chains
+- [concurrency.md](11-concurrency.md) — Mutex/RwLock in concurrent contexts

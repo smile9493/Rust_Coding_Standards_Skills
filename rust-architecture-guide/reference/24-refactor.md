@@ -100,6 +100,6 @@ pub fn process_users(users: &[User]) -> Vec<String> {
 
 ## Related
 
-- [review.md](review.md) — Style review checklist
-- [iterators.md](iterators.md) — Iterator transformations
-- [control-flow.md](control-flow.md) — Control flow patterns
+- [review.md](27-review.md) — Style review checklist
+- [iterators.md](19-iterators.md) — Iterator transformations
+- [control-flow.md](18-control-flow.md) — Control flow patterns

@@ -289,6 +289,6 @@ fn process_all(items: Vec<Box<dyn Processor>>) { }
 
 ## Related
 
-- [priority-pyramid.md](priority-pyramid.md) — The four-level hierarchy
-- [conflict-resolution.md](conflict-resolution.md) — Specific scenarios
-- [trade-offs.md](trade-offs.md) — Decision framework
+- [priority-pyramid.md](01-priority-pyramid.md) — The four-level hierarchy
+- [conflict-resolution.md](02-conflict-resolution.md) — Specific scenarios
+- [trade-offs.md](04-trade-offs.md) — Decision framework

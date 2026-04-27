@@ -259,6 +259,6 @@ Before refactoring from MVP to production:
 
 ## Related
 
-- [priority-pyramid.md](priority-pyramid.md) — When to prioritize what
-- [conflict-resolution.md](conflict-resolution.md) — Specific conflict scenarios
-- [trade-offs.md](trade-offs.md) — Decision analysis framework
+- [priority-pyramid.md](01-priority-pyramid.md) — When to prioritize what
+- [conflict-resolution.md](02-conflict-resolution.md) — Specific conflict scenarios
+- [trade-offs.md](04-trade-offs.md) — Decision analysis framework

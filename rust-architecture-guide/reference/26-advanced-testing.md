@@ -560,6 +560,6 @@ When configuring testing strategies, check in sequence:
 
 ## Related
 
-- [priority-pyramid.md](priority-pyramid.md) — P0 (Safety) verification
-- [toolchain.md](toolchain.md) — CI integration for testing
-- [performance-tuning.md](performance-tuning.md) — Profiling-guided optimization
+- [priority-pyramid.md](01-priority-pyramid.md) — P0 (Safety) verification
+- [toolchain.md](17-toolchain.md) — CI integration for testing
+- [performance-tuning.md](25-performance-tuning.md) — Profiling-guided optimization

@@ -57,5 +57,5 @@ struct User {
 
 ## Related
 
-- [newtype.md](newtype.md) — For type-safe IDs within state machines
-- [trade-offs.md](trade-offs.md) — Framework for deciding when state machines are worth the cost
+- [newtype.md](08-newtype.md) — For type-safe IDs within state machines
+- [trade-offs.md](04-trade-offs.md) — Framework for deciding when state machines are worth the cost

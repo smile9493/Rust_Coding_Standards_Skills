@@ -301,6 +301,6 @@ When facing any conflict, use this template:
 
 ## Related
 
-- [priority-pyramid.md](priority-pyramid.md) — The four-level hierarchy
-- [progressive-architecture.md](progressive-architecture.md) — MVP to production migration
-- [trade-offs.md](trade-offs.md) — Decision framework
+- [priority-pyramid.md](01-priority-pyramid.md) — The four-level hierarchy
+- [progressive-architecture.md](03-progressive-architecture.md) — MVP to production migration
+- [trade-offs.md](04-trade-offs.md) — Decision framework

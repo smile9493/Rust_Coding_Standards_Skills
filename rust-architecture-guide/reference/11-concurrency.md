@@ -172,7 +172,7 @@ fn handle_request() {
 
 ## Related
 
-- [data-architecture.md](data-architecture.md) — Ownership in concurrent contexts
-- [api-design.md](api-design.md) — Async API boundaries
-- [borrowing.md](borrowing.md) — Interior mutability patterns
-- [performance-tuning.md](performance-tuning.md) — Lock-free concurrency and atomics
+- [data-architecture.md](09-data-architecture.md) — Ownership in concurrent contexts
+- [api-design.md](13-api-design.md) — Async API boundaries
+- [borrowing.md](23-borrowing.md) — Interior mutability patterns
+- [performance-tuning.md](25-performance-tuning.md) — Lock-free concurrency and atomics

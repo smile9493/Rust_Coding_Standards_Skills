@@ -81,6 +81,6 @@ Before finalizing any architectural decision:
 
 ## Related
 
-- [state-machine.md](state-machine.md) — When state machines are worth the cost
-- [data-architecture.md](data-architecture.md) — Ownership trade-offs
-- [error-handling.md](error-handling.md) — Error strategy trade-offs
+- [state-machine.md](07-state-machine.md) — When state machines are worth the cost
+- [data-architecture.md](09-data-architecture.md) — Ownership trade-offs
+- [error-handling.md](10-error-handling.md) — Error strategy trade-offs

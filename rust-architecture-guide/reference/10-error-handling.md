@@ -168,6 +168,6 @@ impl AppError {
 
 ## Related
 
-- [api-design.md](api-design.md) — Error types in public APIs
-- [toolchain.md](toolchain.md) — Clippy rules for error handling
-- [errors.md](errors.md) — Error combinators and chaining
+- [api-design.md](13-api-design.md) — Error types in public APIs
+- [toolchain.md](17-toolchain.md) — Clippy rules for error handling
+- [errors.md](21-errors.md) — Error combinators and chaining

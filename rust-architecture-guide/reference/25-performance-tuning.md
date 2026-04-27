@@ -634,7 +634,7 @@ RUSTFLAGS="-Cprofile-use=/tmp/pgo-data/merged.profdata" cargo build --release
 
 ## Related
 
-- [priority-pyramid.md](priority-pyramid.md) — P3 (Runtime Performance) guidelines
-- [trade-offs.md](trade-offs.md) — When performance optimization is justified
-- [toolchain.md](toolchain.md) — Profiling and benchmarking setup
-- [data-struct.md](data-struct.md) — Memory layout and repr annotations
+- [priority-pyramid.md](01-priority-pyramid.md) — P3 (Runtime Performance) guidelines
+- [trade-offs.md](04-trade-offs.md) — When performance optimization is justified
+- [toolchain.md](17-toolchain.md) — Profiling and benchmarking setup
+- [data-struct.md](22-data-struct.md) — Memory layout and repr annotations

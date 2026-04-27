@@ -226,7 +226,7 @@ jobs:
 
 ## Related
 
-- [error-handling.md](error-handling.md) — Error types and unsafe error handling
-- [review.md](review.md) — Code review checklist including toolchain compliance
-- [api-design.md](api-design.md) — API evolution and forward compatibility
-- [advanced-testing.md](advanced-testing.md) — Miri and loom CI integration
+- [error-handling.md](10-error-handling.md) — Error types and unsafe error handling
+- [review.md](27-review.md) — Code review checklist including toolchain compliance
+- [api-design.md](13-api-design.md) — API evolution and forward compatibility
+- [advanced-testing.md](26-advanced-testing.md) — Miri and loom CI integration

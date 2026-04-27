@@ -90,5 +90,5 @@ match value {
 
 ## Related
 
-- [iterators.md](iterators.md) — Functional control flow with iterators
-- [errors.md](errors.md) — Error handling patterns
+- [iterators.md](19-iterators.md) — Functional control flow with iterators
+- [errors.md](21-errors.md) — Error handling patterns

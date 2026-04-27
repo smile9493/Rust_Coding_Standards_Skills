@@ -192,7 +192,7 @@ Standard order: `Debug` → `Clone`/`Copy` → `PartialEq`/`Eq` → `PartialOrd`
 
 ## Related
 
-- [traits.md](traits.md) — Default trait for initialization
-- [borrowing.md](borrowing.md) — Mutability in construction
-- [ffi-interop.md](ffi-interop.md) — FFI-compatible struct layout
-- [performance-tuning.md](performance-tuning.md) — Cache locality and SoA layout
+- [traits.md](20-traits.md) — Default trait for initialization
+- [borrowing.md](23-borrowing.md) — Mutability in construction
+- [ffi-interop.md](15-ffi-interop.md) — FFI-compatible struct layout
+- [performance-tuning.md](25-performance-tuning.md) — Cache locality and SoA layout

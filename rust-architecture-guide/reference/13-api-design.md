@@ -218,7 +218,7 @@ let processors: Vec<Box<dyn Processor>> = vec![/* ... */];
 
 ## Related
 
-- [error-handling.md](error-handling.md) — Error types in API boundaries
-- [newtype.md](newtype.md) — Type-safe parameters in APIs
-- [toolchain.md](toolchain.md) — Workspace and dependency management
-- [traits.md](traits.md) — Trait design patterns and zero-cost abstractions
+- [error-handling.md](10-error-handling.md) — Error types in API boundaries
+- [newtype.md](08-newtype.md) — Type-safe parameters in APIs
+- [toolchain.md](17-toolchain.md) — Workspace and dependency management
+- [traits.md](20-traits.md) — Trait design patterns and zero-cost abstractions
