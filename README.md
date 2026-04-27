@@ -83,35 +83,70 @@ Full document index: [rust-systems-cloud-infra-guide/README.md](rust-systems-clo
 
 ### Installation
 
+This project follows the [Agent Skills Spec v1.0](https://github.com/agentskills/agentskills/blob/main/docs/specification.mdx) format and is compatible with any AI agent platform that supports the Skills specification.
+
 ```bash
-# Option 1: Clone to workspace skills directory (recommended)
+# Clone the repository
 git clone https://github.com/smile9493/Rust_Coding_Standards_Skills.git
+
+# Install to your agent's skills directory
+# Trae IDE
 cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
 cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills/
 
-# Option 2: Use directly in a project
-# Copy both directories to the project's .trae/skills/
+# Claude Code / other Agent Skills compatible platforms
+# Copy both skill directories to your agent's skills configuration path
 ```
 
 ### Usage
 
-Invoke directly in Trae IDE:
+**Skill Invocation** (platform-specific syntax):
 
 ```
+# Trae IDE
 /rust-architecture-guide priority my_conflict
 /rust-architecture-guide state-machine Order
 /rust-systems-cloud-infra-guide io-model
 /rust-systems-cloud-infra-guide backpressure
+
+# Claude Code / other platforms — reference skill name in prompt
+# "According to rust-architecture-guide, what priority should I assign?"
+# "Follow rust-systems-cloud-infra-guide to select the I/O model for this gateway"
 ```
 
-Or trigger with natural language:
+**Natural Language Trigger** — The Agent automatically matches skills based on context:
 
 ```
 Help me refactor the Order entity with type-driven state machine
 Should this module use thiserror or anyhow for error handling?
 Review this concurrent code for Mutex across await issues
 Optimize this storage engine's I/O path with io_uring
+What memory ordering should I use for this atomic counter?
+Write a procedural macro with proper Span-level error reporting
 ```
+
+### Skill Format
+
+Each skill follows the Agent Skills Spec v1.0 structure:
+
+```
+skill-name/
+├── SKILL.md              # Entry point (YAML frontmatter + Agent instructions)
+└── reference/            # Deep-dive reference documents
+    ├── 01-topic.md
+    ├── 02-topic.md
+    └── ...
+```
+
+**SKILL.md frontmatter fields**:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `name` | ✅ | Skill identifier (hyphen-case, matches directory name) |
+| `description` | ✅ | When to invoke this skill (max 1024 chars) |
+| `license` | ❌ | License identifier |
+| `metadata` | ❌ | Extended metadata (version, philosophy, domain, etc.) |
+| `allowed-tools` | ❌ | Tools the skill is permitted to use |
 
 ---
 
@@ -199,11 +234,39 @@ rust-architecture-guide (Universal Constitution)
 
 ## Design Philosophy
 
-### Pragmatism Over Dogmatism
+### 1. Dialectical Materialism — Contradiction Drives Evolution
+
+Engineering decisions are not static truths but dynamic processes resolved through contradiction. Every `unsafe` block is a contradiction between safety and performance; every `.clone()` is a contradiction between simplicity and efficiency. The priority pyramid is the tool for resolving these contradictions — higher levels veto lower, and the resolution itself becomes the architecture.
+
+**Core dialectics**:
+- **Unity of Opposites**: `unsafe` and safe are not enemies — `unsafe` is the material foundation of safe abstractions. The `-sys` crate is unsafe so the wrapper can be safe.
+- **Quantitative to Qualitative Change**: An MVP's `Option<bool>` flags accumulate until the business model stabilizes, then must undergo qualitative change into an Enum state machine. The compiler assists by identifying all call sites.
+- **Negation of Negation**: Errors are not endpoints but starting points — panic → catch → graceful degradation. Each negation reaches a higher level of resilience.
+
+### 2. Jeet Kune Do — No Rule Is Absolute
+
+> "Using no way as way; having no limitation as limitation." — Bruce Lee
+
+The priority pyramid provides "the way," but the DEVIATION protocol provides "no way" — a formal channel for when breaking a rule is the correct decision. This creates a **self-referential philosophical closure**: the rules contain the means to transcend the rules.
+
+**Applied principles**:
+- **Intercepting Boilerplate**: If logic can be expressed in 1 line of pattern matching, never use 5 lines of nesting. `let else` over nested `if let`; `filter_map` over `filter` + `map`.
+- **Economy of Motion**: Every line of code should point directly to intent. Eliminate redundant intermediate variables and implicit copies. Arena allocates once, reclaims in bulk — one strike, no wasted motion.
+- **Hardware Sympathy**: Leverage iterators and zero-copy types, align with the compiler's inline optimization. SoA layout resonates with CPU cache lines; `const fn` shifts computation from runtime to compile time.
+
+### 3. Pragmatism Over Dogmatism
 
 > **Pursue excellence at system boundaries and hot paths; release mental load for internal flows and cold paths.**
 
-### Priority Pyramid
+Not every line of code deserves the same level of scrutiny. The execution mode system (`rapid` / `standard` / `strict`) ensures that the cost of rigor is proportional to the cost of failure:
+
+| Mode | Enforce | Trade-off |
+|------|---------|-----------|
+| `rapid` | P0 only | Unlimited `.clone()`, `anyhow` in libraries, no doc-tests |
+| `standard` | P0 + P1 | Default for most projects |
+| `strict` | P0–P3 | All deviations require formal `// DEVIATION:` annotation |
+
+### 4. Priority Pyramid — The Constitutional Framework
 
 ```
 P0: Safety & Correctness (memory safety, data consistency) — Non-negotiable
@@ -215,11 +278,31 @@ P2: Compile Time (build speed, CI/CD efficiency) — Measure then decide
 P3: Runtime Performance (proven bottlenecks only) — Requires Profiler data
 ```
 
-### Conflict Resolution Rules
-
+**Conflict Resolution Rules**:
 - **Higher priority vetoes lower**: P0 safety requirements veto P3 performance optimization
 - **Same level: choose simpler**: Two P1 solutions conflict, pick the simpler one
 - **P3 requires evidence**: Any performance optimization must include Profiler data
+
+### 5. Mechanical Sympathy — Align with Physics
+
+Ultimate performance comes not from clever tricks, but from deep resonance between code logic and underlying physical hardware. Software runs not on abstract machines, but on:
+
+```
+L1 Cache (32KB, 4 cycles) → L2 (256KB, 12 cycles) → L3 (shared, 40 cycles) → DRAM (200+ cycles)
+NUMA Node 0 ← QPI/UPI → NUMA Node 1
+NIC Ring Buffer → Kernel TCP Stack → User Space
+```
+
+Performance is not optimized — it is **aligned**. When you understand cache lines are 64 bytes, false sharing destroys concurrency, and `mmap` page faults cost microseconds, you stop "optimizing" and start **designing** structures that resonate with hardware.
+
+### 6. Machine vs Machine — Deterministic Quality
+
+Human-written example-based tests only cover known territory. Against the extreme complexity of concurrency and edge cases, we must unleash machine computation:
+
+- **Property-based Testing** (`proptest`): From "concrete examples" to "universal physical laws" — verify symmetry, idempotency, monotonicity
+- **Fuzzing** (`cargo-fuzz`): Genetic mutation and evolutionary selection, searching for crash points in chaos
+- **Concurrency Model Checking** (`loom`): Eliminate the randomness of thread scheduling, achieve exhaustive deterministic exploration
+- **UB Detection** (`Miri`): Before LLVM optimizes your code, use an interpreter to scrutinize every memory contract
 
 ### Agent Decision Log
 
@@ -260,8 +343,51 @@ Each conversation generates a **Decision Summary**, recording:
 
 This skill collection's specification system synthesizes engineering practices from the following sources:
 
+### Rust Ecosystem
+
 - [Rust Official Documentation](https://doc.rust-lang.org/) — Language specification and standard library API
 - [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) — Public API design checklist
+- [The Rust Programming Language](https://doc.rust-lang.org/book/) — Official book
+- [Rust Reference](https://doc.rust-lang.org/reference/) — Language reference
+- [Rustonomicon](https://doc.rust-lang.org/nomicon/) — Unsafe Rust dark arts
 - [Too Many Lists](https://rust-unofficial.github.io/too-many-lists/) — Unsafe and pointer safety tutorial
 - [Tokio Tutorial](https://tokio.rs/tokio/tutorial) — Async runtime best practices
+- [Cargo Book](https://doc.rust-lang.org/cargo/) — Build system and package manager
+
+### Async & Concurrency
+
+- [Tokio](https://tokio.rs/) — Async runtime ecosystem
+- [async-book](https://rust-lang.github.io/async-book/) — Asynchronous programming in Rust
+- [crossbeam](https://github.com/crossbeam-rs/crossbeam) — Concurrent programming tools
+- [loom](https://github.com/tokio-rs/loom) — Concurrency model checking
+
+### Performance & Systems
+
+- [Martin Thompson — Mechanical Sympathy](https://mechanical-sympathy.blogspot.com/) — Hardware-aligned software design philosophy
+- [rustix](https://github.com/bytecodealliance/rustix) — Safe Rust wrappers for POSIX/Win32 syscalls
+- [bumpalo](https://github.com/fitzgen/bumpalo) — Fast arena allocator
+- [arc-swap](https://github.com/vorner/arc-swap) — RCU-style atomic reference swapping
+- [DashMap](https://github.com/xacrimon/dashmap) — Sharded concurrent HashMap
+
+### Quality Assurance
+
+- [proptest](https://github.com/proptest-rs/proptest) — Property-based testing framework
+- [cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz) — Fuzzing infrastructure
+- [Miri](https://github.com/rust-lang/miri) — Undefined behavior detection interpreter
+- [trybuild](https://github.com/dtolnay/trybuild) — Compile-time macro testing
+- [Kani](https://github.com/model-checking/kani) — Formal verification tool
+
+### FFI & Interop
+
+- [cxx](https://github.com/dtolnay/cxx) — Safe C++ interop
+- [bindgen](https://github.com/rust-lang/rust-bindgen) — Automatic FFI binding generation
+- [wasmtime](https://github.com/bytecodealliance/wasmtime) — WebAssembly runtime
+
+### Agent Skills Specification
+
+- [Agent Skills Spec v1.0](https://github.com/agentskills/agentskills/blob/main/docs/specification.mdx) — Universal AI agent skills format specification
+
+### Community
+
 - Architecture experience summaries from numerous production-grade Rust projects in the community
+- Rust community forum, Reddit r/rust, and Zulip discussions that shaped these best practices

@@ -31,6 +31,36 @@ This guide is a **vertical deepening supplement** to [`rust-architecture-guide`]
 | **Resilience** | Graceful degradation over crash, backpressure over OOM, structured concurrency over leaks |
 | **Jeet Kune Do** | One-strike memory lifecycle (Arena), flow like water adapting to hardware channels (Allocator API) |
 
+### Mechanical Sympathy — Align with Physics
+
+Ultimate performance comes not from clever tricks, but from deep resonance between code logic and underlying physical hardware. Software runs not on abstract machines, but on:
+
+```
+L1 Cache (32KB, 4 cycles) → L2 (256KB, 12 cycles) → L3 (shared, 40 cycles) → DRAM (200+ cycles)
+NUMA Node 0 ← QPI/UPI → NUMA Node 1
+NIC Ring Buffer → Kernel TCP Stack → User Space
+```
+
+Performance is not optimized — it is **aligned**. When you understand cache lines are 64 bytes, false sharing destroys concurrency, and `mmap` page faults cost microseconds, you stop "optimizing" and start **designing** structures that resonate with hardware.
+
+### Determinism — Eliminate Non-determinism
+
+Distributed consensus requires bit-level reproducibility. If two nodes receive the same input, their output must be bit-identical. Any non-determinism is poison to consensus — it creates forks in Raft logs, and forks are the deepest fear of distributed systems.
+
+**Prohibited in consensus logic**: `Instant::now()`, `rand::random()`, `HashMap` iteration order.
+
+### Resilience — Absorb, Don't Resist
+
+Systems inevitably trend toward entropy (failures, OOM, network partitions). The resilient response:
+- **Don't resist** — absorb (backpressure over OOM)
+- **Don't crash** — degrade (graceful degradation over crash)
+- **Don't die** — rebirth (K8s restart with persisted state)
+
+### Jeet Kune Do — One Strike, Flow Like Water
+
+- **One Strike**: Arena allocation — allocate once, reclaim in bulk, O(1) lifecycle management
+- **Flow Like Water**: Allocator API — data flows to NUMA-local nodes, flows to PMEM persistent layer, adapting to hardware channels
+
 ## Hard Rules (Absolute Prohibitions)
 
 | Category | Prohibit | Enforce |

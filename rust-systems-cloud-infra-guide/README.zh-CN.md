@@ -31,6 +31,36 @@
 | **Resilience** | 优雅降级 > 崩溃，背压 > OOM，结构化并发 > 泄漏 |
 | **Jeet Kune Do** | 一击内存生命周期（Arena），像水流一样适配硬件通道（Allocator API） |
 
+### Mechanical Sympathy — 顺应物理
+
+极致的性能不是来自"奇技淫巧"，而是来自代码逻辑与底层物理硬件的深度共鸣。软件不是运行在抽象机上，而是运行在：
+
+```
+L1 Cache (32KB, 4 cycles) → L2 (256KB, 12 cycles) → L3 (共享, 40 cycles) → DRAM (200+ cycles)
+NUMA Node 0 ← QPI/UPI → NUMA Node 1
+NIC Ring Buffer → Kernel TCP Stack → User Space
+```
+
+性能不是优化出来的，而是**对齐**出来的。当你理解了 CPU cache line 是 64 字节、false sharing 会摧毁并发、mmap 的 page fault 代价是微秒级，你就不会再"优化"——你会**设计**出与硬件物理共振的结构。
+
+### Determinism — 消除非确定性
+
+分布式共识要求比特级可复现性。如果两个节点收到相同输入，输出必须比特级相同。任何非确定性都是共识的毒药——它会在 Raft log 中制造分叉，而分叉是分布式系统最深的恐惧。
+
+**共识逻辑中禁止**：`Instant::now()`、`rand::random()`、`HashMap` 迭代顺序。
+
+### Resilience — 吸收而非抵抗
+
+系统必然走向熵增（故障、OOM、网络分区）。韧性的回应：
+- **不抵抗**——吸收（背压优于 OOM）
+- **不崩溃**——降级（优雅降级优于崩溃）
+- **不死亡**——重生（K8s 重启 + 持久化状态）
+
+### Jeet Kune Do — 一击必杀，如水之形
+
+- **一击**：Arena 分配——一次分配，批量回收，O(1) 生命周期管理
+- **如水**：Allocator API——数据流向 NUMA 本地节点，流向 PMEM 持久层，顺硬件之势而为
+
 ## 红线（绝对禁止）
 
 | 类别 | 禁止 | 强制 |

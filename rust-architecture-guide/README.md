@@ -20,12 +20,37 @@ This guide is the **constitutional foundation** for AI coding assistants, provid
 
 > **Pursue excellence at system boundaries and hot paths; release mental load for internal flows and cold paths.**
 
+### Priority Pyramid
+
 | Priority | Focus | Rule |
 |----------|-------|------|
 | **P0** | Safety & Correctness | Memory safety, data consistency — non-negotiable |
 | **P1** | Maintainability | Readability, local complexity control — default pursuit |
 | **P2** | Compile Time | Build speed, CI/CD efficiency — measure then decide |
 | **P3** | Runtime Performance | Only for proven bottlenecks — requires Profiler evidence |
+
+### Dialectical Materialism
+
+Engineering decisions are resolved through contradiction:
+- **Unity of Opposites**: `unsafe` and safe are not enemies — `unsafe` is the material foundation of safe abstractions
+- **Quantitative to Qualitative Change**: MVP `Option<bool>` flags accumulate, then must undergo qualitative change into Enum state machines
+- **Negation of Negation**: Errors are not endpoints — panic → catch → graceful degradation, each negation reaches higher resilience
+
+### Jeet Kune Do Coding Philosophy
+
+| Principle | Description |
+|-----------|-------------|
+| **Intercepting Boilerplate** | If logic can be expressed in 1 line of pattern matching, never use 5 lines of nesting |
+| **Economy of Motion** | Every line of code should point directly to intent. Eliminate redundant intermediate variables and implicit copies |
+| **Hardware Sympathy** | Leverage iterators and zero-copy types, align with the compiler's inline optimization |
+
+### Execution Modes
+
+| Mode | Enforce | Trade-off |
+|------|---------|-----------|
+| `rapid` | P0 only | Unlimited `.clone()`, `anyhow` in libraries, no doc-tests |
+| `standard` | P0 + P1 | Default for most projects |
+| `strict` | P0–P3 | All deviations require formal `// DEVIATION:` annotation |
 
 ## Document Index
 
