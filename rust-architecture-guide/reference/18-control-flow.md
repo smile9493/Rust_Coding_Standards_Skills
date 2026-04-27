@@ -1,40 +1,30 @@
-# Control Flow & Patterns
+# Control Flow: Intercepting Deep Nesting
 
-## Let-Else for Early Return
+> **Philosophy — Intercepting Boilerplate**: If a logic can be expressed in 1 line of pattern matching, never use 5 lines of nesting.
 
-### When to Use
+---
 
-Use `let else` when destructuring `Option` or `Result` and needing immediate return on failure.
+## 1.1 Intercept Nesting: Use `let else`
 
-### Pattern
+**Rule**: When destructuring fails and requires immediate return, prohibit `if let` or `match` causing rightward code drift. Use `let else` to keep the path flat.
 
 ```rust
-// ❌ Bloated (indentation hell)
+// ❌ Path crouching (nested)
 if let Some(user) = get_user() {
-    if let Ok(config) = load_config(&user) {
-        // ... core logic
+    if let Ok(config) = load_config(user) {
+        process(config);
     }
 }
 
-// ✅ Elegant (flat structure)
+// ✅ Intercepting way (flat)
 let Some(user) = get_user() else { return };
-let Ok(config) = load_config(&user) else { return };
-// ... core logic
+let Ok(config) = load_config(user) else { return };
+process(config);
 ```
 
-### Benefits
+## 1.2 Intent Direct: Use `matches!` Macro
 
-- Eliminates nested indentation
-- Keeps core logic at base indentation level
-- Makes failure paths explicit and immediate
-
-## Matches! Macro
-
-### When to Use
-
-Use `matches!` when checking if an enum matches specific variants without extracting data.
-
-### Pattern
+**Rule**: When only checking enum variants without extracting data, prohibit verbose `match`.
 
 ```rust
 // ❌ Verbose
@@ -46,49 +36,3 @@ let is_valid = match state {
 // ✅ Concise
 let is_valid = matches!(state, State::Active | State::Pending);
 ```
-
-### Advanced Usage
-
-```rust
-// Check specific variant
-if matches!(result, Err(Error::NetworkError)) {
-    retry_connection();
-}
-
-// Complex conditions
-let should_process = matches!(
-    status,
-    Status::Ready | Status::Processing { retry: true }
-);
-```
-
-## Pattern Matching Best Practices
-
-### Destructure in let Bindings
-
-```rust
-// ❌ Unnecessary match
-match point {
-    Point { x, y } => println!("{}, {}", x, y),
-}
-
-// ✅ Destructure directly
-let Point { x, y } = point;
-println!("{}, {}", x, y);
-```
-
-### Guard Clauses with Patterns
-
-```rust
-// ✅ Combine patterns with guards
-match value {
-    Some(x) if x > 0 => process_positive(x),
-    Some(x) => process_non_positive(x),
-    None => handle_error(),
-}
-```
-
-## Related
-
-- [iterators.md](19-iterators.md) — Functional control flow with iterators
-- [errors.md](21-errors.md) — Error handling patterns

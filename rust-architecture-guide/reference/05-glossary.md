@@ -6,12 +6,12 @@ This document centralizes definitions for specialized terms used across the Rust
 
 ## Architecture & Design Terms
 
-### Monomorphization Retreat (单态化退火)
+### Monomorphization Retreat
 The deliberate switch from compile-time generic dispatch (`fn process<T: Trait>(...)`) to runtime dynamic dispatch (`fn process(Box<dyn Trait>)`) when generic monomorphization causes excessive compile time or binary bloat. This is a **pragmatic compromise** governed by P2 > P1 for non-safety-critical internal code. The term "retreat" emphasizes that generics are the default and dynamic dispatch is a fallback, not a first choice.
 
 **Decision threshold**: Switch when compile time increases >2x or binary size grows >1.5x due to monomorphization.
 
-### Sealed Trait Defense (Sealed Trait 防御)
+### Sealed Trait Defense
 A pattern where a public trait has a private super-trait (the "seal"), preventing external crates from implementing the trait. This defends the crate's invariants by ensuring only internally-approved types satisfy the trait.
 
 ```rust
@@ -22,49 +22,49 @@ pub trait Processor: private::Sealed { fn process(&self); }
 
 **Use when**: The trait is for internal dispatch only, not for user extension. Preserves the right to add methods without breaking downstream.
 
-### Zero-Cost Abstraction Boundary (零成本抽象边界)
+### Zero-Cost Abstraction Boundary
 The line between abstractions that compile away entirely (zero runtime cost) and abstractions that introduce runtime overhead. In this guide, the boundary is explicitly managed: marker traits and `PhantomData` are on the zero-cost side; `Box<dyn Trait>` and runtime validation are on the cost-bearing side. The guide mandates that crossing this boundary requires justification via the priority pyramid.
 
-### Algebraic Indexing (代数索引)
+### Algebraic Indexing
 Using Rust's type system to encode indexing invariants at compile time, eliminating runtime bounds checks. Examples include: using `NonZeroUsize` to represent known-non-zero indices, newtype wrappers that guarantee valid index ranges, and const generics for fixed-size indexing. The term emphasizes that the index validity is proven algebraically (by type construction) rather than checked dynamically.
 
-### Breakwater Principle (防波堤原则)
+### Breakwater Principle
 FFI architecture philosophy: the safe wrapper crate acts as a "breakwater" that absolutely blocks the chaos of C's raw pointers, manual memory management, and undefined behavior from reaching the business layer. All `unsafe` and raw pointers are confined to the `-sys` crate; the wrapper exposes only safe, idiomatic Rust APIs.
 
-### Symmetric Allocation (对称分配)
+### Symmetric Allocation
 FFI memory ownership rule: whoever allocates memory is responsible for deallocating it. Rust-allocated memory (`Box::into_raw`) must be reclaimed by Rust (`Box::from_raw`); C-allocated memory (`malloc`) must be freed by C (`free`). Cross-deallocation is **forbidden** as it causes undefined behavior across allocator boundaries.
 
-### Opaque Handle (不透明句柄)
+### Opaque Handle
 A pattern for FFI where a C or Rust struct is passed across the language boundary as a pointer to an incomplete type. The other side cannot inspect or modify the struct's fields — it can only hold the pointer and pass it back. Implemented in Rust as zero-sized types or private-struct pointers: `#[repr(C)] pub struct CxHandle { _private: [u8; 0] }`.
 
 ---
 
 ## Concurrency & Async Terms
 
-### Work-Stealing Scheduler (工作窃取调度器)
+### Work-Stealing Scheduler
 Tokio's default multi-threaded runtime scheduler where idle threads "steal" tasks from busy threads' queues. This provides automatic load balancing but means a single Future's execution may hop across OS threads at each `.await` point. This is why traditional thread-based logging fails in async Rust — logs from one request scatter across multiple thread streams.
 
-### Cancellation Safety (取消安全性)
+### Cancellation Safety
 Whether a Future can be safely dropped (cancelled) at an `.await` point without losing data or corrupting state. A Future is cancellation-safe if partial progress is either fully committed or fully rolled back. Example: `tokio::sync::mpsc::Sender::send` is cancellation-safe (message either sent or not); `tokio::io::AsyncWrite::write` is NOT (partial writes possible).
 
-### Select Bias (select! 偏向性)
+### Select Bias
 In `tokio::select!`, branches are checked in declaration order by default. The `biased;` directive disables random branch ordering, ensuring deterministic priority: the first branch is always checked first. Use `biased;` when one branch represents higher-priority work (e.g., shutdown signal should take precedence over new request acceptance).
 
-### Spawn Blocking Bridge (阻塞桥接)
+### Spawn Blocking Bridge
 The pattern of using `tokio::task::spawn_blocking` to offload blocking operations (file I/O, CPU-heavy computation, C library calls) from the async runtime's thread pool to a dedicated blocking thread pool. This prevents blocking operations from starving async tasks.
 
 ---
 
 ## Error Handling Terms
 
-### Error Layering (错误分层)
+### Error Layering
 The architectural separation of error handling into two distinct layers:
 - **Library layer**: Uses `thiserror` for structured, typed errors with rich context. Public API never returns `anyhow::Error`.
 - **Application layer**: Uses `anyhow` for convenient error propagation with `.context()` for business-level diagnostics.
 
 This separation ensures library errors are matchable and self-documenting, while application code stays concise.
 
-### Lazy Context vs Eager Context (惰性上下文 vs 急切上下文)
+### Lazy Context vs Eager Context
 - **Lazy context**: `.with_context(|| format!("Failed at {path}"))` — the closure is only evaluated if the Result is `Err`. Zero cost on the happy path.
 - **Eager context**: `.context(format!("Failed at {path}"))` — the string is allocated unconditionally, even on `Ok`. Wastes CPU and memory on the happy path.
 
@@ -82,14 +82,14 @@ result.context(format!("Failed to read {}", path.display()))?;
 
 ## Type System Terms
 
-### Type-Driven State Machine (类型驱动状态机)
+### Type-Driven State Machine
 Encoding business state transitions in the type system so that invalid states are unrepresentable at compile time. Each state is a distinct enum variant carrying only the data valid for that state. Transitions return `Result<Self, TransitionError>`, and the compiler rejects invalid transitions.
 
 ```rust
 enum OrderState {
-    Created(OrderInfo),    // Only has order info
-    Paid(PaymentInfo),     // Only has payment data
-    Shipped(TrackingInfo), // Only has tracking data
+    Created(OrderInfo),
+    Paid(PaymentInfo),
+    Shipped(TrackingInfo),
 }
 // Cannot call .ship() on Created — compiler enforces this
 ```
@@ -100,7 +100,7 @@ A design goal where the type system makes invalid state combinations impossible 
 ### Newtype Pattern
 Wrapping a type in a single-field struct to create a distinct type with its own invariants. Used for type-safe IDs (`struct UserId(Uuid)`), validated strings (`struct Email(String)`), and dimension types (`struct Meters(f64)`). Prevents mixing semantically different values that share the same underlying type.
 
-### Interior Mutability (内部可变性)
+### Interior Mutability
 The ability to mutate data through a shared reference (`&T`), bypassing Rust's default exclusivity rule. Achieved via `Cell<T>` (for `Copy` types, single-threaded), `RefCell<T>` (for non-`Copy` types, single-threaded, runtime borrow checking), and `Mutex<T>`/`RwLock<T>` (multi-threaded). The "interior" means the mutation is contained within the cell's own safety guarantees.
 
 ---
@@ -129,7 +129,7 @@ Using runtime profiling data (from representative workloads) to guide the compil
 
 ## Observability Terms
 
-### Span Isolation (Span 隔离)
+### Span Isolation
 Creating a `tracing::Span` for each logical request (HTTP request, message consumption) so that all events within that request are automatically correlated, even when the Future hops across threads in a work-stealing scheduler. Without Span isolation, logs from one request interleave with logs from other requests, making debugging impossible.
 
 ### W3C Trace Context
@@ -142,20 +142,20 @@ A log output mechanism (`tracing_appender::non_blocking`) that uses a lock-free 
 
 ## FFI Terms
 
-### Trampoline Pattern (跳板模式)
+### Trampoline Pattern
 The technique for passing Rust closures as C callbacks: a C-compatible "trampoline" function receives both the callback function pointer and a `user_data` pointer. The `user_data` points to the Rust closure's heap-allocated environment. The trampoline dereferences `user_data` to recover the closure and calls it. **Never** cast a Rust closure directly to a C function pointer — closures capture environment and are not C-compatible.
 
-### Panic Containment (Panic 遏制)
+### Panic Containment
 Wrapping all `extern "C"` function bodies in `std::panic::catch_unwind` to prevent Rust panics from crossing the FFI boundary. Unwinding across FFI is undefined behavior. If a panic is caught, return a C-compatible error code instead.
 
 ---
 
 ## Testing Terms
 
-### Property-Based Testing (属性测试)
+### Property-Based Testing
 Testing by stating properties (invariants) that must hold for all inputs, then letting a framework (`proptest`) generate random inputs to find counterexamples. Contrast with example-based testing which only checks specific inputs. Essential for core algorithms where edge cases are numerous.
 
-### Concurrency Model Checking (并发模型检查)
+### Concurrency Model Checking
 Using `loom` to systematically explore all possible thread interleavings of concurrent code, finding deadlocks and data races that probabilistic testing misses. `loom` replaces `std::sync::Atomic` with its own mock implementations that enumerate all possible execution orderings.
 
 ### Miri UB Detection
@@ -165,13 +165,13 @@ Running tests under the Miri interpreter to detect undefined behavior in unsafe 
 
 ## Process Terms
 
-### Progressive Architecture (渐进式架构)
+### Progressive Architecture
 The principle that architecture should adapt to the project lifecycle: MVP uses simple patterns (single struct + Option fields, runtime validation), and refactors to production patterns (type-driven state machines, compile-time guarantees) only after business logic is validated. The Rust compiler assists refactoring by identifying all affected call sites.
 
-### Deviation (规范偏离)
+### Deviation
 A formally documented exception to a rule in this guide. Marked with `// DEVIATION: reason` in code and recorded in the Decision Summary. In `strict` mode, deviations trigger additional review. Deviations are not violations — they are conscious, documented trade-offs.
 
-### Decision Summary (决策摘要)
+### Decision Summary
 A mandatory output block appended to every code generation or review response. Contains: applied rules, conflict resolutions, deviation records, and mode context. Ensures the Agent's reasoning is transparent and auditable.
 
 ---

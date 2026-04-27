@@ -1,264 +1,267 @@
-<div align="center">
-
 # Rust Coding Standards Skills
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skill Version](https://img.shields.io/badge/Skill-4.0.0-brightgreen.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-29%20Docs-orange.svg)]()
-[![Platform](https://img.shields.io/badge/Platform-Trae%20%7C%20OpenClaw-9cf.svg)]()
+[![Architecture Guide](https://img.shields.io/badge/Architecture%20Guide-v8.0.0-brightgreen.svg)]()
+[![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v5.0.0-orange.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-40%20Docs-orange.svg)]()
 
-**Rust 工程决策宪法 — 让 AI 编码助手输出确定性的、可复现的架构决策**
+**Rust Engineering Decision Wiki — Constitutional guides for AI coding assistants, covering universal engineering decisions and cloud infrastructure-specific specifications.**
 
-[快速开始](#-快速开始) · [核心特性](#-核心特性) · [命令参考](#-命令参考) · [设计哲学](#-设计哲学) · [参考文档](#-参考文档)
-
-</div>
+English | [简体中文](README.zh-CN.md)
 
 ---
 
-## 📖 项目简介
+## Project Overview
 
-Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决策指南 Skill**，覆盖从架构决策、编码风格到生产最佳实践的完整链路。
+Rust Coding Standards Skills is a **Rust engineering decision guide skill collection** for AI coding assistants, containing a universal engineering constitution and cloud infrastructure-specific specifications, covering the complete chain from architecture decisions, coding style, to production best practices.
 
-本 Skill 作为 Agent 的**宪法性基础**，确保每次代码生成、审查、重构都遵循统一的优先级判定和冲突解决框架，避免"看心情写代码"。
+This skill collection serves as the Agent's **constitutional foundation**, ensuring every code generation, review, and refactoring follows a unified priority judgment and conflict resolution framework.
 
-### 🎯 解决的问题
+### Problems Solved
 
-| 没有 Skill | 有本 Skill |
-|-----------|-----------|
-| AI 随意选择 `unwrap` 还是 `expect` | 按 P0/P1 优先级自动判定 |
-| 泛型单态化爆炸无人把关 | 三级退火策略自动降级 |
-| 错误处理库级/应用级混用 | `thiserror` / `anyhow` 分层隔离 |
-| 并发模型凭直觉选 | MPSC bounded + 最小锁区 + 禁止 Mutex 跨 await |
-| API 演进破坏兼容性 | `#[non_exhaustive]` + Sealed Trait 防御 |
-
----
-
-## ✨ 核心特性
-
-- 🏛️ **四级优先级金字塔** — P0 安全 → P1 可维护 → P2 编译时 → P3 运行时性能，冲突时高优先级否决低优先级
-- 🔧 **三级执行模式** — `rapid`（原型）/ `standard`（默认）/ `strict`（发布），按项目阶段灵活执行
-- 🧬 **类型驱动架构** — 状态机、Newtype、零成本抽象边界（Marker Traits / PhantomData / 单态化退火）
-- 📦 **所有权分层策略** — 业务层 Owned + `.clone()` 解耦，热点层 `Cow`/`Bytes` 零拷贝
-- ⚠️ **错误处理分层** — 库级 `thiserror` 结构化，应用级 `anyhow` + 惰性上下文 + 重试/退避/熔断
-- 🔄 **并发与异步规范** — 有界通道背压、RwLock/parking_lot 策略、死锁预防、`Pin`/`Unpin` 语义、`select!`/`join!` 组合、取消安全
-- 🛡️ **API 演进防御** — `#[non_exhaustive]`、Sealed Trait、`#[deprecated]` 迁移、Trait Object Safety、Builder 必填字段
-- 🔍 **可观测性三件套** — `tracing::instrument` + 零开销 Metrics + Panic Hook → abort
-- 🧪 **高阶质量保证** — proptest 属性测试 + cargo fuzz + Loom 并发模型 + Miri UB 检测
-- ⚡ **性能深度调优** — jemalloc/mimalloc、SoA 布局、SmallVec 栈分配、PGO、False Sharing 防御、SIMD、LTO
-- 🔗 **FFI 安全边界** — `-sys` crate 分离、`cxx` 安全 C++ 互操作、回调 trampoline 模式、`catch_unwind`
-- 🏗️ **工程构建规范** — Cargo Workspace 分治、Feature Flags 隔离、`cargo deny` 供应链审计、rustfmt 强制、CI 流水线
-- 🤖 **Agent 自检指令** — Trade-off 分析 + 所有权/并发/错误/安全四类审查清单（66 项）
-- 📝 **强制输出契约** — 每次输出附带 Decision Summary，记录规则应用、冲突判定、偏离理由
-- 📖 **集中术语表** — 所有专业术语统一定义，避免 Agent 自行解释产生偏差
-- 🚫 **规范偏离流程** — `// DEVIATION: reason` 标注 + 按模式审查 + 周期审计
+| Without Skill | With Skill |
+|--------------|------------|
+| AI randomly chooses `unwrap` vs `expect` | Auto-judged by P0/P1 priority |
+| Generic monomorphization explosion unchecked | Three-level annealing strategy auto-downgrade |
+| Error handling library/app level mixed | `thiserror` / `anyhow` layered isolation |
+| Concurrency model chosen by intuition | MPSC bounded + minimum lock scope + prohibit Mutex across await |
+| API evolution breaks compatibility | `#[non_exhaustive]` + Sealed Trait defense |
+| I/O model selection without basis | Tokio epoll vs io_uring selection decision tree |
+| Backpressure mechanism missing | Bounded channels, Semaphore, 503 propagation |
+| Consensus algorithm implementation non-standard | Deterministic state machines (Raft/Paxos Apply), prohibit time/randomness dependencies |
 
 ---
 
-## 🚀 快速开始
+## Core Features
 
-### 安装
+### rust-architecture-guide — Universal Engineering Constitution
+
+Applicable to **all Rust projects**, providing priority decision framework, architecture patterns, and coding style.
+
+- **Four-level priority pyramid** — P0 Safety → P1 Maintainability → P2 Compile Time → P3 Performance
+- **Three execution modes** — `rapid` (prototype) / `standard` (default) / `strict` (production)
+- **Type-driven architecture** — State machines, Newtype, zero-cost abstraction boundaries
+- **Ownership layering strategy** — Business layer Owned + `.clone()` decoupling, hotpath `Cow`/`Bytes` zero-copy
+- **Error handling layering** — Library-level `thiserror` structured, application-level `anyhow` + lazy context
+- **Concurrency & async specifications** — Bounded channel backpressure, RwLock/parking_lot strategy, `Pin`/`Unpin` semantics
+- **API evolution defense** — `#[non_exhaustive]`, Sealed Trait, `#[deprecated]` migration
+- **Advanced QA** — proptest + cargo fuzz + Loom + Miri
+- **Performance deep tuning** — jemalloc/mimalloc, SoA layout, SmallVec, PGO, SIMD, LTO
+- **FFI safety boundary** — `-sys` crate separation, `cxx` safe C++ interop
+- **Engineering build specifications** — Cargo Workspace division, Feature Flags isolation, `cargo deny` audit
+- **Jeet Kune Do coding style** — Intercepting Boilerplate, Economy of Motion, Hardware Sympathy
+- **Agent self-check directives** — Decision Summary output contract
+
+Full document index: [rust-architecture-guide/README.md](rust-architecture-guide/README.md)
+
+---
+
+### rust-systems-cloud-infra-guide — Cloud Infrastructure Specific
+
+Applicable to **database kernels, distributed storage, high-performance gateways, container runtimes, eBPF control planes, OS components** and other long-running systems. Vertical deepening of the universal constitution.
+
+**Environment assumptions**: Long-running nodes (uptime > 1 year), 10GbE+ networks, multi-NUMA architectures.
+
+- **I/O model decision** — Tokio epoll vs io_uring vs monoio selection decision tree
+- **Zero-copy pipeline** — `splice`/`sendfile`/`copy_file_range`, `bytes::Bytes` O(1) clone
+- **Backpressure mechanism** — Bounded channels, Semaphore, 503 propagation, absolute prohibition of unbounded channels
+- **Cancellation safety** — Non-idempotent writes must use `spawn` + `oneshot`
+- **Graceful shutdown** — `SIGTERM`/`SIGINT` capture, CancellationToken, fsync WAL
+- **Consensus algorithm specification** — Deterministic state machines, prohibit `Instant::now()`, `rand`, `HashMap` ordering
+- **Syscall wrappers** — `rustix` wrapper + eBPF integration
+- **Advanced memory architecture** — Arena (`bumpalo`), Slab pre-allocation (`mmap` + `mlock`), NUMA/PMEM
+- **Lock-free concurrency** — RCU (`arc-swap`), Epoch reclamation (`crossbeam-epoch`), memory ordering precision
+- **Vectorized execution** — SIMD instructions (`std::simd`/AVX-512), Bitmask branch elimination, SoA columnar layout
+- **Memory exhaustion backpressure** — `Result<T, AllocError>` return, 503 rejection, prohibit `panic!`
+- **Mandatory CI Lints** — 11 strict checks (`await_holding_lock`, `unwrap_used`, etc.)
+
+Full document index: [rust-systems-cloud-infra-guide/README.md](rust-systems-cloud-infra-guide/README.md)
+
+---
+
+## Quick Start
+
+### Installation
 
 ```bash
-# 方式一：克隆到工作空间 skills 目录（推荐）
+# Option 1: Clone to workspace skills directory (recommended)
 git clone https://github.com/smile9493/Rust_Coding_Standards_Skills.git
 cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
+cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills/
 
-# 方式二：直接在项目中使用
-# 将 rust-architecture-guide/ 目录复制到项目的 .trae/skills/ 下
+# Option 2: Use directly in a project
+# Copy both directories to the project's .trae/skills/
 ```
 
-### 使用
+### Usage
 
-在 Trae IDE 中直接调用：
+Invoke directly in Trae IDE:
 
 ```
 /rust-architecture-guide priority my_conflict
 /rust-architecture-guide state-machine Order
-/rust-architecture-guide review src/
+/rust-systems-cloud-infra-guide io-model
+/rust-systems-cloud-infra-guide backpressure
 ```
 
-或自然语言触发：
+Or trigger with natural language:
 
 ```
-帮我用类型驱动状态机重构 Order 实体
-这个模块的错误处理应该用 thiserror 还是 anyhow？
-审查这段并发代码有没有 Mutex 跨 await 的问题
+Help me refactor the Order entity with type-driven state machine
+Should this module use thiserror or anyhow for error handling?
+Review this concurrent code for Mutex across await issues
+Optimize this storage engine's I/O path with io_uring
 ```
 
 ---
 
-## 📋 命令参考
+## Skills Index
 
-### Strategy — 战略决策
+### rust-architecture-guide — Universal Engineering Constitution
 
-| 命令 | 说明 | 参考文档 |
-|------|------|---------|
-| `mode` | 设置执行模式 (rapid/standard/strict) | `00-mode-guide.md` |
-| `priority` | 应用优先级矩阵判定冲突 | `01-priority-pyramid.md` |
-| `conflict` | 解决典型冲突场景 | `02-conflict-resolution.md` |
-| `progressive` | MVP → Production 渐进式架构 | `03-progressive-architecture.md` |
-| `glossary` | 查询术语定义 | `05-glossary.md` |
-| `deviation` | 记录或审查规范偏离 | `06-deviation-process.md` |
+| Layer | Coverage |
+|-------|----------|
+| **Execution Mode** | `rapid` (prototype) → `standard` (default) → `strict` (production) |
+| **P0 Safety** | Memory safety, data consistency, unsafe specifications, FFI boundaries, Miri verification |
+| **P1 Maintainability** | Semantic naming, ownership transfer, trait decoupling, Owned > complex lifetimes |
+| **P2 Compile Time** | `Box<dyn Trait>` downgrade, workspace division, reject >2x compile growth |
+| **P3 Performance** | SoA layout, SIMD, profiling-driven optimization (proven bottlenecks only) |
+| **Zero-cost Abstraction** | Marker Traits interception, PhantomData cautious use, monomorphization annealing |
+| **Coding Style** | `let else`, iterator chaining, `From`/`Into`, interior mutability |
+| **Architecture Patterns** | State machines, Newtype, API evolution, error layering |
+| **Async Depth** | `Pin`/`Unpin`, `select!`/`join!`, cancellation safety, custom executors |
+| **QA** | proptest property testing, cargo fuzz, Loom concurrency model, Miri UB detection |
+| **Metaprogramming** | Declarative/procedural macros, const generics, `const fn` |
+| **FFI Interop** | Three-layer isolation, opaque pointers, panic containment, repr(C) |
+| **Toolchain** | CI, Clippy, rustfmt, cargo deny, workspace, feature flags |
 
-### Design — 架构设计
-
-| 命令 | 说明 | 参考文档 |
-|------|------|---------|
-| `state-machine` | 类型驱动状态机设计 | `state-machine.md` |
-| `newtype` | Newtype 模式与类型安全 ID | `newtype.md` |
-| `data-arch` | 数据架构与所有权策略 | `data-architecture.md` |
-| `error-handling` | 错误处理分层规范 | `error-handling.md` |
-| `concurrency` | 并发模型选择与规范 | `concurrency.md` |
-| `async` | 异步运行时与规范 | `async-internals.md` |
-| `select` | `select!`/`join!` 组合与取消安全 | `async-internals.md` |
-| `cancellation` | 异步取消语义与安全模式 | `async-internals.md` |
-| `api-design` | 公共 API 边界设计 | `api-design.md` |
-| `non-exhaustive` | `#[non_exhaustive]` 向前兼容 | `api-design.md` |
-| `sealed-trait` | Sealed Trait 模式 | `api-design.md` |
-| `deprecated` | `#[deprecated]` 迁移策略 | `api-design.md` |
-| `object-safety` | Trait Object Safety 规则 | `api-design.md` |
-
-### Refactor — 重构路径
-
-| 命令 | 说明 | 参考文档 |
-|------|------|---------|
-| `control-flow` | 控制流模式重构 | `control-flow.md` |
-| `iterators` | 迭代器链式重构 | `iterators.md` |
-| `traits` | 惯用 Trait 模式 | `traits.md` |
-| `borrowing` | 借用与可变性优化 | `borrowing.md` |
-| `interior-mutability` | 内部可变性模式（Cell/RefCell/OnceCell） | `borrowing.md` |
-
-### Evaluate — 质量评估
-
-| 命令 | 说明 | 参考文档 |
-|------|------|---------|
-| `review` | 综合代码审查 | `review.md` |
-| `property-test` | 属性测试策略 | `advanced-testing.md` |
-| `fuzz` | Fuzz 测试策略 | `advanced-testing.md` |
-| `miri` | Miri UB 检测 | `advanced-testing.md` |
-| `performance` | 性能调优指南 | `performance-tuning.md` |
-| `smallvec` | 栈分配小集合策略 | `performance-tuning.md` |
-| `pgo` | Profile-Guided Optimization | `performance-tuning.md` |
-
-### Configure — 工程配置
-
-| 命令 | 说明 | 参考文档 |
-|------|------|---------|
-| `toolchain` | 工具链与 CI 配置 | `toolchain.md` |
-| `workspace` | Cargo Workspace 分治 | `toolchain.md` |
-| `feature-flags` | Feature Flags 隔离 | `toolchain.md` |
-| `cargo-deny` | 供应链安全审计 | `toolchain.md` |
-| `rustfmt` | 代码格式化配置 | `toolchain.md` |
-| `ci` | CI 流水线设计 | `toolchain.md` |
-| `observability` | 可观测性配置 | `observability.md` |
-| `ffi` / `interop` | FFI 与跨语言互操作 | `ffi-interop.md` |
-| `cxx` | 安全 C++ 互操作 | `ffi-interop.md` |
-| `metaprogramming` | 宏与元编程规范 | `metaprogramming.md` |
+Entry: [SKILL.md](rust-architecture-guide/SKILL.md) · Document Index: [README.md](rust-architecture-guide/README.md)
 
 ---
 
-## 🧠 设计哲学
+### rust-systems-cloud-infra-guide — Cloud Infrastructure Specific
 
-### 务实主义优于教条主义
+| Domain | Coverage |
+|--------|----------|
+| **I/O Model** | Tokio epoll vs io_uring vs monoio selection, mixed runtime red line |
+| **Zero-Copy** | `splice`, `sendfile`, `bytes::Bytes`, Direct I/O (`O_DIRECT` + alignment) |
+| **Backpressure** | Bounded channels, Semaphore, 503 propagation, prohibit unbounded channels |
+| **Cancellation Safety** | Non-idempotent writes `spawn` + `oneshot`, `select!` safety |
+| **Syscalls** | `rustix` wrappers, eBPF integration (`aya`/`libbpf-rs`), error code mapping |
+| **Consensus** | Deterministic state machines, prohibit `Instant::now()`/`rand`/`HashMap` ordering |
+| **Resilience** | Graceful shutdown (`SIGTERM` → CancellationToken → fsync WAL), circuit breaker, Lock Poisoning |
+| **Observability** | Tracing + Metrics + Panic Hook, `turmoil` network fault simulation |
+| **Advanced Memory** | Arena (`bumpalo`), Slab (`mmap`+`mlock`), NUMA/PMEM, `allocator_api2` |
+| **Lock-Free** | RCU (`arc-swap`), Epoch (`crossbeam-epoch`), memory ordering (Release+Acquire/Relaxed) |
+| **Vectorized** | SIMD (`std::simd`/AVX-512), Bitmask branch elimination, SoA columnar |
+| **FFI Safety** | `catch_unwind`, error code return, trampoline pattern |
+| **Memory Exhaustion** | `Result<T, AllocError>` + backpressure, prohibit `panic!` |
+| **CI Lints** | 11 strict checks (`await_holding_lock`, `unwrap_used`, etc.) |
 
-> **系统边界与热点路径追求极致，内部流程与冷路径释放心智负担。**
+Entry: [SKILL.md](rust-systems-cloud-infra-guide/SKILL.md) · Document Index: [README.md](rust-systems-cloud-infra-guide/README.md)
 
-### 优先级金字塔
+---
+
+## Relationship
 
 ```
-P0: 安全与正确性（内存安全、数据一致性）— 不可妥协
+rust-architecture-guide (Universal Constitution)
+          │
+          ├── Four-level priority framework (P0 → P3)
+          ├── Three execution modes (rapid / standard / strict)
+          ├── Jeet Kune Do coding style
+          ├── Agent self-check list + Decision Summary
+          │
+          └──► rust-systems-cloud-infra-guide (Vertical Deepening)
+                      │
+                      ├── Core Philosophy
+                      │   ├── Mechanical Sympathy — Software aligned with hardware
+                      │   ├── Determinism — Eliminate non-determinism
+                      │   ├── Resilience — Graceful degradation over crash
+                      │   └── Jeet Kune Do — One-strike memory lifecycle
+                      │
+                      ├── I/O Model (epoll vs io_uring vs monoio)
+                      ├── Zero-copy pipeline (splice, sendfile, bytes::Bytes)
+                      ├── Bounded resource backpressure + cancellation safety
+                      ├── Deterministic state machines (consensus algorithms)
+                      ├── Graceful shutdown (CancellationToken flow)
+                      ├── Advanced memory architecture (Arena / Slab / NUMA / PMEM / Allocator API)
+                      ├── Lock-free concurrency (RCU + Epoch + memory ordering)
+                      ├── Vectorized execution (SIMD + SoA)
+                      └── Mandatory CI Lints (11 strict checks)
+```
+
+- **`rust-architecture-guide`** (v8.0.0): Constitutional foundation for all Rust engineering
+- **`rust-systems-cloud-infra-guide`** (v5.0.0): Cloud-native scenario **amendment**, adding system-level red lines and hardware alignment constraints on top of P0 safety
+- Complementary use: The universal constitution provides the priority framework; the cloud infrastructure guide vertically deepens on top of it
+
+---
+
+## Design Philosophy
+
+### Pragmatism Over Dogmatism
+
+> **Pursue excellence at system boundaries and hot paths; release mental load for internal flows and cold paths.**
+
+### Priority Pyramid
+
+```
+P0: Safety & Correctness (memory safety, data consistency) — Non-negotiable
                   ↓
-P1: 可维护性（可读性、局部复杂度控制）— 默认追求
+P1: Maintainability (readability, local complexity control) — Default pursuit
                   ↓
-P2: 编译时（构建速度、CI/CD 效率）— 测量后决策
+P2: Compile Time (build speed, CI/CD efficiency) — Measure then decide
                   ↓
-P3: 运行时性能（仅限已证明的瓶颈）— 需 Profiler 数据
+P3: Runtime Performance (proven bottlenecks only) — Requires Profiler data
 ```
 
-### 冲突解决规则
+### Conflict Resolution Rules
 
-- **高优先级否决低优先级**：P0 安全要求否决 P3 性能优化
-- **同级取更简方案**：两个 P1 方案冲突，选更简单的
-- **P3 需要证据**：任何性能优化必须附带 Profiler 数据
+- **Higher priority vetoes lower**: P0 safety requirements veto P3 performance optimization
+- **Same level: choose simpler**: Two P1 solutions conflict, pick the simpler one
+- **P3 requires evidence**: Any performance optimization must include Profiler data
 
-### Agent 决策日志
+### Agent Decision Log
 
-每次对话生成 **Decision Summary**，记录：
-1. 当前执行模式 (rapid/standard/strict)
-2. 面临的冲突与优先级判定
-3. 选择的方案与理由
-4. 被否决的方案与原因
-5. 规范偏离记录（如有）
+Each conversation generates a **Decision Summary**, recording:
+1. Current execution mode (rapid/standard/strict)
+2. Conflicts faced and priority judgments
+3. Chosen solution and rationale
+4. Rejected solutions and reasons
+5. Deviation records (if any)
 
 ---
 
-## 📚 参考文档
-
-`reference/` 目录包含 29 份深度参考文档，按决策流程顺序编号：
-
-| 领域 | 文档 | 覆盖范围 |
-|------|------|---------|
-| **执行与战略** | `00-mode-guide.md` `01-priority-pyramid.md` `02-conflict-resolution.md` `03-progressive-architecture.md` `04-trade-offs.md` `05-glossary.md` `06-deviation-process.md` | 执行模式、优先级矩阵、冲突解决、渐进式架构、权衡分析、术语表、偏离流程 |
-| **架构设计** | `07-state-machine.md` `08-newtype.md` `09-data-architecture.md` `10-error-handling.md` `11-concurrency.md` `13-api-design.md` | 状态机、Newtype、数据架构、错误处理（重试/退避/分类）、并发（RwLock/parking_lot/死锁）、API 边界（deprecated/object safety） |
-| **异步与互操作** | `12-async-internals.md` `15-ffi-interop.md` | Future 状态机、select!/join!、取消安全、Pin/Unpin、cxx 安全 C++ 互操作、回调 trampoline |
-| **编码风格** | `18-control-flow.md` `19-iterators.md` `20-traits.md` `21-errors.md` `22-data-struct.md` `23-borrowing.md` | 控制流、迭代器（自定义/高级组合子）、Trait 惯用法、错误组合子、数据结构（repr/enum 布局/derive）、借用（内部可变性/分割借用） |
-| **性能与质量** | `25-performance-tuning.md` `26-advanced-testing.md` `16-observability.md` | 内存/缓存/锁自由/编译时/unsafe 调优、SmallVec/PGO、属性/模糊/并发/UB 测试、Tracing/Metrics/Panic |
-| **元编程与工具链** | `14-metaprogramming.md` `17-toolchain.md` | 声明/过程宏、const 泛型、Clippy/rustfmt/Workspace/Feature Flags/cargo deny/CI 流水线 |
-| **审查与示例** | `27-review.md` `24-refactor.md` `28-usage-examples.md` | 综合审查清单、重构路径、使用示例 |
-
----
-
-## 📁 项目结构
+## Project Structure
 
 ```
-rust-architecture-guide/
-  SKILL.md                          # Skill 入口（宪法性定义 + 完整指南）
-  reference/                        # 29 份参考文档（按决策流程编号）
-    00-mode-guide.md                # 执行模式 (rapid/standard/strict)
-    01-priority-pyramid.md          # 四级优先级体系
-    02-conflict-resolution.md       # 典型冲突与解决方案
-    03-progressive-architecture.md  # MVP → Production 渐进迁移
-    04-trade-offs.md                # 权衡决策记录
-    05-glossary.md                  # 集中术语表
-    06-deviation-process.md         # 规范偏离流程
-    07-state-machine.md             # 类型驱动状态机
-    08-newtype.md                   # 类型安全 ID 与凭证
-    09-data-architecture.md         # 所有权、克隆、内存布局
-    10-error-handling.md            # 库级 vs 应用级错误策略
-    11-concurrency.md               # 消息传递、通道、锁、RwLock、parking_lot、死锁预防
-    12-async-internals.md           # 异步内幕、select!/join!、取消安全、Pin/Unpin、自定义执行器
-    13-api-design.md                # 公共 API 边界、#[non_exhaustive]、Sealed Trait、#[deprecated]、Object Safety
-    14-metaprogramming.md           # 声明/过程宏、const 泛型
-    15-ffi-interop.md               # FFI 边界、cxx 安全 C++ 互操作、回调 trampoline
-    16-observability.md             # Tracing、Metrics、Panic Hook、Coredump
-    17-toolchain.md                 # CI、Clippy、rustfmt、unsafe、Workspace、Feature Flags、cargo deny
-    18-control-flow.md              # 控制流模式
-    19-iterators.md                 # 迭代器最佳实践
-    20-traits.md                    # Trait 惯用法 + 零成本抽象边界
-    21-errors.md                    # 错误组合子
-    22-data-struct.md               # 数据结构模式、#[repr] 注解、enum 布局、derive 规范
-    23-borrowing.md                 # 借用与可变性、内部可变性、分割借用
-    24-refactor.md                  # 重构路径
-    25-performance-tuning.md        # 完整性能调优指南（SmallVec、PGO）
-    26-advanced-testing.md          # 属性测试、Fuzzing、Loom、Miri
-    27-review.md                    # 综合审查清单
-    28-usage-examples.md            # 使用示例
+├── rust-architecture-guide/
+│   ├── SKILL.md                          # Skill entry
+│   ├── README.md                         # Document index (detailed)
+│   └── reference/                        # 29 reference documents
+│
+├── rust-systems-cloud-infra-guide/
+│   ├── SKILL.md                          # Skill entry
+│   ├── README.md                         # Document index (detailed)
+│   └── reference/                        # 11 reference documents
+│
+└── README.md                              # This file — Wiki index (overview)
 ```
 
 ---
 
-## 📄 许可证
+## License
 
 [MIT](LICENSE)
 
 ---
 
-## 🙏 致谢
+## Acknowledgments
 
-本 Skill 的规范体系综合了以下来源的工程实践：
+This skill collection's specification system synthesizes engineering practices from the following sources:
 
-- [Rust 官方文档](https://doc.rust-lang.org/) — 语言规范与标准库 API
-- [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) — 公共 API 设计检查清单
-- [Too Many Lists](https://rust-unofficial.github.io/too-many-lists/) — unsafe 与指针安全教程
-- [Tokio 教程](https://tokio.rs/tokio/tutorial) — 异步运行时最佳实践
-- 社区大量生产级 Rust 项目的架构经验总结
+- [Rust Official Documentation](https://doc.rust-lang.org/) — Language specification and standard library API
+- [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) — Public API design checklist
+- [Too Many Lists](https://rust-unofficial.github.io/too-many-lists/) — Unsafe and pointer safety tutorial
+- [Tokio Tutorial](https://tokio.rs/tokio/tutorial) — Async runtime best practices
+- Architecture experience summaries from numerous production-grade Rust projects in the community

@@ -1,0 +1,177 @@
+# Rust 系统与云基础设施指南
+
+[![Version](https://img.shields.io/badge/Version-v5.0.0-orange.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-11%20Docs-blue.svg)]()
+[![CI Lints](https://img.shields.io/badge/CI%20Lints-11%20Strict-red.svg)]()
+
+**云原生基础设施 Rust 指南** — 面向数据库内核、分布式存储、高性能网关、容器运行时、eBPF 控制平面、OS 组件等长时间运行系统的垂直深化指南。
+
+[English](README.md) | 简体中文
+
+---
+
+## 概述
+
+本指南是 [`rust-architecture-guide`](../rust-architecture-guide/) 的**垂直深化补充**，针对：
+
+- 数据库内核 & 存储引擎
+- 分布式消息队列
+- 高性能网关 / 代理
+- 容器运行时、eBPF 控制平面
+- OS 组件
+
+**环境假设**：长时间运行节点（uptime > 1 年）、10GbE+ 网络、多 NUMA 架构。
+
+## 核心哲学
+
+| 原则 | 描述 |
+|------|------|
+| **Mechanical Sympathy** | 软件设计对齐硬件物理特性（CPU 缓存、NUMA、PMEM、内核 I/O 栈） |
+| **Determinism** | 消除非确定性（时间、随机、HashMap 顺序），确保可复现状态机 |
+| **Resilience** | 优雅降级 > 崩溃，背压 > OOM，结构化并发 > 泄漏 |
+| **Jeet Kune Do** | 一击内存生命周期（Arena），像水流一样适配硬件通道（Allocator API） |
+
+## 红线（绝对禁止）
+
+| 类别 | 禁止 | 强制 |
+|------|------|------|
+| **通道** | `std::sync::mpsc::channel()` 无界 | `tokio::sync::mpsc::channel(LIMIT)` |
+| **取消** | `select!` 中直接非幂等写 | `spawn` + `oneshot` |
+| **时间** | 状态机 Apply 中使用 `Instant::now()` | Leader 提议的时间戳 |
+| **关闭** | `SIGTERM` 时立即退出 | 优雅关闭（cancel token → wait inflight → fsync → exit） |
+| **FFI** | `extern` 函数不加 `catch_unwind` | 捕获 panic + 返回错误码 |
+| **单次请求分配** | AST 节点用全局堆 | Arena（`bumpalo`） |
+| **Arena 逃逸** | 保存 Arena 指针到外部静态变量 | 需要时 Clone 到全局堆 |
+| **夜间分配器** | 生产环境用 `std::alloc::Allocator` | `allocator_api2`（稳定） |
+| **碎片分配** | FFI 边界直接 `alloc::alloc` | 预分配 Slab（`mmap` + `mlock`） |
+| **分配 Panic** | 分配失败直接 `panic!` | `Result<T, AllocError>` + 背压 |
+| **读重路径锁** | 100+ 核读路径用 `RwLock`/`Mutex` | `arc-swap`（RCU 零阻塞读） |
+| **无锁回收** | 无保护直接 `drop` 共享指针 | `crossbeam-epoch` Guard |
+| **内存序** | 盲目用 `Ordering::SeqCst` | `Release`+`Acquire` 对；计数器用 `Relaxed` |
+| **逐字节循环** | 核心解析循环逐字节 `if byte == b'\n'` | SIMD bitmask 批量比较 |
+| **AoS 聚合** | 大批量聚合用 Array of Structs | SoA（Struct of Arrays）列式布局 |
+
+---
+
+## 文档索引
+
+`reference/` 目录包含 **11 份深度参考文档**，覆盖云基础设施核心领域：
+
+### 一、I/O 与零拷贝
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **01** | [io-model.md](reference/01-io-model.md) | I/O 模型选型：Tokio epoll vs io_uring vs monoio 决策树 + 零拷贝管道（`splice`/`sendfile`/`copy_file_range` via `rustix`）+ `bytes::Bytes` O(1) clone + Direct I/O（`O_DIRECT` + 对齐）+ 混合运行时红线 |
+
+### 二、背压与取消安全
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **02** | [backpressure.md](reference/02-backpressure.md) | 有界通道 + `Semaphore` 全局并发限制 + HTTP 503 `Retry-After` 传播 + 取消安全（非幂等写 `spawn` + `oneshot`）+ 熔断器 |
+
+### 三、系统调用与 eBPF
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **03** | [syscall.md](reference/03-syscall.md) | 封装优先级（`rustix` → `nix` → `libc`）+ eBPF 集成（`aya`/`libbpf-rs`）+ 错误码映射 |
+
+### 四、共识与确定性
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **04** | [consensus.md](reference/04-consensus.md) | Raft/Paxos Apply 绝对确定性 + `BTreeMap`/`IndexMap` 替代 + 状态指纹验证 + 零拷贝序列化 |
+
+### 五、韧性设计
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **05** | [resilience.md](reference/05-resilience.md) | 优雅关闭流程 + Lock Poisoning 处理 + K8s 健康检查 + 失败降级矩阵 |
+
+### 六、可观测性
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **06** | [observability.md](reference/06-observability.md) | 结构化日志 + 热路径静默 + `loom` 确定性并发测试 + `turmoil` 网络故障模拟 + I/O 错误注入 |
+
+### 七、无锁并发
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **07** | [lock-free.md](reference/07-lock-free.md) | RCU 模式（`arc-swap`）+ Epoch 回收（`crossbeam-epoch`）+ 内存序精确控制 |
+
+### 八、向量化执行
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **08** | [vectorized.md](reference/08-vectorized.md) | SIMD 指令 + Bitmask 消除分支 + SoA 列式布局 + LLVM 自动向量化 |
+
+### 九、代码规范
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **09** | [code-style.md](reference/09-code-style.md) | 容量感知 + 热路径零分配 + SAFETY 注释强制 + FFI `catch_unwind` + 禁止 Mutex 跨 `.await` + 穷举模式匹配 |
+
+### 十、CI 检查
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **10** | [ci-lints.md](reference/10-ci-lints.md) | 11 项 deny-level lints + test 环境 `cfg_attr` 放宽 + Cargo.toml `[lints]` 配置 |
+
+### 十一、高级内存
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **11** | [memory-advanced.md](reference/11-memory-advanced.md) | Arena + Slab 预分配 + Allocator API + 内存耗尽背压 |
+
+---
+
+## 关系
+
+```
+rust-architecture-guide (通用宪法)
+          │
+          └──► rust-systems-cloud-infra-guide (垂直深化)
+                      │
+                      ├── I/O 模型：Tokio vs io_uring
+                      ├── 背压：有界通道 + Semaphore
+                      ├── 系统调用：rustix 封装
+                      ├── 共识：确定性状态机
+                      ├── 韧性：优雅关闭 + 熔断
+                      ├── 可观测性：tracing + metrics
+                      ├── 无锁：RCU + Epoch + 内存序
+                      ├── 向量化：SIMD + SoA
+                      └── 内存：Arena + Slab + Allocator API
+```
+
+- 本指南依赖于 `rust-architecture-guide` 的 P0-P3 优先级框架和执行模式
+- 本指南在 P0 安全之上为云原生场景增加系统级红线和硬件对齐约束
+- **两者互补使用**：通用宪法是基础，本指南是云基础设施专用附加条款
+
+---
+
+## 文件结构
+
+```
+rust-systems-cloud-infra-guide/
+├── SKILL.md                          # Skill 入口（Agent 指令）
+├── README.md                         # 文档索引（英文）
+├── README.zh-CN.md                   # 文档索引（中文）
+└── reference/                        # 11 份深度参考文档
+    ├── 01-io-model.md               # I/O 模型与零拷贝
+    ├── 02-backpressure.md           # 背压与取消安全
+    ├── 03-syscall.md                # 系统调用封装
+    ├── 04-consensus.md              # 共识与确定性
+    ├── 05-resilience.md             # 韧性设计
+    ├── 06-observability.md          # 可观测性
+    ├── 07-lock-free.md              # 无锁并发
+    ├── 08-vectorized.md             # 向量化执行
+    ├── 09-code-style.md             # 代码规范
+    ├── 10-ci-lints.md               # CI 检查
+    └── 11-memory-advanced.md        # 高级内存
+```
+
+---
+
+## 许可证
+
+[MIT](../LICENSE)
