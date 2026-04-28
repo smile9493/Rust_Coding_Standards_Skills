@@ -1,12 +1,19 @@
 # Lock-free Concurrency & Memory Reclamation
 
-## Profile
+> **📚 Prerequisites**: This document assumes mastery of basic lock spectrum and decision tree from [`11-concurrency.md`](../../rust-architecture-guide/reference/11-concurrency.md) §4 (Atomic Operations and Memory Ordering).
+> 
+> **🔺 Deepening Direction**: Hardening general lock strategies for 128+ cores, 10GbE scenarios, introducing RCU and lock-free structures with formal verification.
+> 
+> **📋 Document Profile**:
+> - **Domain**: 10GbE NIC packet routing, database global metadata trees, HFT order books
+> - **Environment**: 128+ core CPU, extremely high concurrent reads, ultra-low latency requirements
+> - **Mode**: `standard` (awareness) → `strict` (mandatory implementation)
+> - **Prerequisites**: [`11-concurrency.md`](../../rust-architecture-guide/reference/11-concurrency.md), [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md)
 
-* **Domain**: 10GbE NIC packet routing, database global metadata trees, HFT order books
-* **Environment**: 128+ core CPU, extremely high concurrent reads, ultra-low latency requirements
-* **Philosophy**:
-    * **Dialectical Materialism (Space vs Time)**: Acknowledge read and write as inherent contradictions. Resolve concurrency conflicts through spatial copying (RCU), and resolve old object destruction through temporal partitioning (Epoch).
-    * **Jeet Kune Do (Be Water)**: Read operations must "flow like water" — absolute zero blocking, bypassing all mutex obstacles.
+## Philosophy
+
+* **Dialectical Materialism (Space vs Time)**: Acknowledge read and write as inherent contradictions. Resolve concurrency conflicts through spatial copying (RCU), and resolve old object destruction through temporal partitioning (Epoch).
+* **Jeet Kune Do (Be Water)**: Read operations must "flow like water" — absolute zero blocking, bypassing all mutex obstacles.
 
 ---
 

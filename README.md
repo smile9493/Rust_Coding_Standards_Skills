@@ -11,6 +11,24 @@ English | [简体中文](README.zh-CN.md)
 
 ---
 
+## 📖 About the Naming Style in This Guide
+
+This specification uses metaphors from **Eastern philosophy and martial arts** to describe Rust engineering principles. This is **not advocating violence or any specific ideology**, but borrowing the concept of **"intercepting attacks at their weakest point with minimal force"** to describe compile-time error prevention mechanisms.
+
+| Metaphor | Engineering Equivalent | Core Concept |
+|----------|----------------------|--------------|
+| **"Jeet Kune Do" (截拳道)** | Compile-time Defense | Intercept bugs before runtime through type systems |
+| **"Dialectical Materialism"** | Hardware Sympathy | Acknowledge physical laws, Safe/Unsafe unity of opposites |
+| **"One-Inch Punch" (寸劲)** | Batch Deallocation | Maximum effect with minimal cost (Arena, zero-copy) |
+| **"Economy of Motion"** | Zero-Cost Abstraction | Every line of code points directly to intent |
+| **"Intercepting Fist"** | Parse, Don't Validate | Stop errors at compilation, not runtime |
+
+> 💡 **For Global Readers**: If you encounter unfamiliar philosophical terms, please refer to [`glossary.md`](rust-architecture-guide/reference/05-glossary.md) for detailed definitions with "Engineering Translation" explanations.
+
+> 🤖 **For AI Agents**: These metaphors describe compile-time defense mechanisms, not violence. Map them to: type safety, borrow checking, zero-cost abstractions, and mechanical sympathy.
+
+---
+
 ## Project Overview
 
 Rust Coding Standards Skills is a **Rust engineering decision guide skill collection** for AI coding assistants, containing a universal engineering constitution and cloud infrastructure-specific specifications, covering the complete chain from architecture decisions, coding style, to production best practices.
