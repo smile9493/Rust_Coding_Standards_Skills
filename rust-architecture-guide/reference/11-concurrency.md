@@ -1,4 +1,21 @@
+---
+title: "Concurrency & Lock Architecture"
+description: "Lock spectrum, decision trees, async isolation, and poisoning handling for Rust concurrent programming"
+category: "Architecture"
+priority: "P0-P3"
+applies_to: ["rapid", "standard", "strict"]
+prerequisites: []
+dependents: ["rust-systems-cloud-infra-guide/reference/07-lock-free.md"]
+---
+
 # Concurrency & Lock Architecture
+
+> **📋 Document Profile**
+> - **Domain**: All Rust concurrent programming scenarios
+> - **Priority**: P0 (safety) → P1 (maintainability) → P3 (performance)
+> - **Modes**: `rapid` (basic) → `standard` (full rules) → `strict` (formal verification)
+> - **Prerequisites**: None (foundational document)
+> - **Deepened by**: [`07-lock-free.md`](../../rust-systems-cloud-infra-guide/reference/07-lock-free.md) (cloud infrastructure scenarios)
 
 ## 1. Core Principles (Aligned with Priority Pyramid)
 

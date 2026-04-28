@@ -1,6 +1,23 @@
+---
+title: "Performance Tuning & Low-Level Optimization"
+description: "Mechanical Sympathy principles: Arena, SIMD, cache optimization, and benchmark-driven workflow for P3 performance"
+category: "Performance"
+priority: "P3"
+applies_to: ["standard", "strict"]
+prerequisites: ["09-data-architecture.md", "11-concurrency.md"]
+dependents: ["rust-systems-cloud-infra-guide/reference/08-vectorized.md", "rust-systems-cloud-infra-guide/reference/07-lock-free.md"]
+---
+
 # Performance Tuning & Low-Level Optimization: Mechanical Sympathy
 
 > **Core Philosophy — Mechanical Sympathy**: Ultimate performance comes not from clever tricks, but from deep resonance between code logic and underlying physical hardware — CPU cache lines, pipelines, memory buses, and the kernel I/O stack.
+
+> **📋 Document Profile**
+> - **Domain**: P3 performance optimization (profiler-proven bottlenecks only)
+> - **Priority**: P3 only (constrained by P0-P2)
+> - **Modes**: `standard` (warning) → `strict` (mandatory benchmark proof)
+> - **Prerequisites**: [`09-data-architecture.md`](09-data-architecture.md) (data layout), [`11-concurrency.md`](11-concurrency.md) (atomics)
+> - **Deepened by**: [`08-vectorized.md`](../../rust-systems-cloud-infra-guide/reference/08-vectorized.md) (SIMD intrinsics), [`07-lock-free.md`](../../rust-systems-cloud-infra-guide/reference/07-lock-free.md) (lock-free structures)
 
 ---
 

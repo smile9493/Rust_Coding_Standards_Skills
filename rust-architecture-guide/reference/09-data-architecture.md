@@ -1,6 +1,23 @@
+---
+title: "Data Architecture & Memory Management"
+description: "Zero-copy parsing, Arena allocation, stack-first principles, and capacity management for Rust data structures"
+category: "Architecture"
+priority: "P1-P3"
+applies_to: ["rapid", "standard", "strict"]
+prerequisites: []
+dependents: ["rust-systems-cloud-infra-guide/reference/11-memory-advanced.md"]
+---
+
 # Data Architecture & Memory Management: Zero-Overhead Principles
 
 > **Core Philosophy — Intercepting Boilerplate**: Don't move data, just point to where it is. Zero-copy and stack-first designs improve both performance and predictability.
+
+> **📋 Document Profile**
+> - **Domain**: All Rust data structure design
+> - **Priority**: P1 (maintainability) → P3 (performance optimization)
+> - **Modes**: `rapid` (allow clone) → `standard` (prefer zero-copy) → `strict` (mandatory Miri/dhat)
+> - **Prerequisites**: None (foundational document)
+> - **Deepened by**: [`11-memory-advanced.md`](../../rust-systems-cloud-infra-guide/reference/11-memory-advanced.md) (NUMA, Allocator API)
 
 ---
 
