@@ -158,6 +158,7 @@ Architectural solution: Through **unidirectional control (Rust is the brain, JS 
 | [09-zero-copy-pool.md](references/09-zero-copy-pool.md) | Zero-Copy Resource Pool | Resource pool topology, JS injection via `encodeInto`, Wasm resolution with boundary interception, frame lifecycle sync |
 | [10-command-bus-v3.md](references/10-command-bus-v3.md) | Zero-Copy Command Bus V3.1 | Double-buffer topology, atomic synchronization (`AcqRel`), Facade write/consume cycle, lifecycle safety contract, hard constraints [F-08]~[F-11] |
 | [11-toolchain-v3.md](references/11-toolchain-v3.md) | Toolchain & Lifecycle Automation V3.2 | Layout assertions, binary size budget, twiggy diagnostics, performance telemetry, lifecycle checkpoints, hard constraints [F-12]~[F-15] |
+| [12-domain-engines-v4.md](references/12-domain-engines-v4.md) | Domain Engines V4.1 | Pixel rendering (wgpu/vello/tiny-skia), vector & search (SIMD128), high-density state (CRDT/yrs), time slicing, environment purity, hard constraints [F-16]~[F-20] |
 
 ---
 

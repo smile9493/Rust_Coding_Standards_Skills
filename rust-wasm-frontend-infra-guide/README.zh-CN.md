@@ -1,7 +1,7 @@
 # Rust → Wasm 垂直基建编译与边界规范
 
 [![Version](https://img.shields.io/badge/Version-v4.0.0-purple.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-11%20Docs-blue.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-12%20Docs-blue.svg)]()
 [![Domain](https://img.shields.io/badge/Domain-Wasm%20Vertical%20Base-9b59b6.svg)]()
 
 **Rust-Wasm 前端基建垂直深化架构规范** — 针对 `wasm32-unknown-unknown` 目标的编译配置、跨语言边界、线性内存管理、并发模型到通用代码适配的硬约束规范。
