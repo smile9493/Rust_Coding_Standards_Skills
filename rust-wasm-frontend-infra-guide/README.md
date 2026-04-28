@@ -1,7 +1,7 @@
 # Rust to Wasm Vertical Compilation & Boundary Specification
 
 [![Version](https://img.shields.io/badge/Version-v4.0.0-purple.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-12%20Docs-blue.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-13%20Docs-blue.svg)]()
 [![Domain](https://img.shields.io/badge/Domain-Wasm%20Vertical%20Base-9b59b6.svg)]()
 
 **Rust-Wasm Frontend Infrastructure Vertical Deepening Architectural Specification** — Hard constraints for `wasm32-unknown-unknown` target compilation configuration, cross-language boundary, linear memory management, concurrency model, and general code adaptation.
@@ -37,7 +37,7 @@ From these, four iron rules are derived:
 
 ## Document Index
 
-`references/` directory contains **11 reference documents**, strictly corresponding to the specification's stages:
+`references/` directory contains **12 reference documents**, strictly corresponding to the specification's stages:
 
 ### I. Iron Rules
 
@@ -105,6 +105,12 @@ From these, four iron rules are derived:
 |---|----------|----------|
 | **11** | [toolchain-v3.md](references/11-toolchain-v3.md) | Compile-time layout assertions (`size_of` + `offset_of`) + binary size budget (`.wasm-size-budget.json`) + `twiggy` diagnostics + `performance.now()` telemetry + lifecycle checkpoints + hard constraints [F-12]~[F-15] |
 
+### XII. Domain Engines V4.1
+
+| # | Document | Coverage |
+|---|----------|----------|
+| **12** | [domain-engines-v4.md](references/12-domain-engines-v4.md) | Three domain engines: pixel rendering (wgpu/vello/tiny-skia tier selection), vector & search (SIMD128 + macerator), high-density state (CRDT/yrs mandatory + dependency injection) + cooperative time slicing (8ms threshold) + environment purity principle + hard constraints [F-16]~[F-20] |
+
 ---
 
 ## Relationship
@@ -135,7 +141,7 @@ rust-architecture-guide (Universal Constitution)
 rust-wasm-frontend-infra-guide/
 ├── SKILL.md                          # Skill entry (Agent instructions)
 ├── README.md                         # Document index
-└── references/                       # 11 reference documents
+└── references/                       # 12 reference documents
     ├── 01-iron-rules.md              # Iron Rules
     ├── 02-build-control.md           # Compilation & Artifact Control
     ├── 03-ffi-boundary.md            # FFI & Cross-Language Boundary
@@ -146,7 +152,8 @@ rust-wasm-frontend-infra-guide/
     ├── 08-philosophy-v2.md           # Architectural Philosophy & Decision Meta-Spec
     ├── 09-zero-copy-pool.md          # Zero-Copy Resource Pool
     ├── 10-command-bus-v3.md          # Zero-Copy Command Bus V3.1
-    └── 11-toolchain-v3.md            # Toolchain & Lifecycle Automation V3.2
+    ├── 11-toolchain-v3.md            # Toolchain & Lifecycle Automation V3.2
+    └── 12-domain-engines-v4.md       # Domain Engines V4.1
 ```
 
 ---

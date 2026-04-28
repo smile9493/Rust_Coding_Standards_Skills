@@ -1,7 +1,7 @@
 # Rust → Wasm 垂直基建编译与边界规范
 
 [![Version](https://img.shields.io/badge/Version-v4.0.0-purple.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-12%20Docs-blue.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-13%20Docs-blue.svg)]()
 [![Domain](https://img.shields.io/badge/Domain-Wasm%20Vertical%20Base-9b59b6.svg)]()
 
 **Rust-Wasm 前端基建垂直深化架构规范** — 针对 `wasm32-unknown-unknown` 目标的编译配置、跨语言边界、线性内存管理、并发模型到通用代码适配的硬约束规范。
@@ -40,7 +40,7 @@
 
 ## 文档索引
 
-`references/` 目录包含 **11 份参考文档**，严格对应规范的 11 个阶段：
+`references/` 目录包含 **12 份参考文档**，严格对应规范的 12 个阶段：
 
 ### 一、核心哲学与铁律
 
@@ -108,6 +108,12 @@
 |------|------|---------|
 | **11** | [toolchain-v3.md](references/11-toolchain-v3.md) | 编译期布局断言（`size_of` + `offset_of`）+ 二进制体积预算（`.wasm-size-budget.json`）+ `twiggy` 诊断 + `performance.now()` 遥测 + 生命周期检查点 + 硬约束 [F-12]~[F-15] |
 
+### 十二、领域特定引擎 V4.1
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **12** | [domain-engines-v4.md](references/12-domain-engines-v4.md) | 三大领域引擎：像素渲染（wgpu/vello/tiny-skia 分层选型）+ 向量检索（SIMD128 + macerator）+ 高密度状态（CRDT/yrs 强制复用 + 依赖注入）+ 协作式时间分片（8ms 阈值）+ 环境纯洁原则 + 硬约束 [F-16]~[F-20] |
+
 ---
 
 ## 关系
@@ -139,7 +145,7 @@ rust-wasm-frontend-infra-guide/
 ├── SKILL.md                          # Skill 入口（Agent 指令）
 ├── README.md                         # 文档索引（英文）
 ├── README.zh-CN.md                   # 文档索引（中文）
-└── references/                        # 11 份参考文档
+└── references/                        # 12 份参考文档
     ├── 01-iron-rules.md              # 核心哲学与铁律
     ├── 02-build-control.md           # 编译与产物控制
     ├── 03-ffi-boundary.md            # FFI 与跨语言边界
@@ -150,7 +156,8 @@ rust-wasm-frontend-infra-guide/
     ├── 08-philosophy-v2.md           # 架构哲学与决策元规范
     ├── 09-zero-copy-pool.md          # 零拷贝资源池
     ├── 10-command-bus-v3.md          # 零拷贝指令总线 V3.1
-    └── 11-toolchain-v3.md            # 工具链与全生命周期自动化 V3.2
+    ├── 11-toolchain-v3.md            # 工具链与全生命周期自动化 V3.2
+    └── 12-domain-engines-v4.md       # 领域特定引擎 V4.1
 ```
 
 ---
