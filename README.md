@@ -1,11 +1,12 @@
 # Rust Coding Standards Skills
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Architecture Guide](https://img.shields.io/badge/Architecture%20Guide-v8.0.0-brightgreen.svg)]()
-[![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v5.0.0-orange.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-40%20Docs-orange.svg)]()
+[![Architecture Guide](https://img.shields.io/badge/Architecture%20Guide-v9.0.0-brightgreen.svg)]()
+[![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v6.0.0-orange.svg)]()
+[![Wasm Infra Guide](https://img.shields.io/badge/Wasm%20Infra%20Guide-v4.0.0-purple.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-53%20Docs-orange.svg)]()
 
-**Rust Engineering Decision Wiki — Constitutional guides for AI coding assistants, covering universal engineering decisions and cloud infrastructure-specific specifications.**
+**Rust Engineering Decision Wiki — Constitutional guides for AI coding assistants, covering universal engineering decisions, cloud infrastructure-specific specifications, and WebAssembly frontend infrastructure specifications.**
 
 English | [简体中文](README.zh-CN.md)
 
@@ -23,7 +24,7 @@ This specification uses metaphors from **Eastern philosophy and martial arts** t
 | **"Economy of Motion"** | Zero-Cost Abstraction | Every line of code points directly to intent |
 | **"Intercepting Fist"** | Parse, Don't Validate | Stop errors at compilation, not runtime |
 
-> 💡 **For Global Readers**: If you encounter unfamiliar philosophical terms, please refer to [`glossary.md`](rust-architecture-guide/reference/05-glossary.md) for detailed definitions with "Engineering Translation" explanations.
+> 💡 **For Global Readers**: If you encounter unfamiliar philosophical terms, please refer to [`glossary.md`](rust-architecture-guide/references/05-glossary.md) for detailed definitions with "Engineering Translation" explanations.
 
 > 🤖 **For AI Agents**: These metaphors describe compile-time defense mechanisms, not violence. Map them to: type safety, borrow checking, zero-cost abstractions, and mechanical sympathy.
 
@@ -31,7 +32,7 @@ This specification uses metaphors from **Eastern philosophy and martial arts** t
 
 ## Project Overview
 
-Rust Coding Standards Skills is a **Rust engineering decision guide skill collection** for AI coding assistants, containing a universal engineering constitution and cloud infrastructure-specific specifications, covering the complete chain from architecture decisions, coding style, to production best practices.
+Rust Coding Standards Skills is a **Rust engineering decision guide skill collection** for AI coding assistants, containing a universal engineering constitution, cloud infrastructure-specific specifications, and WebAssembly frontend infrastructure specifications, covering the complete chain from architecture decisions, coding style, to production best practices.
 
 This skill collection serves as the Agent's **constitutional foundation**, ensuring every code generation, review, and refactoring follows a unified priority judgment and conflict resolution framework.
 
@@ -47,6 +48,9 @@ This skill collection serves as the Agent's **constitutional foundation**, ensur
 | I/O model selection without basis | Tokio epoll vs io_uring selection decision tree |
 | Backpressure mechanism missing | Bounded channels, Semaphore, 503 propagation |
 | Consensus algorithm implementation non-standard | Deterministic state machines (Raft/Paxos Apply), prohibit time/randomness dependencies |
+| WASM binary size bloated | `opt-level="z"` + `wasm-opt -Oz` + allocator replacement |
+| JS-WASM FFI per-element overhead | `WasmSlice` zero-copy batch pattern |
+| Wasm linear memory leak | Arena per-frame lifecycle + explicit `.free()` |
 
 ---
 
@@ -67,6 +71,9 @@ Applicable to **all Rust projects**, providing priority decision framework, arch
 - **Performance deep tuning** — jemalloc/mimalloc, SoA layout, SmallVec, PGO, SIMD, LTO
 - **FFI safety boundary** — `-sys` crate separation, `cxx` safe C++ interop
 - **Engineering build specifications** — Cargo Workspace division, Feature Flags isolation, `cargo deny` audit
+- **Memory layout transparency** — struct padding audit, `#[repr(C)]` mandate, cache-friendly design, false sharing prevention
+- **Breakwater architecture** — Facade/Core layered design, boundary interception protocol, type contraction (de-oxygenation)
+- **Physical feasibility audit** — I/O budget, memory ceiling, concurrency true cost with red-line thresholds
 - **Jeet Kune Do coding style** — Intercepting Boilerplate, Economy of Motion, Hardware Sympathy
 - **Agent self-check directives** — Decision Summary output contract
 
@@ -97,6 +104,27 @@ Full document index: [rust-systems-cloud-infra-guide/README.md](rust-systems-clo
 
 ---
 
+### rust-wasm-frontend-infra-guide — WebAssembly Frontend Infrastructure Specific
+
+Applicable to **all Rust projects targeting `wasm32-unknown-unknown`**, providing compilation & boundary layer hard constraints. Vertical deepening of the universal constitution.
+
+**Environment assumptions**: Wasm linear memory only grows, JS ↔ Wasm boundary is expensive RPC, browser main thread must not be blocked, zero-copy views are unsafe operations.
+
+- **[IRON-01] Binary size is paramount** — `opt-level="z"`, `lto=true`, `codegen-units=1`, `panic="abort"`, `strip=true`
+- **[IRON-02] Zero-copy at boundary** — `WasmSlice` safe encapsulation, prohibit serialization on hot paths
+- **[IRON-03] Memory partitioning** — Global state static residency, per-frame Arena lifecycle (`bumpalo` + `reset()`)
+- **[IRON-04] Cross-origin isolation documented** — `SharedArrayBuffer` requires documented COOP/COEP configuration
+- **Build control** — `wasm-opt -Oz` mandatory, allocator replacement (`talc`/`MiniAlloc`, prohibit `wee_alloc`)
+- **FFI boundary** — Explicit scalar or `WasmSlice` parameters, prohibit `JsValue` pass-through
+- **Concurrency** — `wasm-bindgen-futures` only, prohibit blocking APIs, Worker isolation with COOP/COEP
+- **Error handling** — `Result<T, JsValue>` + `thiserror`, `panic="abort"` means use `Result` not `panic!`
+- **Logging** — `console_error_panic_hook` + `tracing_wasm` mandatory initialization
+- **7 hard prohibitions** + **10-item compliance checklist**
+
+Full document index: [rust-wasm-frontend-infra-guide/README.md](rust-wasm-frontend-infra-guide/README.md)
+
+---
+
 ## Quick Start
 
 ### Installation
@@ -111,6 +139,7 @@ git clone https://github.com/smile9493/Rust_Coding_Standards_Skills.git
 # Trae IDE
 cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
 cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills/
+cp -r Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide ~/.trae/skills/
 
 # Claude Code / other Agent Skills compatible platforms
 # Copy both skill directories to your agent's skills configuration path
@@ -126,6 +155,8 @@ cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills
 /rust-architecture-guide state-machine Order
 /rust-systems-cloud-infra-guide io-model
 /rust-systems-cloud-infra-guide backpressure
+/rust-wasm-frontend-infra-guide build-control
+/rust-wasm-frontend-infra-guide ffi-boundary
 
 # Claude Code / other platforms — reference skill name in prompt
 # "According to rust-architecture-guide, what priority should I assign?"
@@ -141,6 +172,8 @@ Review this concurrent code for Mutex across await issues
 Optimize this storage engine's I/O path with io_uring
 What memory ordering should I use for this atomic counter?
 Write a procedural macro with proper Span-level error reporting
+Configure my WASM project's Cargo.toml for minimal binary size
+Design a zero-copy JS-WASM boundary for image processing
 ```
 
 ### Skill Format
@@ -150,7 +183,7 @@ Each skill follows the Agent Skills Spec v1.0 structure:
 ```
 skill-name/
 ├── SKILL.md              # Entry point (YAML frontmatter + Agent instructions)
-└── reference/            # Deep-dive reference documents
+└── references/            # Deep-dive reference documents
     ├── 01-topic.md
     ├── 02-topic.md
     └── ...
@@ -186,6 +219,9 @@ skill-name/
 | **QA** | proptest property testing, cargo fuzz, Loom concurrency model, Miri UB detection |
 | **Metaprogramming** | Declarative/procedural macros, const generics, `const fn` |
 | **FFI Interop** | Three-layer isolation, opaque pointers, panic containment, repr(C) |
+| **Memory Layout** | Struct padding audit, `#[repr(C)]` mandate, cache-friendly design (≤64 bytes), false sharing prevention |
+| **Breakwater Pattern** | Facade/Core layered architecture, boundary interception protocol, type contraction (de-oxygenation), O(1) conversion mandate |
+| **Physical Audit** | I/O budget (>30% → batching), memory ceiling (<20% margin → backpressure), concurrency true cost (>20% contention → lock-free) |
 | **Toolchain** | CI, Clippy, rustfmt, cargo deny, workspace, feature flags |
 
 Entry: [SKILL.md](rust-architecture-guide/SKILL.md) · Document Index: [README.md](rust-architecture-guide/README.md)
@@ -204,14 +240,32 @@ Entry: [SKILL.md](rust-architecture-guide/SKILL.md) · Document Index: [README.m
 | **Consensus** | Deterministic state machines, prohibit `Instant::now()`/`rand`/`HashMap` ordering |
 | **Resilience** | Graceful shutdown (`SIGTERM` → CancellationToken → fsync WAL), circuit breaker, Lock Poisoning |
 | **Observability** | Tracing + Metrics + Panic Hook, `turmoil` network fault simulation |
-| **Advanced Memory** | Arena (`bumpalo`), Slab (`mmap`+`mlock`), NUMA/PMEM, `allocator_api2` |
+| **Advanced Memory** | Arena (`bumpalo`), Slab pre-allocation (`mmap` + `mlock`), NUMA/PMEM, `allocator_api2` |
 | **Lock-Free** | RCU (`arc-swap`), Epoch (`crossbeam-epoch`), memory ordering (Release+Acquire/Relaxed) |
 | **Vectorized** | SIMD (`std::simd`/AVX-512), Bitmask branch elimination, SoA columnar |
+| **Breakwater Pattern** | Facade/Core layered architecture, boundary interception protocol, de-oxygenation |
+| **Physical Audit** | Container memory limits, network latency budgets, NUMA topology audit |
 | **FFI Safety** | `catch_unwind`, error code return, trampoline pattern |
 | **Memory Exhaustion** | `Result<T, AllocError>` + backpressure, prohibit `panic!` |
 | **CI Lints** | 11 strict checks (`await_holding_lock`, `unwrap_used`, etc.) |
 
 Entry: [SKILL.md](rust-systems-cloud-infra-guide/SKILL.md) · Document Index: [README.md](rust-systems-cloud-infra-guide/README.md)
+
+---
+
+### rust-wasm-frontend-infra-guide — WebAssembly Frontend Infrastructure Specific
+
+| Domain | Coverage |
+|--------|----------|
+| **Iron Rules** | IRON-01~04: Binary size paramount, zero-copy at boundary, memory partitioning, cross-origin isolation documented |
+| **Build Control** | `Cargo.toml` release profile (MUST), `wasm-opt -Oz` (MUST), allocator replacement `talc`/`MiniAlloc` (SHOULD) |
+| **FFI Boundary** | `WasmSlice` zero-copy encapsulation (MUST), boundary type explicit contracts, prohibit `JsValue` pass-through |
+| **Memory Lifecycle** | Global residency vs per-frame Arena (`bumpalo` + `reset()`), memory leak physical defense |
+| **Concurrency** | `wasm-bindgen-futures` (MUST), prohibit blocking APIs (MUST NOT), Worker isolation with COOP/COEP |
+| **Wasm Adaptation** | `Result<T, JsValue>` + `thiserror`, `console_error_panic_hook` + `tracing_wasm` |
+| **Compliance** | 7 hard prohibitions [F-01]~[F-07], 10-item compliance checklist |
+
+Entry: [SKILL.md](rust-wasm-frontend-infra-guide/SKILL.md) · Document Index: [README.md](rust-wasm-frontend-infra-guide/README.md)
 
 ---
 
@@ -225,28 +279,46 @@ rust-architecture-guide (Universal Constitution)
           ├── Jeet Kune Do coding style
           ├── Agent self-check list + Decision Summary
           │
-          └──► rust-systems-cloud-infra-guide (Vertical Deepening)
+          ├──► rust-systems-cloud-infra-guide (Vertical Deepening)
+          │           │
+          │           ├── Core Philosophy
+          │           │   ├── Mechanical Sympathy — Software aligned with hardware
+          │           │   ├── Determinism — Eliminate non-determinism
+          │           │   ├── Resilience — Graceful degradation over crash
+          │           │   └── Jeet Kune Do — One-strike memory lifecycle
+          │           │
+          │           ├── I/O Model (epoll vs io_uring vs monoio)
+          │           ├── Zero-copy pipeline (splice, sendfile, bytes::Bytes)
+          │           ├── Bounded resource backpressure + cancellation safety
+          │           ├── Deterministic state machines (consensus algorithms)
+          │           ├── Graceful shutdown (CancellationToken flow)
+          │           ├── Advanced memory architecture (Arena / Slab / NUMA / PMEM / Allocator API)
+          │           ├── Lock-free concurrency (RCU + Epoch + memory ordering)
+          │           ├── Vectorized execution (SIMD + SoA)
+          │           ├── Breakwater pattern (Facade/Core layered architecture)
+          │           ├── Physical feasibility audit (pre-design mandatory)
+          │           └── Mandatory CI Lints (11 strict checks)
+          │
+          └──► rust-wasm-frontend-infra-guide (Vertical Deepening)
                       │
-                      ├── Core Philosophy
-                      │   ├── Mechanical Sympathy — Software aligned with hardware
-                      │   ├── Determinism — Eliminate non-determinism
-                      │   ├── Resilience — Graceful degradation over crash
-                      │   └── Jeet Kune Do — One-strike memory lifecycle
+                      ├── Iron Rules
+                      │   ├── IRON-01 — Binary size is paramount
+                      │   ├── IRON-02 — Zero-copy at boundary
+                      │   ├── IRON-03 — Memory partitioning
+                      │   └── IRON-04 — Cross-origin isolation documented
                       │
-                      ├── I/O Model (epoll vs io_uring vs monoio)
-                      ├── Zero-copy pipeline (splice, sendfile, bytes::Bytes)
-                      ├── Bounded resource backpressure + cancellation safety
-                      ├── Deterministic state machines (consensus algorithms)
-                      ├── Graceful shutdown (CancellationToken flow)
-                      ├── Advanced memory architecture (Arena / Slab / NUMA / PMEM / Allocator API)
-                      ├── Lock-free concurrency (RCU + Epoch + memory ordering)
-                      ├── Vectorized execution (SIMD + SoA)
-                      └── Mandatory CI Lints (11 strict checks)
+                      ├── Build Control (Cargo.toml + wasm-opt + allocator)
+                      ├── FFI Boundary (WasmSlice + explicit contracts)
+                      ├── Memory Lifecycle (Arena per-frame + leak defense)
+                      ├── Concurrency (wasm-bindgen-futures + Worker isolation)
+                      ├── Wasm Adaptation (Result<T, JsValue> + logging)
+                      └── Compliance (7 prohibitions + 10-item checklist)
 ```
 
-- **`rust-architecture-guide`** (v8.0.0): Constitutional foundation for all Rust engineering
-- **`rust-systems-cloud-infra-guide`** (v5.0.0): Cloud-native scenario **amendment**, adding system-level red lines and hardware alignment constraints on top of P0 safety
-- Complementary use: The universal constitution provides the priority framework; the cloud infrastructure guide vertically deepens on top of it
+- **`rust-architecture-guide`** (v9.0.0): Constitutional foundation for all Rust engineering — adds memory layout transparency, breakwater pattern, and physical feasibility audit
+- **`rust-systems-cloud-infra-guide`** (v6.0.0): Cloud-native scenario **amendment**, adds system-level red lines, Facade/Core architecture, and deployment physical audit on top of P0 safety
+- **`rust-wasm-frontend-infra-guide`** (v4.0.0): `wasm32-unknown-unknown` scenario **amendment**, adds compilation & boundary layer hard constraints on top of P0 safety
+- Complementary use: The universal constitution provides the priority framework; vertical deepening guides add domain-specific red lines
 
 ---
 
@@ -339,12 +411,17 @@ Each conversation generates a **Decision Summary**, recording:
 ├── rust-architecture-guide/
 │   ├── SKILL.md                          # Skill entry
 │   ├── README.md                         # Document index (detailed)
-│   └── reference/                        # 29 reference documents
+│   └── references/                        # 29 reference documents
 │
 ├── rust-systems-cloud-infra-guide/
 │   ├── SKILL.md                          # Skill entry
 │   ├── README.md                         # Document index (detailed)
-│   └── reference/                        # 11 reference documents
+│   └── references/                        # 13 reference documents
+│
+├── rust-wasm-frontend-infra-guide/
+│   ├── SKILL.md                          # Skill entry
+│   ├── README.md                         # Document index (detailed)
+│   └── references/                        # 7 reference documents
 │
 └── README.md                              # This file — Wiki index (overview)
 ```
@@ -366,7 +443,7 @@ This skill collection's specification system synthesizes engineering practices f
 - [Rust Official Documentation](https://doc.rust-lang.org/) — Language specification and standard library API
 - [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) — Public API design checklist
 - [The Rust Programming Language](https://doc.rust-lang.org/book/) — Official book
-- [Rust Reference](https://doc.rust-lang.org/reference/) — Language reference
+- [Rust Reference](https://doc.rust-lang.org/references/) — Language reference
 - [Rustonomicon](https://doc.rust-lang.org/nomicon/) — Unsafe Rust dark arts
 - [Too Many Lists](https://rust-unofficial.github.io/too-many-lists/) — Unsafe and pointer safety tutorial
 - [Tokio Tutorial](https://tokio.rs/tokio/tutorial) — Async runtime best practices

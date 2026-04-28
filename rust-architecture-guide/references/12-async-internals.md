@@ -5,7 +5,7 @@ category: "Advanced"
 priority: "P1-P3"
 applies_to: ["standard", "strict"]
 prerequisites: ["11-concurrency.md"]
-dependents: ["rust-systems-cloud-infra-guide/reference/01-io-model.md"]
+dependents: ["rust-systems-cloud-infra-guide/references/01-io-model.md"]
 ---
 
 # Rust Async Internals & Custom Runtime

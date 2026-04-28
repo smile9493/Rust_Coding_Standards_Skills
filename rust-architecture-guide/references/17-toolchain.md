@@ -5,7 +5,7 @@ category: "Tooling"
 priority: "P0-P2"
 applies_to: ["rapid", "standard", "strict"]
 prerequisites: []
-dependents: ["rust-systems-cloud-infra-guide/reference/10-ci-lints.md"]
+dependents: ["rust-systems-cloud-infra-guide/references/10-ci-lints.md"]
 ---
 
 # Toolchain & CI

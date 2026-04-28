@@ -4,13 +4,13 @@ description: "Tokio epoll vs io_uring vs monoio decision tree for high-throughpu
 category: "Infrastructure"
 priority: "P1-P3"
 applies_to: ["standard", "strict"]
-prerequisites: ["rust-architecture-guide/reference/12-async-internals.md", "rust-architecture-guide/reference/09-data-architecture.md"]
+prerequisites: ["rust-architecture-guide/references/12-async-internals.md", "rust-architecture-guide/references/09-data-architecture.md"]
 dependents: []
 ---
 
 # I/O Model & Zero-Copy Architecture
 
-> **📚 Prerequisites**: This document assumes understanding of basic async Rust from [`12-async-internals.md`](../../rust-architecture-guide/reference/12-async-internals.md) and zero-copy principles from [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md) §1 (Zero-Copy Parsing).
+> **📚 Prerequisites**: This document assumes understanding of basic async Rust from [`12-async-internals.md`](../../rust-architecture-guide/references/12-async-internals.md) and zero-copy principles from [`09-data-architecture.md`](../../rust-architecture-guide/references/09-data-architecture.md) §1 (Zero-Copy Parsing).
 > 
 > **🔺 Deepening Direction**: Selecting between Tokio epoll, io_uring, and monoio for high-throughput scenarios (10GbE+, storage engines, gateways) with zero-copy pipeline optimization.
 > 
@@ -18,7 +18,7 @@ dependents: []
 > - **Domain**: High-throughput gateways, storage engines, message queues, database WAL.
 > - **Environment**: Linux kernel 5.1+ (io_uring support), 10GbE+ network.
 > - **Mode**: `standard` (awareness) → `strict` (mandatory selection)
-> - **Prerequisites**: [`12-async-internals.md`](../../rust-architecture-guide/reference/12-async-internals.md), [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md)
+> - **Prerequisites**: [`12-async-internals.md`](../../rust-architecture-guide/references/12-async-internals.md), [`09-data-architecture.md`](../../rust-architecture-guide/references/09-data-architecture.md)
 
 ## Philosophy
 

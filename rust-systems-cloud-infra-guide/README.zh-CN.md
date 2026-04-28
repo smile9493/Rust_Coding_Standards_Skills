@@ -85,73 +85,73 @@ NIC Ring Buffer → Kernel TCP Stack → User Space
 
 ## 文档索引
 
-`reference/` 目录包含 **11 份深度参考文档**，覆盖云基础设施核心领域：
+`references/` 目录包含 **11 份深度参考文档**，覆盖云基础设施核心领域：
 
 ### 一、I/O 与零拷贝
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **01** | [io-model.md](reference/01-io-model.md) | I/O 模型选型：Tokio epoll vs io_uring vs monoio 决策树 + 零拷贝管道（`splice`/`sendfile`/`copy_file_range` via `rustix`）+ `bytes::Bytes` O(1) clone + Direct I/O（`O_DIRECT` + 对齐）+ 混合运行时红线 |
+| **01** | [io-model.md](references/01-io-model.md) | I/O 模型选型：Tokio epoll vs io_uring vs monoio 决策树 + 零拷贝管道（`splice`/`sendfile`/`copy_file_range` via `rustix`）+ `bytes::Bytes` O(1) clone + Direct I/O（`O_DIRECT` + 对齐）+ 混合运行时红线 |
 
 ### 二、背压与取消安全
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **02** | [backpressure.md](reference/02-backpressure.md) | 有界通道 + `Semaphore` 全局并发限制 + HTTP 503 `Retry-After` 传播 + 取消安全（非幂等写 `spawn` + `oneshot`）+ 熔断器 |
+| **02** | [backpressure.md](references/02-backpressure.md) | 有界通道 + `Semaphore` 全局并发限制 + HTTP 503 `Retry-After` 传播 + 取消安全（非幂等写 `spawn` + `oneshot`）+ 熔断器 |
 
 ### 三、系统调用与 eBPF
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **03** | [syscall.md](reference/03-syscall.md) | 封装优先级（`rustix` → `nix` → `libc`）+ eBPF 集成（`aya`/`libbpf-rs`）+ 错误码映射 |
+| **03** | [syscall.md](references/03-syscall.md) | 封装优先级（`rustix` → `nix` → `libc`）+ eBPF 集成（`aya`/`libbpf-rs`）+ 错误码映射 |
 
 ### 四、共识与确定性
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **04** | [consensus.md](reference/04-consensus.md) | Raft/Paxos Apply 绝对确定性 + `BTreeMap`/`IndexMap` 替代 + 状态指纹验证 + 零拷贝序列化 |
+| **04** | [consensus.md](references/04-consensus.md) | Raft/Paxos Apply 绝对确定性 + `BTreeMap`/`IndexMap` 替代 + 状态指纹验证 + 零拷贝序列化 |
 
 ### 五、韧性设计
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **05** | [resilience.md](reference/05-resilience.md) | 优雅关闭流程 + Lock Poisoning 处理 + K8s 健康检查 + 失败降级矩阵 |
+| **05** | [resilience.md](references/05-resilience.md) | 优雅关闭流程 + Lock Poisoning 处理 + K8s 健康检查 + 失败降级矩阵 |
 
 ### 六、可观测性
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **06** | [observability.md](reference/06-observability.md) | 结构化日志 + 热路径静默 + `loom` 确定性并发测试 + `turmoil` 网络故障模拟 + I/O 错误注入 |
+| **06** | [observability.md](references/06-observability.md) | 结构化日志 + 热路径静默 + `loom` 确定性并发测试 + `turmoil` 网络故障模拟 + I/O 错误注入 |
 
 ### 七、无锁并发
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **07** | [lock-free.md](reference/07-lock-free.md) | RCU 模式（`arc-swap`）+ Epoch 回收（`crossbeam-epoch`）+ 内存序精确控制 |
+| **07** | [lock-free.md](references/07-lock-free.md) | RCU 模式（`arc-swap`）+ Epoch 回收（`crossbeam-epoch`）+ 内存序精确控制 |
 
 ### 八、向量化执行
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **08** | [vectorized.md](reference/08-vectorized.md) | SIMD 指令 + Bitmask 消除分支 + SoA 列式布局 + LLVM 自动向量化 |
+| **08** | [vectorized.md](references/08-vectorized.md) | SIMD 指令 + Bitmask 消除分支 + SoA 列式布局 + LLVM 自动向量化 |
 
 ### 九、代码规范
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **09** | [code-style.md](reference/09-code-style.md) | 容量感知 + 热路径零分配 + SAFETY 注释强制 + FFI `catch_unwind` + 禁止 Mutex 跨 `.await` + 穷举模式匹配 |
+| **09** | [code-style.md](references/09-code-style.md) | 容量感知 + 热路径零分配 + SAFETY 注释强制 + FFI `catch_unwind` + 禁止 Mutex 跨 `.await` + 穷举模式匹配 |
 
 ### 十、CI 检查
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **10** | [ci-lints.md](reference/10-ci-lints.md) | 11 项 deny-level lints + test 环境 `cfg_attr` 放宽 + Cargo.toml `[lints]` 配置 |
+| **10** | [ci-lints.md](references/10-ci-lints.md) | 11 项 deny-level lints + test 环境 `cfg_attr` 放宽 + Cargo.toml `[lints]` 配置 |
 
 ### 十一、高级内存
 
 | 编号 | 文档 | 覆盖范围 |
 |------|------|---------|
-| **11** | [memory-advanced.md](reference/11-memory-advanced.md) | Arena + Slab 预分配 + Allocator API + 内存耗尽背压 |
+| **11** | [memory-advanced.md](references/11-memory-advanced.md) | Arena + Slab 预分配 + Allocator API + 内存耗尽背压 |
 
 ---
 
@@ -186,7 +186,7 @@ rust-systems-cloud-infra-guide/
 ├── SKILL.md                          # Skill 入口（Agent 指令）
 ├── README.md                         # 文档索引（英文）
 ├── README.zh-CN.md                   # 文档索引（中文）
-└── reference/                        # 11 份深度参考文档
+└── references/                        # 11 份深度参考文档
     ├── 01-io-model.md               # I/O 模型与零拷贝
     ├── 02-backpressure.md           # 背压与取消安全
     ├── 03-syscall.md                # 系统调用封装

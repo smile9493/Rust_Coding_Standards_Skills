@@ -4,7 +4,7 @@ description: "Deterministic Raft/Paxos state machines with zero-cost serializati
 category: "Infrastructure"
 priority: "P0-P1"
 applies_to: ["strict"]
-prerequisites: ["rust-architecture-guide/reference/12-async-internals.md"]
+prerequisites: ["rust-architecture-guide/references/12-async-internals.md"]
 dependents: []
 ---
 

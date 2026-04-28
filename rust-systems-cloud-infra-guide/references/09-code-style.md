@@ -4,7 +4,7 @@ description: "Capacity-aware allocation, mandatory SAFETY comments, and FFI pani
 category: "Infrastructure"
 priority: "P0-P1"
 applies_to: ["standard", "strict"]
-prerequisites: ["rust-architecture-guide/reference/15-ffi-interop.md"]
+prerequisites: ["rust-architecture-guide/references/15-ffi-interop.md"]
 dependents: ["10-ci-lints.md"]
 ---
 

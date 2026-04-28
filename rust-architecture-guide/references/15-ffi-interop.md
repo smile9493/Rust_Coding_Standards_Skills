@@ -5,7 +5,7 @@ category: "Advanced"
 priority: "P0-P1"
 applies_to: ["standard", "strict"]
 prerequisites: []
-dependents: ["rust-systems-cloud-infra-guide/reference/03-syscall.md"]
+dependents: ["rust-systems-cloud-infra-guide/references/03-syscall.md"]
 ---
 
 # FFI & Cross-Language Interop: The Defense Wall

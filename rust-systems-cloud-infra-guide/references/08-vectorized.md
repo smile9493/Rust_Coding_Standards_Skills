@@ -4,13 +4,13 @@ description: "SIMD vectorization, SoA columnar layout, and auto-vectorization fo
 category: "Infrastructure"
 priority: "P3"
 applies_to: ["strict"]
-prerequisites: ["rust-architecture-guide/reference/09-data-architecture.md", "rust-architecture-guide/reference/25-performance-tuning.md"]
+prerequisites: ["rust-architecture-guide/references/09-data-architecture.md", "rust-architecture-guide/references/25-performance-tuning.md"]
 dependents: []
 ---
 
 # Vectorized Execution & Columnar Memory Layout
 
-> **📚 Prerequisites**: This document assumes understanding of basic data layout principles from [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md) §3 (Cache Affinity & Data Layout) and [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md) §4 (SIMD Vectorization).
+> **📚 Prerequisites**: This document assumes understanding of basic data layout principles from [`09-data-architecture.md`](../../rust-architecture-guide/references/09-data-architecture.md) §3 (Cache Affinity & Data Layout) and [`25-performance-tuning.md`](../../rust-architecture-guide/references/25-performance-tuning.md) §4 (SIMD Vectorization).
 > 
 > **🔺 Deepening Direction**: Applying SIMD auto-vectorization and manual intrinsics to 10GbE+ networking, database executors, and HFT data processing with hardware-aligned memory layouts.
 > 
@@ -18,7 +18,7 @@ dependents: []
 > - **Domain**: Database vectorized execution engines (e.g., Databend), 10GbE NIC protocol parsing, high-frequency financial data cleaning
 > - **Environment**: Modern multi-core CPU, I/O bypassed via io_uring or DPDK, computation is the sole bottleneck
 > - **Mode**: `strict` (mandatory for compute-bound hot paths)
-> - **Prerequisites**: [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md), [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md)
+> - **Prerequisites**: [`09-data-architecture.md`](../../rust-architecture-guide/references/09-data-architecture.md), [`25-performance-tuning.md`](../../rust-architecture-guide/references/25-performance-tuning.md)
 
 ## Philosophy
 

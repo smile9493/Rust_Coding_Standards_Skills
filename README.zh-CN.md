@@ -1,11 +1,12 @@
 # Rust 编码规范 Skills
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Architecture Guide](https://img.shields.io/badge/Architecture%20Guide-v8.0.0-brightgreen.svg)]()
-[![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v5.0.0-orange.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-40%20Docs-orange.svg)]()
+[![Architecture Guide](https://img.shields.io/badge/Architecture%20Guide-v9.0.0-brightgreen.svg)]()
+[![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v6.0.0-orange.svg)]()
+[![Wasm Infra Guide](https://img.shields.io/badge/Wasm%20Infra%20Guide-v4.0.0-purple.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-53%20Docs-orange.svg)]()
 
-**Rust 工程决策 Wiki — AI 编码助手的宪法性指南，覆盖通用工程决策与云基础设施专用规范。**
+**Rust 工程决策 Wiki — AI 编码助手的宪法性指南，覆盖通用工程决策、云基础设施专用规范与 WebAssembly 前端基建专用规范。**
 
 [English](README.md) | 简体中文
 
@@ -13,7 +14,7 @@
 
 ## 项目简介
 
-Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决策指南 Skill 集合**，包含通用工程宪法与云基础设施专用规范，覆盖从架构决策、编码风格到生产最佳实践的完整链路。
+Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决策指南 Skill 集合**，包含通用工程宪法、云基础设施专用规范与 WebAssembly 前端基建专用规范，覆盖从架构决策、编码风格到生产最佳实践的完整链路。
 
 本 Skill 集合作为 Agent 的**宪法性基础**，确保每次代码生成、审查、重构都遵循统一的优先级判定和冲突解决框架，避免"看心情写代码"。
 
@@ -29,6 +30,9 @@ Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决
 | I/O 模型选择无依据                  | Tokio epoll vs io\_uring 选型决策树         |
 | 背压机制缺失                       | 有界通道、Semaphore、503 传播                  |
 | 共识算法实现不规范                    | 确定性状态机（Raft/Paxos Apply）、禁止时间/随机依赖     |
+| WASM 二进制体积膨胀                  | `opt-level="z"` + `wasm-opt -Oz` + 分配器替换 |
+| JS-WASM FFI 逐元素开销               | `WasmSlice` 零拷贝批量模式 |
+| Wasm 线性内存泄漏                    | Arena 帧级生命周期 + 显式 `.free()` |
 
 ***
 
@@ -49,6 +53,9 @@ Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决
 - ⚡ **性能深度调优** — jemalloc/mimalloc、SoA 布局、SmallVec、PGO、SIMD、LTO
 - 🔗 **FFI 安全边界** — `-sys` crate 分离、三层隔离架构、`catch_unwind` 防波堤
 - 🧙 **元编程与宏魔法** — 截击样板代码、过程宏 Span 级错误、`const fn` 零开销
+- 🧊 **内存布局透明化** — 结构体空隙审计、`#[repr(C)]` 强制、缓存行友好设计（≤64 字节）、伪共享防御
+- 🌊 **防波堤架构** — Facade/Core 分层设计、边界截击协议、类型收缩（去氧）、O(1) 转换强制
+- 📏 **物理可行性审计** — I/O 预算（>30% → 批量处理）、内存天花板（<20% 余量 → 背压）、并发真实代价（>20% 争用率 → 无锁重构）
 - 🥋 **截拳道编码风格** — 截击样板、经济法则、硬件同理心
 - 🤖 **Agent 自检指令** — Decision Summary 输出契约
 
@@ -72,10 +79,33 @@ Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决
 - 🧠 **高级内存架构** — Arena（`bumpalo`）、Slab 预分配（`mmap` + `mlock`）、NUMA/PMEM
 - 🔓 **无锁并发** — RCU（`arc-swap`）、Epoch 回收（`crossbeam-epoch`）、内存序精确控制
 - 🚀 **向量化执行** — SIMD 指令（`std::simd`/AVX-512）、Bitmask 消除分支、SoA 列式布局
+- 🌊 **防波堤架构** — Facade/Core 分层、边界截击协议、去氧转换
+- 📏 **物理可行性审计** — 容器内存限制、网络延迟预算、NUMA 拓扑审计
 - 🚫 **内存耗尽背压** — `Result<T, AllocError>` 返回、503 拒绝、禁止 `panic!`
 - ✅ **强制 CI Lints** — 11 项严格检查（`await_holding_lock`、`unwrap_used` 等）
 
 📖 **完整文档索引**：[rust-systems-cloud-infra-guide/README.zh-CN.md](rust-systems-cloud-infra-guide/README.zh-CN.md)
+
+***
+
+### rust-wasm-frontend-infra-guide — WebAssembly 前端基建专用
+
+适用于**所有编译为 `wasm32-unknown-unknown` 目标的 Rust 项目**，提供编译与边界层硬约束规范。通用宪法的垂直深化。
+
+**环境假设**：Wasm 线性内存只增不减、JS ↔ Wasm 边界是昂贵的 RPC、浏览器主线程不容阻塞、零拷贝视图是 unsafe 操作。
+
+- 🛡️ **[IRON-01] 体积即王道** — `opt-level="z"`, `lto=true`, `codegen-units=1`, `panic="abort"`, `strip=true`
+- 🛡️ **[IRON-02] 边界零拷贝** — `WasmSlice` 安全封装，高频路径禁止序列化
+- 🛡️ **[IRON-03] 内存分治** — 全局状态静态驻留，帧级 Arena 生命周期（`bumpalo` + `reset()`）
+- 🛡️ **[IRON-04] 跨源隔离可见即所得** — `SharedArrayBuffer` 必须文档化 COOP/COEP 配置
+- 🔧 **编译控制** — `wasm-opt -Oz` 强制，分配器替换（`talc`/`MiniAlloc`，禁用 `wee_alloc`）
+- 🔗 **FFI 边界** — 显式标量或 `WasmSlice` 参数，禁止 `JsValue` 透传
+- 🔄 **并发** — 仅 `wasm-bindgen-futures`，禁止阻塞 API，Worker 隔离 + COOP/COEP
+- ⚠️ **错误处理** — `Result<T, JsValue>` + `thiserror`，`panic="abort"` 下必须用 `Result` 不用 `panic!`
+- 📝 **日志** — `console_error_panic_hook` + `tracing_wasm` 强制初始化
+- ✅ **7 条硬禁令** + **10 项合规自检清单**
+
+📖 **完整文档索引**：[rust-wasm-frontend-infra-guide/README.zh-CN.md](rust-wasm-frontend-infra-guide/README.zh-CN.md)
 
 ***
 
@@ -93,6 +123,7 @@ git clone https://github.com/smile9493/Rust_Coding_Standards_Skills.git
 # Trae IDE
 cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
 cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills/
+cp -r Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide ~/.trae/skills/
 
 # Claude Code / 其他 Agent Skills 兼容平台
 # 将两个 skill 目录复制到你 Agent 的 skills 配置路径下
@@ -108,6 +139,8 @@ cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills
 /rust-architecture-guide state-machine Order
 /rust-systems-cloud-infra-guide io-model
 /rust-systems-cloud-infra-guide backpressure
+/rust-wasm-frontend-infra-guide build-control
+/rust-wasm-frontend-infra-guide ffi-boundary
 
 # Claude Code / 其他平台 — 在提示中引用 skill 名称
 # "According to rust-architecture-guide, what priority should I assign?"
@@ -123,6 +156,8 @@ cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills
 用 io_uring 优化这个存储引擎的 I/O 路径
 这个原子计数器应该用什么内存序？
 写一个过程宏，要求 Span 级别的错误报告
+配置我的 WASM 项目 Cargo.toml 以获得最小二进制体积
+设计一个零拷贝的 JS-WASM 边界用于图像处理
 ```
 
 ### Skill 格式
@@ -132,7 +167,7 @@ cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills
 ```
 skill-name/
 ├── SKILL.md              # 入口文件（YAML 前置信息 + Agent 指令）
-└── reference/            # 深度参考文档
+└── references/            # 深度参考文档
     ├── 01-topic.md
     ├── 02-topic.md
     └── ...
@@ -160,28 +195,46 @@ rust-architecture-guide (通用宪法)
           ├── 截拳道编码风格
           ├── Agent 自检清单 + Decision Summary
           │
-          └──► rust-systems-cloud-infra-guide (垂直深化)
+          ├──► rust-systems-cloud-infra-guide (垂直深化)
+          │           │
+          │           ├── 核心哲学
+          │           │   ├── Mechanical Sympathy — 软件对齐硬件物理特性
+          │           │   ├── Determinism — 消除非确定性
+          │           │   ├── Resilience — 优雅降级 > 崩溃
+          │           │   └── Jeet Kune Do — 一击内存生命周期
+          │           │
+          │           ├── I/O 模型（epoll vs io_uring vs monoio）
+          │           ├── 零拷贝管道（splice, sendfile, bytes::Bytes）
+          │           ├── 有界资源背压 + 取消安全
+          │           ├── 确定性状态机（共识算法）
+          │           ├── 优雅关闭（CancellationToken 流程）
+          │           ├── 高级内存架构（Arena / Slab / NUMA / PMEM / Allocator API）
+          │           ├── 无锁并发（RCU + Epoch + 内存序）
+          │           ├── 向量化执行（SIMD + SoA）
+          │           ├── 防波堤架构（Facade/Core 分层）
+          │           ├── 物理可行性审计（设计前强制）
+          │           └── 强制 CI Lints（11 项严格检查）
+          │
+          └──► rust-wasm-frontend-infra-guide (垂直深化)
                       │
-                      ├── 核心哲学
-                      │   ├── Mechanical Sympathy — 软件对齐硬件物理特性
-                      │   ├── Determinism — 消除非确定性
-                      │   ├── Resilience — 优雅降级 > 崩溃
-                      │   └── Jeet Kune Do — 一击内存生命周期
+                      ├── 铁律
+                      │   ├── IRON-01 — 体积即王道
+                      │   ├── IRON-02 — 边界零拷贝
+                      │   ├── IRON-03 — 内存分治
+                      │   └── IRON-04 — 跨源隔离可见即所得
                       │
-                      ├── I/O 模型（epoll vs io_uring vs monoio）
-                      ├── 零拷贝管道（splice, sendfile, bytes::Bytes）
-                      ├── 有界资源背压 + 取消安全
-                      ├── 确定性状态机（共识算法）
-                      ├── 优雅关闭（CancellationToken 流程）
-                      ├── 高级内存架构（Arena / Slab / NUMA / PMEM / Allocator API）
-                      ├── 无锁并发（RCU + Epoch + 内存序）
-                      ├── 向量化执行（SIMD + SoA）
-                      └── 强制 CI Lints（11 项严格检查）
+                      ├── 编译控制（Cargo.toml + wasm-opt + 分配器）
+                      ├── FFI 边界（WasmSlice + 显式契约）
+                      ├── 内存生命周期（Arena 帧级 + 泄漏防御）
+                      ├── 并发（wasm-bindgen-futures + Worker 隔离）
+                      ├── Wasm 适配（Result<T, JsValue> + 日志）
+                      └── 合规（7 条禁令 + 10 项自检清单）
 ```
 
-- **`rust-architecture-guide`**（v8.0.0）：所有 Rust 工程的宪法基础
-- **`rust-systems-cloud-infra-guide`**（v5.0.0）：云原生场景的**附加条款**，在 P0 安全之上增加系统级红线和硬件对齐约束
-- 两者互补使用：通用宪法提供优先级框架，云基础设施指南在其基础上进行垂直深化
+- **`rust-architecture-guide`**（v9.0.0）：所有 Rust 工程的宪法基础 — 新增内存布局透明化、防波堤架构、物理可行性审计三大范式
+- **`rust-systems-cloud-infra-guide`**（v6.0.0）：云原生场景的**附加条款**，在 P0 安全之上增加系统级红线、Facade/Core 架构与部署物理审计
+- **`rust-wasm-frontend-infra-guide`**（v4.0.0）：`wasm32-unknown-unknown` 场景的**附加条款**，在 P0 安全之上增加编译与边界层硬约束
+- 两者互补使用：通用宪法提供优先级框架，垂直深化指南增加领域专用红线
 
 ***
 
@@ -269,13 +322,19 @@ NIC Ring Buffer → Kernel TCP Stack → User Space
 │   ├── SKILL.md                          # Skill 入口
 │   ├── README.md                         # 文档索引（英文）
 │   ├── README.zh-CN.md                   # 文档索引（中文）
-│   └── reference/                        # 29 份参考文档
+│   └── references/                        # 29 份参考文档
 │
 ├── rust-systems-cloud-infra-guide/
 │   ├── SKILL.md                          # Skill 入口
 │   ├── README.md                         # 文档索引（英文）
 │   ├── README.zh-CN.md                   # 文档索引（中文）
-│   └── reference/                        # 11 份参考文档
+│   └── references/                        # 13 份参考文档
+│
+├── rust-wasm-frontend-infra-guide/
+│   ├── SKILL.md                          # Skill 入口
+│   ├── README.md                         # 文档索引（英文）
+│   ├── README.zh-CN.md                   # 文档索引（中文）
+│   └── references/                        # 7 份参考文档
 │
 ├── README.md                              # Wiki 索引（英文）
 └── README.zh-CN.md                        # Wiki 索引（中文）
@@ -298,7 +357,7 @@ NIC Ring Buffer → Kernel TCP Stack → User Space
 - [Rust 官方文档](https://doc.rust-lang.org/) — 语言规范与标准库 API
 - [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) — 公共 API 设计检查清单
 - [The Rust Programming Language](https://doc.rust-lang.org/book/) — 官方书籍
-- [Rust Reference](https://doc.rust-lang.org/reference/) — 语言参考
+- [Rust Reference](https://doc.rust-lang.org/references/) — 语言参考
 - [Rustonomicon](https://doc.rust-lang.org/nomicon/) — Unsafe Rust 黑魔法
 - [Too Many Lists](https://rust-unofficial.github.io/too-many-lists/) — Unsafe 与指针安全教程
 - [Tokio 教程](https://tokio.rs/tokio/tutorial) — 异步运行时最佳实践

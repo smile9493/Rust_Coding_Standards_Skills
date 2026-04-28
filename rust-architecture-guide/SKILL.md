@@ -1,17 +1,22 @@
 ---
 name: rust-architecture-guide
-description: Comprehensive Rust engineering guide covering priority pyramid, architecture decisions, and idiomatic coding style. Invoke when starting Rust projects, making trade-offs, or writing idiomatic code. Based on Jeet Kune Do philosophy — intercept boilerplate, flow with hardware, fold logic to maximum energy density.
+description: Comprehensive Rust engineering guide covering priority pyramid, architecture decisions, idiomatic coding style, memory layout transparency, breakwater pattern, and physical feasibility audit. Invoke when starting Rust projects, making trade-offs, writing idiomatic code, or designing system architecture. Based on Jeet Kune Do philosophy — intercept boilerplate, flow with hardware, fold logic to maximum energy density, unity of false and real.
 license: MIT
 metadata:
-  version: "8.0.0"
-  philosophy: "Dialectical Materialism & Jeet Kune Do"
+  version: "9.0.0"
+  philosophy: "Dialectical Materialism & Jeet Kune Do — Unity of False and Real"
   domain: "general Rust engineering"
   author: "rust-architect"
 ---
 
-# Rust Architecture & Engineering Decision Guide
+# Rust Architecture & Engineering Decision Guide V9.0.0 — The Jeet Kune Do Edition
 
 This document serves as the **constitutional foundation** for Rust engineering decisions. It is structured for deterministic, reproducible decision-making suitable for AI-assisted development.
+
+V9.0.0 introduces three paradigm shifts:
+1. **Memory Layout Transparency** (ref/30): From "ideological safety" to "materialist physics" — struct padding audit, `#[repr(C)]` mandate, cache-friendly design
+2. **Breakwater Architecture** (ref/31): Facade/Core layered pattern — ergonomic facade absorbs chaos, zero-overhead core maintains determinism
+3. **Physical Feasibility Audit** (ref/32): Mandatory audit between initiation and design — I/O budget, memory ceiling, concurrency true cost
 
 ### Execution Mode
 
@@ -21,7 +26,7 @@ Before applying any rule, determine the execution mode:
 - **`standard`** (default): Enforce P0+P1; warn on P2 violations
 - **`strict`** (production): Enforce P0-P3; all deviations require formal annotation
 
-See [reference/00-mode-guide.md](reference/00-mode-guide.md) for full mode definitions.
+See [references/00-mode-guide.md](references/00-mode-guide.md) for full mode definitions.
 
 ### Mandatory Output Contract
 
@@ -182,65 +187,65 @@ flowchart TD
 ```
 
 ### Execution & Strategy (7)
-- [00-mode-guide.md](reference/00-mode-guide.md) — Execution modes and transition checklists
-- [01-priority-pyramid.md](reference/01-priority-pyramid.md) — The four-level hierarchy
-- [02-conflict-resolution.md](reference/02-conflict-resolution.md) — Typical conflicts and resolutions
-- [03-progressive-architecture.md](reference/03-progressive-architecture.md) — MVP to production migration
-- [04-trade-offs.md](reference/04-trade-offs.md) — Decision analysis framework
-- [05-glossary.md](reference/05-glossary.md) — Centralized terminology definitions
-- [06-deviation-process.md](reference/06-deviation-process.md) — Formal rule exception handling
+- [00-mode-guide.md](references/00-mode-guide.md) — Execution modes and transition checklists
+- [01-priority-pyramid.md](references/01-priority-pyramid.md) — The four-level hierarchy
+- [02-conflict-resolution.md](references/02-conflict-resolution.md) — Typical conflicts and resolutions
+- [03-progressive-architecture.md](references/03-progressive-architecture.md) — MVP to production migration
+- [04-trade-offs.md](references/04-trade-offs.md) — Decision analysis framework
+- [05-glossary.md](references/05-glossary.md) — Centralized terminology definitions
+- [06-deviation-process.md](references/06-deviation-process.md) — Formal rule exception handling
 
 ### Architecture Patterns (11)
 - **State & Types**
-  - [07-state-machine.md](reference/07-state-machine.md) — Type-driven state machines
-  - [08-newtype.md](reference/08-newtype.md) — Type-safe IDs and credentials
+  - [07-state-machine.md](references/07-state-machine.md) — Type-driven state machines
+  - [08-newtype.md](references/08-newtype.md) — Type-safe IDs and credentials
   
 - **Data & Memory** (P0-P1)
-  - [09-data-architecture.md](reference/09-data-architecture.md) — Ownership, cloning, zero-copy, Arena basics
+  - [09-data-architecture.md](references/09-data-architecture.md) — Ownership, cloning, zero-copy, Arena basics
   
 - **Error Handling** (P0-P1)
-  - [10-error-handling.md](reference/10-error-handling.md) — Library (`thiserror`) vs application (`anyhow`) strategies
+  - [10-error-handling.md](references/10-error-handling.md) — Library (`thiserror`) vs application (`anyhow`) strategies
   
 - **Concurrency & Async** (P0-P3)
-  - [11-concurrency.md](reference/11-concurrency.md) — Lock spectrum, decision tree, async isolation (P0-P1)
-  - [12-async-internals.md](reference/12-async-internals.md) — Pin/Unpin, Waker, custom executors (P2-P3)
+  - [11-concurrency.md](references/11-concurrency.md) — Lock spectrum, decision tree, async isolation (P0-P1)
+  - [12-async-internals.md](references/12-async-internals.md) — Pin/Unpin, Waker, custom executors (P2-P3)
   
 - **API & Safety**
-  - [13-api-design.md](reference/13-api-design.md) — Public API boundaries, `#[non_exhaustive]`, sealed traits
-  - [15-ffi-interop.md](reference/15-ffi-interop.md) — The Defense Wall: FFI safety boundaries (P0)
+  - [13-api-design.md](references/13-api-design.md) — Public API boundaries, `#[non_exhaustive]`, sealed traits
+  - [15-ffi-interop.md](references/15-ffi-interop.md) — The Defense Wall: FFI safety boundaries (P0)
   
 - **Metaprogramming** (P1-P2)
-  - [14-metaprogramming.md](reference/14-metaprogramming.md) — Declarative/procedural macros, const generics
+  - [14-metaprogramming.md](references/14-metaprogramming.md) — Declarative/procedural macros, const generics
   
 - **Observability**
-  - [16-observability.md](reference/16-observability.md) — Tracing, metrics, panic hooks
+  - [16-observability.md](references/16-observability.md) — Tracing, metrics, panic hooks
   
 - **Tooling**
-  - [17-toolchain.md](reference/17-toolchain.md) — CI, Clippy, workspace, feature flags
+  - [17-toolchain.md](references/17-toolchain.md) — CI, Clippy, workspace, feature flags
 
 ### Idiomatic Style (7)
-- [18-control-flow.md](reference/18-control-flow.md) — `let else`, `matches!`, intercepting deep nesting
-- [19-iterators.md](reference/19-iterators.md) — Iterator chains, `filter_map`, flowing force
-- [20-traits.md](reference/20-traits.md) — `From` vs `Into`, `Default`, Hardware Sympathy
-- [21-errors.md](reference/21-errors.md) — `unwrap_or_else`, `map_err`, `and_then`
-- [22-data-struct.md](reference/22-data-struct.md) — Field shorthand, type stuttering
-- [23-borrowing.md](reference/23-borrowing.md) — `AsRef`, `Cow`, memory economy
-- [24-refactor.md](reference/24-refactor.md) — Agent Self-Check List, Reduction Directive
+- [18-control-flow.md](references/18-control-flow.md) — `let else`, `matches!`, intercepting deep nesting
+- [19-iterators.md](references/19-iterators.md) — Iterator chains, `filter_map`, flowing force
+- [20-traits.md](references/20-traits.md) — `From` vs `Into`, `Default`, Hardware Sympathy
+- [21-errors.md](references/21-errors.md) — `unwrap_or_else`, `map_err`, `and_then`
+- [22-data-struct.md](references/22-data-struct.md) — Field shorthand, type stuttering
+- [23-borrowing.md](references/23-borrowing.md) — `AsRef`, `Cow`, memory economy
+- [24-refactor.md](references/24-refactor.md) — Agent Self-Check List, Reduction Directive
 
 ### Deep Dive (P3 Only)
 > ⚠️ **Requirement**: All P3 optimizations MUST include profiler data proving bottleneck
 
-- [25-performance-tuning.md](reference/25-performance-tuning.md) — Mechanical Sympathy: SoA, SIMD, Arena, PGO (P3 only)
-- [26-advanced-testing.md](reference/26-advanced-testing.md) — Formal verification: proptest, fuzz, Loom, Miri (strict mode)
-- [27-review.md](reference/27-review.md) — Production review checklist
-- [28-usage-examples.md](reference/28-usage-examples.md) — Real-world scenarios with Decision Summaries
+- [25-performance-tuning.md](references/25-performance-tuning.md) — Mechanical Sympathy: SoA, SIMD, Arena, PGO (P3 only)
+- [26-advanced-testing.md](references/26-advanced-testing.md) — Formal verification: proptest, fuzz, Loom, Miri (strict mode)
+- [27-review.md](references/27-review.md) — Production review checklist
+- [28-usage-examples.md](references/28-usage-examples.md) — Real-world scenarios with Decision Summaries
 
 ---
 
 ## 9. Constitutional Summary
 
 **No rule is absolute.** The ultimate measure of code quality is whether it matches:
-- Its lifecycle stage (MVP vs production) — governed by [execution mode](reference/00-mode-guide.md)
+- Its lifecycle stage (MVP vs production) — governed by [execution mode](references/00-mode-guide.md)
 - Business constraints (deadline vs long-term maintenance)
 - Team context (solo vs large organization)
 
@@ -249,6 +254,6 @@ flowchart TD
 
 **Deviation Protocol**: When breaking a rule is the correct decision, annotate with `// DEVIATION: reason` and record in the Decision Summary.
 
-**Terminology**: All specialized terms are defined in [glossary.md](reference/05-glossary.md).
+**Terminology**: All specialized terms are defined in [glossary.md](references/05-glossary.md).
 
 **Remember**: This guide is the Agent's **constitutional foundation**. Before each response, generate a **Decision Summary** recording rationale for choosing specific implementation paths, ensuring consistency and professional depth.

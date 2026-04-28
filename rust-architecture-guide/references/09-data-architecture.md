@@ -5,7 +5,7 @@ category: "Architecture"
 priority: "P1-P3"
 applies_to: ["rapid", "standard", "strict"]
 prerequisites: []
-dependents: ["rust-systems-cloud-infra-guide/reference/11-memory-advanced.md"]
+dependents: ["rust-systems-cloud-infra-guide/references/11-memory-advanced.md"]
 ---
 
 # Data Architecture & Memory Management: Zero-Overhead Principles
@@ -17,7 +17,7 @@ dependents: ["rust-systems-cloud-infra-guide/reference/11-memory-advanced.md"]
 > - **Priority**: P1 (maintainability) → P3 (performance optimization)
 > - **Modes**: `rapid` (allow clone) → `standard` (prefer zero-copy) → `strict` (mandatory Miri/dhat)
 > - **Prerequisites**: None (foundational document)
-> - **Deepened by**: [`11-memory-advanced.md`](../../rust-systems-cloud-infra-guide/reference/11-memory-advanced.md) (NUMA, Allocator API)
+> - **Deepened by**: [`11-memory-advanced.md`](../../rust-systems-cloud-infra-guide/references/11-memory-advanced.md) (NUMA, Allocator API)
 
 ---
 

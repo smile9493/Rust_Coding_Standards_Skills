@@ -4,7 +4,7 @@ description: "Bounded channels, graceful degradation, and backpressure propagati
 category: "Infrastructure"
 priority: "P0-P1"
 applies_to: ["standard", "strict"]
-prerequisites: ["rust-architecture-guide/reference/11-concurrency.md"]
+prerequisites: ["rust-architecture-guide/references/11-concurrency.md"]
 dependents: ["05-resilience.md"]
 ---
 

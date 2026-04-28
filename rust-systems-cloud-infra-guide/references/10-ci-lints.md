@@ -4,7 +4,7 @@ description: "deny-level lints configuration for CI/CD pipelines and pre-commit 
 category: "Infrastructure"
 priority: "P0-P1"
 applies_to: ["rapid", "standard", "strict"]
-prerequisites: ["rust-architecture-guide/reference/17-toolchain.md", "09-code-style.md"]
+prerequisites: ["rust-architecture-guide/references/17-toolchain.md", "09-code-style.md"]
 dependents: []
 ---
 

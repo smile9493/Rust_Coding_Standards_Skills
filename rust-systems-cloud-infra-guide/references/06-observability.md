@@ -4,7 +4,7 @@ description: "Structured logging, deterministic concurrency testing with loom/tu
 category: "Infrastructure"
 priority: "P0-P1"
 applies_to: ["standard", "strict"]
-prerequisites: ["rust-architecture-guide/reference/16-observability.md", "rust-architecture-guide/reference/26-advanced-testing.md"]
+prerequisites: ["rust-architecture-guide/references/16-observability.md", "rust-architecture-guide/references/26-advanced-testing.md"]
 dependents: []
 ---
 

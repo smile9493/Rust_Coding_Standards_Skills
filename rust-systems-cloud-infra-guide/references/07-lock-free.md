@@ -1,6 +1,6 @@
 # Lock-free Concurrency & Memory Reclamation
 
-> **📚 Prerequisites**: This document assumes mastery of basic lock spectrum and decision tree from [`11-concurrency.md`](../../rust-architecture-guide/reference/11-concurrency.md) §4 (Atomic Operations and Memory Ordering).
+> **📚 Prerequisites**: This document assumes mastery of basic lock spectrum and decision tree from [`11-concurrency.md`](../../rust-architecture-guide/references/11-concurrency.md) §4 (Atomic Operations and Memory Ordering).
 > 
 > **🔺 Deepening Direction**: Hardening general lock strategies for 128+ cores, 10GbE scenarios, introducing RCU and lock-free structures with formal verification.
 > 
@@ -8,7 +8,7 @@
 > - **Domain**: 10GbE NIC packet routing, database global metadata trees, HFT order books
 > - **Environment**: 128+ core CPU, extremely high concurrent reads, ultra-low latency requirements
 > - **Mode**: `standard` (awareness) → `strict` (mandatory implementation)
-> - **Prerequisites**: [`11-concurrency.md`](../../rust-architecture-guide/reference/11-concurrency.md), [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md)
+> - **Prerequisites**: [`11-concurrency.md`](../../rust-architecture-guide/references/11-concurrency.md), [`25-performance-tuning.md`](../../rust-architecture-guide/references/25-performance-tuning.md)
 
 ## Philosophy
 

@@ -1,6 +1,6 @@
 # Advanced Memory & Allocators (V4.1.0)
 
-> **📚 Prerequisites**: This document assumes understanding of basic Arena allocation from [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md) §2 (Arena Architecture) and memory optimization from [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md) §2 (Arena Allocation).
+> **📚 Prerequisites**: This document assumes understanding of basic Arena allocation from [`09-data-architecture.md`](../../rust-architecture-guide/references/09-data-architecture.md) §2 (Arena Architecture) and memory optimization from [`25-performance-tuning.md`](../../rust-architecture-guide/references/25-performance-tuning.md) §2 (Arena Allocation).
 > 
 > **🔺 Deepening Direction**: Applying Arena patterns to database kernels, HFT systems with NUMA-aware placement, PMEM mapping, and custom Allocator API for extreme performance scenarios.
 > 
@@ -8,7 +8,7 @@
 > - **Domain**: Database kernels, extreme-low-latency gateways, high-frequency trading systems.
 > - **Environment**: Long-running nodes (Uptime > 1 year), 10GbE+ network, multi-NUMA architecture.
 > - **Mode**: `strict` (mandatory for long-running systems)
-> - **Prerequisites**: [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md), [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md)
+> - **Prerequisites**: [`09-data-architecture.md`](../../rust-architecture-guide/references/09-data-architecture.md), [`25-performance-tuning.md`](../../rust-architecture-guide/references/25-performance-tuning.md)
 
 ## Philosophy
 

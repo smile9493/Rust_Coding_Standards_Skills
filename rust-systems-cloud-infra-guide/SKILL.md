@@ -1,17 +1,21 @@
 ---
 name: rust-systems-cloud-infra-guide
-description: Use when building Rust cloud-native infrastructure (database kernels, distributed storage, high-performance gateways, container runtimes, eBPF control planes). Covers I/O model selection, zero-copy pipelines, backpressure, deterministic consensus, lock-free concurrency, SIMD vectorization, and advanced memory architecture. Vertical deepening of rust-architecture-guide for long-running systems.
+description: Use when building Rust cloud-native infrastructure (database kernels, distributed storage, high-performance gateways, container runtimes, eBPF control planes). Covers I/O model selection, zero-copy pipelines, backpressure, deterministic consensus, lock-free concurrency, SIMD vectorization, advanced memory architecture, breakwater pattern, and physical feasibility audit. Vertical deepening of rust-architecture-guide for long-running systems.
 license: MIT
 metadata:
-  version: "5.0.0"
-  philosophy: "Mechanical Sympathy, Determinism, Resilience, Jeet Kune Do"
+  version: "6.0.0"
+  philosophy: "Mechanical Sympathy, Determinism, Resilience, Jeet Kune Do, Unity of False and Real"
   domain: "cloud-native infrastructure"
   relationship: "vertical-deepening-of:rust-architecture-guide"
 ---
 
-# Rust Systems & Cloud Infrastructure Guide
+# Rust Systems & Cloud Infrastructure Guide V6.0.0
 
 Vertical deepening of `rust-architecture-guide` for world-class cloud-native infrastructure. Assumes long-running nodes (uptime > 1 year), 10GbE+ network, multi-NUMA architecture.
+
+V6.0.0 additions:
+1. **Breakwater Pattern** (ref/12): Facade/Core layered architecture for cloud services — high-tolerance external API, zero-overload internal kernel
+2. **Physical Feasibility Audit** (ref/13): Container memory limits, network latency budgets, NUMA topology awareness
 
 ## Core Philosophy
 
@@ -33,7 +37,7 @@ Choose async I/O backend to maximize kernel I/O stack utilization.
 - Mixed scenario → `tokio-uring`
 - **Red Line**: If mixing `tokio` and `io_uring`, must unify runtime across entire pipeline
 
-→ [reference/01-io-model.md](reference/01-io-model.md)
+→ [references/01-io-model.md](references/01-io-model.md)
 
 ## Action 2: Zero-Copy Pipeline
 
@@ -44,7 +48,7 @@ Build proxy gateway, storage transport, or RPC framework with zero unnecessary c
 - Receiver-side: Use `BufMut` + `read_buf` API
 - **Red Line**: Absolutely prohibit meaningless data copies between user-space and kernel
 
-→ [reference/01-io-model.md](reference/01-io-model.md)
+→ [references/01-io-model.md](references/01-io-model.md)
 
 ## Action 3: Backpressure & Bounded Resources
 
@@ -55,7 +59,7 @@ Cloud-native environment with strict K8s Cgroups limits.
 - Propagate backpressure upstream (HTTP 503) or internally
 - **Red Line**: Absolutely prohibit unbounded channels
 
-→ [reference/02-backpressure.md](reference/02-backpressure.md)
+→ [references/02-backpressure.md](references/02-backpressure.md)
 
 ## Action 4: Cancellation Safety
 
@@ -65,7 +69,7 @@ Client may disconnect at any time (timeout or cancel).
 - Use `futures::future::Abortable` with explicit cleanup
 - **Red Line**: All operations in `select!` must be cancellation-safe
 
-→ [reference/02-backpressure.md](reference/02-backpressure.md)
+→ [references/02-backpressure.md](references/02-backpressure.md)
 
 ## Action 5: Graceful Shutdown
 
@@ -79,7 +83,7 @@ Cloud-native process termination must be structured.
 6. Exit
 - **Red Line**: Prohibit `kill -9` brutal termination
 
-→ [reference/05-resilience.md](reference/05-resilience.md)
+→ [references/05-resilience.md](references/05-resilience.md)
 
 ## Action 6: Deterministic State Machine
 
@@ -89,7 +93,7 @@ Implement Raft or Paxos Apply logic with absolute determinism.
 - **Required**: Leader-proposed timestamp, `BTreeMap` / `IndexMap`
 - **Red Line**: State machine absolutely prohibits any non-determinism
 
-→ [reference/04-consensus.md](reference/04-consensus.md)
+→ [references/04-consensus.md](references/04-consensus.md)
 
 ## Action 7: FFI Boundary Safety
 
@@ -99,7 +103,7 @@ All `extern "C"` functions exposed to external callers.
 - Return error code (-1 or -2) on panic interception
 - **Red Line**: All `extern "C"` functions must use `catch_unwind` to prevent UB
 
-→ [reference/09-code-style.md](reference/09-code-style.md)
+→ [references/09-code-style.md](references/09-code-style.md)
 
 ## Action 8: Arena Allocation
 
@@ -109,7 +113,7 @@ Per-Request / Per-Transaction AST trees, execution plan nodes, temporary state m
 - **Red Line**: Prohibit saving Arena-allocated pointers to external static variables (use-after-free)
 - **Red Line**: Absolutely prohibit scattered allocation on default global heap
 
-→ [reference/11-memory-advanced.md](reference/11-memory-advanced.md)
+→ [references/11-memory-advanced.md](references/11-memory-advanced.md)
 
 ## Action 9: Physical Addressing (Allocator API)
 
@@ -120,7 +124,7 @@ Build database low-level B-Tree, hash table, MemTable.
 - PMEM: Allocate core index on persistent memory
 - **Red Line**: Core structures must decouple default allocator, allow generic injection
 
-→ [reference/11-memory-advanced.md](reference/11-memory-advanced.md)
+→ [references/11-memory-advanced.md](references/11-memory-advanced.md)
 
 ## Action 10: Slab Pre-allocation
 
@@ -131,7 +135,7 @@ Low-level C FFI boundary or I/O buffer pools.
 - Use `crossbeam_queue::ArrayQueue` for O(1) lock-free alloc/dealloc
 - **Red Line**: Prohibit throwing high-frequency tiny allocations directly to OS
 
-→ [reference/11-memory-advanced.md](reference/11-memory-advanced.md)
+→ [references/11-memory-advanced.md](references/11-memory-advanced.md)
 
 ## Action 11: Memory Exhaustion Backpressure
 
@@ -142,7 +146,7 @@ Custom allocator reaches capacity limit.
 3. Last resort: Process suicide with K8s restart
 - **Red Line**: Absolutely prohibit direct `panic!` or undefined behavior
 
-→ [reference/11-memory-advanced.md](reference/11-memory-advanced.md)
+→ [references/11-memory-advanced.md](references/11-memory-advanced.md)
 
 ## Action 12: Lock-free Read Path (RCU)
 
@@ -153,7 +157,7 @@ Read-heavy, write-sparse global routing tables or config trees (10GbE NIC, 128+ 
 - Readers flow like water past writer boulders
 - **Red Line**: Absolutely prohibit `std::sync::RwLock` or `Mutex` in read-heavy paths at scale — cache line contention causes performance collapse
 
-→ [reference/07-lock-free.md](reference/07-lock-free.md)
+→ [references/07-lock-free.md](references/07-lock-free.md)
 
 ## Action 13: Epoch-based Memory Reclamation
 
@@ -163,7 +167,7 @@ Build lock-free concurrent structures (Lock-free Queue, SkipList).
 - Establish epochs on timeline, physically reclaim only after all reader threads cross old epoch
 - **Red Line**: Prohibit directly dropping shared atomic pointers without concurrent protection
 
-→ [reference/07-lock-free.md](reference/07-lock-free.md)
+→ [references/07-lock-free.md](references/07-lock-free.md)
 
 ## Action 14: Memory Ordering Precision
 
@@ -173,7 +177,7 @@ Atomic variables for lock-free state transitions.
 - Pure statistical counters: enforce `Ordering::Relaxed`
 - **Red Line**: Prohibit blind `Ordering::SeqCst` — CPU memory barrier cost is extremely high
 
-→ [reference/07-lock-free.md](reference/07-lock-free.md)
+→ [references/07-lock-free.md](references/07-lock-free.md)
 
 ## Action 15: SIMD Vectorized Execution
 
@@ -184,7 +188,7 @@ Gateway protocol parsing, JSON extraction, bulk memory search (GB/s throughput).
 - Use `as_simd::<N>` for aligned data, scalar fallback for unaligned tail
 - **Red Line**: Prohibit byte-by-byte comparison in core parsing loops (branch misprediction collapses performance)
 
-→ [reference/08-vectorized.md](reference/08-vectorized.md)
+→ [references/08-vectorized.md](references/08-vectorized.md)
 
 ## Action 16: Columnar Memory Layout (SoA)
 
@@ -195,7 +199,7 @@ Database executor, large-scale structured data aggregation.
 - Ensure data alignment, cooperate with CPU hardware prefetcher
 - **Red Line**: Prohibit AoS (Array of Structs) for bulk aggregation — CPU cache fills with useless padding
 
-→ [reference/08-vectorized.md](reference/08-vectorized.md)
+→ [references/08-vectorized.md](references/08-vectorized.md)
 
 ---
 
@@ -286,14 +290,16 @@ flowchart TD
 
 | File | Topic | Key Directive |
 |------|-------|---------------|
-| [01-io-model.md](reference/01-io-model.md) | I/O Model Selection | Tokio epoll vs io_uring decision tree; mixed runtime red line |
-| [02-backpressure.md](reference/02-backpressure.md) | Backpressure & Bounded Resources | Prohibit unbounded channels; 503 or internal backpressure |
-| [03-syscall.md](reference/03-syscall.md) | Syscall Wrappers | Use `rustix` instead of direct syscall |
-| [04-consensus.md](reference/04-consensus.md) | Consensus & Deterministic State | Prohibit HashMap order, rand, Instant::now |
-| [05-resilience.md](reference/05-resilience.md) | Resilience Design | Graceful shutdown, circuit breaker, CancellationToken |
-| [06-observability.md](reference/06-observability.md) | Observability | Tracing + Metrics + Panic Hook full chain |
-| [07-lock-free.md](reference/07-lock-free.md) | Lock-free Concurrency | RCU zero-block read, Epoch reclamation, memory ordering |
-| [08-vectorized.md](reference/08-vectorized.md) | Vectorized Execution | SIMD instructions, SoA columnar layout, auto-vectorization |
-| [09-code-style.md](reference/09-code-style.md) | Code Standards | FFI safety, catch_unwind, CI lints |
-| [10-ci-lints.md](reference/10-ci-lints.md) | CI Checks | Strict lints configuration |
-| [11-memory-advanced.md](reference/11-memory-advanced.md) | Advanced Memory Architecture | Arena, Slab, NUMA/PMEM physical addressing, Allocator API |
+| [01-io-model.md](references/01-io-model.md) | I/O Model Selection | Tokio epoll vs io_uring decision tree; mixed runtime red line |
+| [02-backpressure.md](references/02-backpressure.md) | Backpressure & Bounded Resources | Prohibit unbounded channels; 503 or internal backpressure |
+| [03-syscall.md](references/03-syscall.md) | Syscall Wrappers | Use `rustix` instead of direct syscall |
+| [04-consensus.md](references/04-consensus.md) | Consensus & Deterministic State | Prohibit HashMap order, rand, Instant::now |
+| [05-resilience.md](references/05-resilience.md) | Resilience Design | Graceful shutdown, circuit breaker, CancellationToken |
+| [06-observability.md](references/06-observability.md) | Observability | Tracing + Metrics + Panic Hook full chain |
+| [07-lock-free.md](references/07-lock-free.md) | Lock-free Concurrency | RCU zero-block read, Epoch reclamation, memory ordering |
+| [08-vectorized.md](references/08-vectorized.md) | Vectorized Execution | SIMD instructions, SoA columnar layout, auto-vectorization |
+| [09-code-style.md](references/09-code-style.md) | Code Standards | FFI safety, catch_unwind, CI lints |
+| [10-ci-lints.md](references/10-ci-lints.md) | CI Checks | Strict lints configuration |
+| [11-memory-advanced.md](references/11-memory-advanced.md) | Advanced Memory Architecture | Arena, Slab, NUMA/PMEM physical addressing, Allocator API |
+| [12-breakwater-pattern.md](references/12-breakwater-pattern.md) | Breakwater Architecture | Facade/Core layered design, boundary interception, de-oxygenation protocol |
+| [13-physical-audit.md](references/13-physical-audit.md) | Physical Feasibility Audit | Container memory limits, network latency budgets, NUMA topology |

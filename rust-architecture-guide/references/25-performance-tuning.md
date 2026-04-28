@@ -5,7 +5,7 @@ category: "Performance"
 priority: "P3"
 applies_to: ["standard", "strict"]
 prerequisites: ["09-data-architecture.md", "11-concurrency.md"]
-dependents: ["rust-systems-cloud-infra-guide/reference/08-vectorized.md", "rust-systems-cloud-infra-guide/reference/07-lock-free.md"]
+dependents: ["rust-systems-cloud-infra-guide/references/08-vectorized.md", "rust-systems-cloud-infra-guide/references/07-lock-free.md"]
 ---
 
 # Performance Tuning & Low-Level Optimization: Mechanical Sympathy
@@ -17,7 +17,7 @@ dependents: ["rust-systems-cloud-infra-guide/reference/08-vectorized.md", "rust-
 > - **Priority**: P3 only (constrained by P0-P2)
 > - **Modes**: `standard` (warning) → `strict` (mandatory benchmark proof)
 > - **Prerequisites**: [`09-data-architecture.md`](09-data-architecture.md) (data layout), [`11-concurrency.md`](11-concurrency.md) (atomics)
-> - **Deepened by**: [`08-vectorized.md`](../../rust-systems-cloud-infra-guide/reference/08-vectorized.md) (SIMD intrinsics), [`07-lock-free.md`](../../rust-systems-cloud-infra-guide/reference/07-lock-free.md) (lock-free structures)
+> - **Deepened by**: [`08-vectorized.md`](../../rust-systems-cloud-infra-guide/references/08-vectorized.md) (SIMD intrinsics), [`07-lock-free.md`](../../rust-systems-cloud-infra-guide/references/07-lock-free.md) (lock-free structures)
 
 ---
 
@@ -127,7 +127,7 @@ fn handle_request() {
 **Benefit**: Reduces thousands of `malloc`/`free` calls to single pointer offset — O(1) allocation efficiency.
 
 **For advanced scenarios** (per-request AST, NUMA-aware allocation, custom Allocator API):
-→ See [`rust-systems-cloud-infra-guide/reference/11-memory-advanced.md`](../rust-systems-cloud-infra-guide/reference/11-memory-advanced.md)
+→ See [`rust-systems-cloud-infra-guide/references/11-memory-advanced.md`](../rust-systems-cloud-infra-guide/references/11-memory-advanced.md)
 
 ### 2.2 Pre-allocation Discipline
 
@@ -223,7 +223,7 @@ struct AlignedCounter {
 ```
 
 **For production systems** (using `CachePadded`, RCU patterns):
-→ See [`rust-systems-cloud-infra-guide/reference/07-lock-free.md`](../rust-systems-cloud-infra-guide/reference/07-lock-free.md)
+→ See [`rust-systems-cloud-infra-guide/references/07-lock-free.md`](../rust-systems-cloud-infra-guide/references/07-lock-free.md)
 
 ---
 
@@ -279,7 +279,7 @@ fn simd_add(a: &[f32], b: &[f32], out: &mut [f32]) {
 **P0 Red Line**: **MUST** use runtime feature detection and provide scalar fallback for architecture-specific intrinsics.
 
 **For advanced SIMD** (AVX-512 intrinsics, bitmask branch elimination):
-→ See [`rust-systems-cloud-infra-guide/reference/08-vectorized.md`](../rust-systems-cloud-infra-guide/reference/08-vectorized.md)
+→ See [`rust-systems-cloud-infra-guide/references/08-vectorized.md`](../rust-systems-cloud-infra-guide/references/08-vectorized.md)
 
 ---
 
@@ -322,7 +322,7 @@ fn consumer() {
 **Why**: ABA problem, memory reclamation timing, and platform differences are extremely difficult to handle correctly.
 
 **For advanced lock-free patterns** (RCU with arc-swap, Epoch-based reclamation, custom lock-free SkipList):
-→ See [`rust-systems-cloud-infra-guide/reference/07-lock-free.md`](../rust-systems-cloud-infra-guide/reference/07-lock-free.md)
+→ See [`rust-systems-cloud-infra-guide/references/07-lock-free.md`](../rust-systems-cloud-infra-guide/references/07-lock-free.md)
 
 ---
 
@@ -498,9 +498,9 @@ strict (Ultra-low latency)
 - [`26-advanced-testing.md`](26-advanced-testing.md) — Loom, Miri, fuzz testing
 
 ### rust-systems-cloud-infra-guide (Advanced Scenarios)
-- [`07-lock-free.md`](../rust-systems-cloud-infra-guide/reference/07-lock-free.md) — RCU, Epoch reclamation, memory ordering proofs
-- [`08-vectorized.md`](../rust-systems-cloud-infra-guide/reference/08-vectorized.md) — SIMD intrinsics, bitmask parsing, SoA columnar
-- [`11-memory-advanced.md`](../rust-systems-cloud-infra-guide/reference/11-memory-advanced.md) — Arena allocators, Slab, NUMA, Allocator API
+- [`07-lock-free.md`](../rust-systems-cloud-infra-guide/references/07-lock-free.md) — RCU, Epoch reclamation, memory ordering proofs
+- [`08-vectorized.md`](../rust-systems-cloud-infra-guide/references/08-vectorized.md) — SIMD intrinsics, bitmask parsing, SoA columnar
+- [`11-memory-advanced.md`](../rust-systems-cloud-infra-guide/references/11-memory-advanced.md) — Arena allocators, Slab, NUMA, Allocator API
 
 ---
 

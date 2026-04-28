@@ -58,50 +58,50 @@
 
 | 文件 | 主题 |
 |------|------|
-| `reference/00-mode-guide.md` | 执行模式 — rapid / standard / strict 定义与转换 |
-| `reference/01-priority-pyramid.md` | 四级优先级金字塔 |
-| `reference/02-conflict-resolution.md` | 典型冲突与解决方案 |
-| `reference/03-progressive-architecture.md` | MVP → 生产级渐进式架构 |
-| `reference/04-trade-offs.md` | 权衡决策分析框架 |
-| `reference/05-glossary.md` | 集中术语词汇表 |
-| `reference/06-deviation-process.md` | 偏差流程（`// DEVIATION:` 注解） |
+| `references/00-mode-guide.md` | 执行模式 — rapid / standard / strict 定义与转换 |
+| `references/01-priority-pyramid.md` | 四级优先级金字塔 |
+| `references/02-conflict-resolution.md` | 典型冲突与解决方案 |
+| `references/03-progressive-architecture.md` | MVP → 生产级渐进式架构 |
+| `references/04-trade-offs.md` | 权衡决策分析框架 |
+| `references/05-glossary.md` | 集中术语词汇表 |
+| `references/06-deviation-process.md` | 偏差流程（`// DEVIATION:` 注解） |
 
 ### 架构模式（11 份）
 
 | 文件 | 主题 |
 |------|------|
-| `reference/07-state-machine.md` | 类型驱动状态机设计 |
-| `reference/08-newtype.md` | Newtype 模式与类型安全 ID |
-| `reference/09-data-architecture.md` | 所有权、克隆、内存布局 |
-| `reference/10-error-handling.md` | 库级 `thiserror` vs 应用级 `anyhow` |
-| `reference/11-concurrency.md` | 并发：通道、锁、RwLock、parking_lot、死锁预防 |
-| `reference/12-async-internals.md` | 异步内幕：Future、Pin/Unpin、select!/join!、取消安全 |
-| `reference/13-api-design.md` | 公共 API：`#[non_exhaustive]`、Sealed Trait、`#[deprecated]` |
-| `reference/14-metaprogramming.md` | 截击样板：声明式宏、过程宏、const fn、常量泛型 |
-| `reference/15-ffi-interop.md` | 防波堤体系：三层隔离、不透明指针、Panic 截击、repr(C) |
-| `reference/16-observability.md` | Tracing、Metrics、Panic Hook、Coredump |
-| `reference/17-toolchain.md` | CI、Clippy、rustfmt、Workspace、Feature Flags、cargo deny |
+| `references/07-state-machine.md` | 类型驱动状态机设计 |
+| `references/08-newtype.md` | Newtype 模式与类型安全 ID |
+| `references/09-data-architecture.md` | 所有权、克隆、内存布局 |
+| `references/10-error-handling.md` | 库级 `thiserror` vs 应用级 `anyhow` |
+| `references/11-concurrency.md` | 并发：通道、锁、RwLock、parking_lot、死锁预防 |
+| `references/12-async-internals.md` | 异步内幕：Future、Pin/Unpin、select!/join!、取消安全 |
+| `references/13-api-design.md` | 公共 API：`#[non_exhaustive]`、Sealed Trait、`#[deprecated]` |
+| `references/14-metaprogramming.md` | 截击样板：声明式宏、过程宏、const fn、常量泛型 |
+| `references/15-ffi-interop.md` | 防波堤体系：三层隔离、不透明指针、Panic 截击、repr(C) |
+| `references/16-observability.md` | Tracing、Metrics、Panic Hook、Coredump |
+| `references/17-toolchain.md` | CI、Clippy、rustfmt、Workspace、Feature Flags、cargo deny |
 
 ### 地道风格（7 份）
 
 | 文件 | 主题 |
 |------|------|
-| `reference/18-control-flow.md` | `let else`、`matches!`、截击深度嵌套 |
-| `reference/19-iterators.md` | 迭代器链、`filter_map`、流式发力 |
-| `reference/20-traits.md` | `From` vs `Into`、`Default`、硬件同理心 |
-| `reference/21-errors.md` | `unwrap_or_else`、`map_err`、`and_then` |
-| `reference/22-data-struct.md` | 字段简写、类型口吃消除 |
-| `reference/23-borrowing.md` | `AsRef`、`Cow`、内存经济 |
-| `reference/24-refactor.md` | Agent 自检清单、归约指令 |
+| `references/18-control-flow.md` | `let else`、`matches!`、截击深度嵌套 |
+| `references/19-iterators.md` | 迭代器链、`filter_map`、流式发力 |
+| `references/20-traits.md` | `From` vs `Into`、`Default`、硬件同理心 |
+| `references/21-errors.md` | `unwrap_or_else`、`map_err`、`and_then` |
+| `references/22-data-struct.md` | 字段简写、类型口吃消除 |
+| `references/23-borrowing.md` | `AsRef`、`Cow`、内存经济 |
+| `references/24-refactor.md` | Agent 自检清单、归约指令 |
 
 ### 性能与质量（4 份）
 
 | 文件 | 主题 |
 |------|------|
-| `reference/25-performance-tuning.md` | 硬件同理心：内存、缓存、无锁、SIMD、BCE、预取 |
-| `reference/26-advanced-testing.md` | 机器对抗机器：proptest、fuzzing、loom、Miri、turmoil、防御报告 |
-| `reference/27-review.md` | 综合审查清单 |
-| `reference/28-usage-examples.md` | 实战用例 |
+| `references/25-performance-tuning.md` | 硬件同理心：内存、缓存、无锁、SIMD、BCE、预取 |
+| `references/26-advanced-testing.md` | 机器对抗机器：proptest、fuzzing、loom、Miri、turmoil、防御报告 |
+| `references/27-review.md` | 综合审查清单 |
+| `references/28-usage-examples.md` | 实战用例 |
 
 ## 关系
 
