@@ -1,7 +1,7 @@
 # Rust 系统与云基础设施指南
 
-[![Version](https://img.shields.io/badge/Version-v5.0.0-orange.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-11%20Docs-blue.svg)]()
+[![Version](https://img.shields.io/badge/Version-v6.0.0-orange.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-13%20Docs-blue.svg)]()
 [![CI Lints](https://img.shields.io/badge/CI%20Lints-11%20Strict-red.svg)]()
 
 **云原生基础设施 Rust 指南** — 面向数据库内核、分布式存储、高性能网关、容器运行时、eBPF 控制平面、OS 组件等长时间运行系统的垂直深化指南。
@@ -85,7 +85,7 @@ NIC Ring Buffer → Kernel TCP Stack → User Space
 
 ## 文档索引
 
-`references/` 目录包含 **11 份深度参考文档**，覆盖云基础设施核心领域：
+`references/` 目录包含 **13 份深度参考文档**，覆盖云基础设施核心领域：
 
 ### 一、I/O 与零拷贝
 
@@ -153,6 +153,18 @@ NIC Ring Buffer → Kernel TCP Stack → User Space
 |------|------|---------|
 | **11** | [memory-advanced.md](references/11-memory-advanced.md) | Arena + Slab 预分配 + Allocator API + 内存耗尽背压 |
 
+### 十二、防波堤架构
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **12** | [breakwater-pattern.md](references/12-breakwater-pattern.md) | Facade/Core 分层架构 + Facade 职责（限流、熔断、输入验证、背压、优雅降级）+ Core 不变量（无网络 I/O、无锁、纯逻辑、零拷贝）+ 边界截击协议 |
+
+### 十三、物理可行性审计
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **13** | [physical-audit.md](references/13-physical-audit.md) | 设计前强制审计 + 容器内存限制审计（70% 阈值→熔断）+ 网络延迟预算（p50/p99 分布）+ NUMA 拓扑审计 + 云审计报告模板 |
+
 ---
 
 ## 关系
@@ -170,7 +182,9 @@ rust-architecture-guide (通用宪法)
                       ├── 可观测性：tracing + metrics
                       ├── 无锁：RCU + Epoch + 内存序
                       ├── 向量化：SIMD + SoA
-                      └── 内存：Arena + Slab + Allocator API
+                      ├── 内存：Arena + Slab + Allocator API
+                      ├── 防波堤：Facade/Core 分层架构
+                      └── 物理审计：容器内存限制 + 网络延迟预算 + NUMA 拓扑
 ```
 
 - 本指南依赖于 `rust-architecture-guide` 的 P0-P3 优先级框架和执行模式
@@ -186,7 +200,7 @@ rust-systems-cloud-infra-guide/
 ├── SKILL.md                          # Skill 入口（Agent 指令）
 ├── README.md                         # 文档索引（英文）
 ├── README.zh-CN.md                   # 文档索引（中文）
-└── references/                        # 11 份深度参考文档
+└── references/                        # 13 份深度参考文档
     ├── 01-io-model.md               # I/O 模型与零拷贝
     ├── 02-backpressure.md           # 背压与取消安全
     ├── 03-syscall.md                # 系统调用封装
@@ -197,7 +211,9 @@ rust-systems-cloud-infra-guide/
     ├── 08-vectorized.md             # 向量化执行
     ├── 09-code-style.md             # 代码规范
     ├── 10-ci-lints.md               # CI 检查
-    └── 11-memory-advanced.md        # 高级内存
+    ├── 11-memory-advanced.md        # 高级内存
+    ├── 12-breakwater-pattern.md     # 防波堤架构
+    └── 13-physical-audit.md         # 物理可行性审计
 ```
 
 ---

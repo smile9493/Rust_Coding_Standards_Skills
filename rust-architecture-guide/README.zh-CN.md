@@ -66,7 +66,7 @@
 | `references/05-glossary.md` | 集中术语词汇表 |
 | `references/06-deviation-process.md` | 偏差流程（`// DEVIATION:` 注解） |
 
-### 架构模式（11 份）
+### 架构模式（14 份）
 
 | 文件 | 主题 |
 |------|------|
@@ -81,6 +81,9 @@
 | `references/15-ffi-interop.md` | 防波堤体系：三层隔离、不透明指针、Panic 截击、repr(C) |
 | `references/16-observability.md` | Tracing、Metrics、Panic Hook、Coredump |
 | `references/17-toolchain.md` | CI、Clippy、rustfmt、Workspace、Feature Flags、cargo deny |
+| `references/30-memory-layout.md` | **内存布局透明化**：结构体空隙审计、repr(C) 强制、缓存行友好设计、对齐控制 |
+| `references/31-breakwater-pattern.md` | **防波堤架构**：Facade/Core 分层模式、边界截击协议、类型收缩（去氧） |
+| `references/32-physical-audit.md` | **物理可行性审计**：I/O 预算、内存天花板、并发真实代价、设计前强制审计 |
 
 ### 地道风格（7 份）
 
