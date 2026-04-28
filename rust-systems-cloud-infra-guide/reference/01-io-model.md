@@ -1,12 +1,19 @@
-# Skill: I/O Model & Zero-Copy Architecture
+# I/O Model & Zero-Copy Architecture
 
-## 👤 Profile
+> **📚 Prerequisites**: This document assumes understanding of basic async Rust from [`12-async-internals.md`](../../rust-architecture-guide/reference/12-async-internals.md) and zero-copy principles from [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md) §1 (Zero-Copy Parsing).
+> 
+> **🔺 Deepening Direction**: Selecting between Tokio epoll, io_uring, and monoio for high-throughput scenarios (10GbE+, storage engines, gateways) with zero-copy pipeline optimization.
+> 
+> **📋 Document Profile**:
+> - **Domain**: High-throughput gateways, storage engines, message queues, database WAL.
+> - **Environment**: Linux kernel 5.1+ (io_uring support), 10GbE+ network.
+> - **Mode**: `standard` (awareness) → `strict` (mandatory selection)
+> - **Prerequisites**: [`12-async-internals.md`](../../rust-architecture-guide/reference/12-async-internals.md), [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md)
 
-* **Domain**: High-throughput gateways, storage engines, message queues, database WAL.
-* **Environment**: Linux kernel 5.1+ (io_uring support), 10GbE+ network.
-* **Philosophy**:
-    * **Maximize Kernel I/O Stack**: Eliminate syscall overhead, achieve true async kernel handoff.
-    * **Zero-Copy**: Data should flow, not be copied.
+## Philosophy
+
+* **Maximize Kernel I/O Stack**: Eliminate syscall overhead, achieve true async kernel handoff.
+* **Zero-Copy**: Data should flow, not be copied.
 
 ---
 

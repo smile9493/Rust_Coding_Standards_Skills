@@ -1,12 +1,19 @@
-# Skill: Advanced Memory & Allocators (V4.1.0)
+# Advanced Memory & Allocators (V4.1.0)
 
-## 👤 Profile
+> **📚 Prerequisites**: This document assumes understanding of basic Arena allocation from [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md) §2 (Arena Architecture) and memory optimization from [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md) §2 (Arena Allocation).
+> 
+> **🔺 Deepening Direction**: Applying Arena patterns to database kernels, HFT systems with NUMA-aware placement, PMEM mapping, and custom Allocator API for extreme performance scenarios.
+> 
+> **📋 Document Profile**:
+> - **Domain**: Database kernels, extreme-low-latency gateways, high-frequency trading systems.
+> - **Environment**: Long-running nodes (Uptime > 1 year), 10GbE+ network, multi-NUMA architecture.
+> - **Mode**: `strict` (mandatory for long-running systems)
+> - **Prerequisites**: [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md), [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md)
 
-* **Domain**: Database kernels, extreme-low-latency gateways, high-frequency trading systems.
-* **Environment**: Long-running nodes (Uptime > 1 year), 10GbE+ network, multi-NUMA architecture.
-* **Philosophy**:
-    * **Materialist Dialectics**: Accept memory fragmentation "entropy increase" as objective necessity; hardware heterogeneity determines upper-layer software behavior.
-    * **Jeet Kune Do**: "One strike, instant destruction" inch punch (Arena); flow like water to hardware channels (Allocator API).
+## Philosophy
+
+* **Materialist Dialectics**: Accept memory fragmentation "entropy increase" as objective necessity; hardware heterogeneity determines upper-layer software behavior.
+* **Jeet Kune Do**: "One strike, instant destruction" inch punch (Arena); flow like water to hardware channels (Allocator API).
 
 ---
 

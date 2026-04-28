@@ -1,12 +1,19 @@
 # Vectorized Execution & Columnar Memory Layout
 
-## Profile
+> **📚 Prerequisites**: This document assumes understanding of basic data layout principles from [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md) §3 (Cache Affinity & Data Layout) and [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md) §4 (SIMD Vectorization).
+> 
+> **🔺 Deepening Direction**: Applying SIMD auto-vectorization and manual intrinsics to 10GbE+ networking, database executors, and HFT data processing with hardware-aligned memory layouts.
+> 
+> **📋 Document Profile**:
+> - **Domain**: Database vectorized execution engines (e.g., Databend), 10GbE NIC protocol parsing, high-frequency financial data cleaning
+> - **Environment**: Modern multi-core CPU, I/O bypassed via io_uring or DPDK, computation is the sole bottleneck
+> - **Mode**: `strict` (mandatory for compute-bound hot paths)
+> - **Prerequisites**: [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md), [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md)
 
-* **Domain**: Database vectorized execution engines (e.g., Databend), 10GbE NIC protocol parsing, high-frequency financial data cleaning
-* **Environment**: Modern multi-core CPU, I/O bypassed via io_uring or DPDK, computation is the sole bottleneck
-* **Philosophy**:
-    * **Dialectical Materialism (Physical Law Compliance)**: Acknowledge CPU cache hit rate as inviolable physical law. Abandon human-intuitive object arrays (AoS), adopt machine-intuitive columnar layout (SoA).
-    * **Jeet Kune Do (One-Strike Kill)**: Discard byte-by-byte "fancy but useless" processing. Combine compressed time and space actions, using SIMD instructions to crush multiple data in one clock cycle, achieving GB/s throughput.
+## Philosophy
+
+* **Dialectical Materialism (Physical Law Compliance)**: Acknowledge CPU cache hit rate as inviolable physical law. Abandon human-intuitive object arrays (AoS), adopt machine-intuitive columnar layout (SoA).
+* **Jeet Kune Do (One-Strike Kill)**: Discard byte-by-byte "fancy but useless" processing. Combine compressed time and space actions, using SIMD instructions to crush multiple data in one clock cycle, achieving GB/s throughput.
 
 ---
 
