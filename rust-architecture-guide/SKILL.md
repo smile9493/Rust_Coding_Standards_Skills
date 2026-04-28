@@ -160,17 +160,32 @@ When receiving a Rust coding task, fold the logic with Jeet Kune Do intuition be
 - [06-deviation-process.md](reference/06-deviation-process.md) — Formal rule exception handling
 
 ### Architecture Patterns (11)
-- [07-state-machine.md](reference/07-state-machine.md) — Type-driven state machines
-- [08-newtype.md](reference/08-newtype.md) — Type-safe IDs and credentials
-- [09-data-architecture.md](reference/09-data-architecture.md) — Ownership, cloning, memory layout
-- [10-error-handling.md](reference/10-error-handling.md) — Library vs application error strategies
-- [11-concurrency.md](reference/11-concurrency.md) — Message passing, channels, locking
-- [12-async-internals.md](reference/12-async-internals.md) — Async internals, Pin/Unpin, custom executors
-- [13-api-design.md](reference/13-api-design.md) — Public API boundaries, `#[non_exhaustive]`, sealed traits
-- [14-metaprogramming.md](reference/14-metaprogramming.md) — Intercepting Boilerplate: declarative macros, procedural macros, const fn, const generics
-- [15-ffi-interop.md](reference/15-ffi-interop.md) — The Defense Wall: three-layer isolation, opaque pointers, panic containment, repr(C)
-- [16-observability.md](reference/16-observability.md) — Tracing, metrics, panic hooks, coredumps
-- [17-toolchain.md](reference/17-toolchain.md) — CI, Clippy, unsafe guidelines, workspace, feature flags
+- **State & Types**
+  - [07-state-machine.md](reference/07-state-machine.md) — Type-driven state machines
+  - [08-newtype.md](reference/08-newtype.md) — Type-safe IDs and credentials
+  
+- **Data & Memory** (P0-P1)
+  - [09-data-architecture.md](reference/09-data-architecture.md) — Ownership, cloning, zero-copy, Arena basics
+  
+- **Error Handling** (P0-P1)
+  - [10-error-handling.md](reference/10-error-handling.md) — Library (`thiserror`) vs application (`anyhow`) strategies
+  
+- **Concurrency & Async** (P0-P3)
+  - [11-concurrency.md](reference/11-concurrency.md) — Lock spectrum, decision tree, async isolation (P0-P1)
+  - [12-async-internals.md](reference/12-async-internals.md) — Pin/Unpin, Waker, custom executors (P2-P3)
+  
+- **API & Safety**
+  - [13-api-design.md](reference/13-api-design.md) — Public API boundaries, `#[non_exhaustive]`, sealed traits
+  - [15-ffi-interop.md](reference/15-ffi-interop.md) — The Defense Wall: FFI safety boundaries (P0)
+  
+- **Metaprogramming** (P1-P2)
+  - [14-metaprogramming.md](reference/14-metaprogramming.md) — Declarative/procedural macros, const generics
+  
+- **Observability**
+  - [16-observability.md](reference/16-observability.md) — Tracing, metrics, panic hooks
+  
+- **Tooling**
+  - [17-toolchain.md](reference/17-toolchain.md) — CI, Clippy, workspace, feature flags
 
 ### Idiomatic Style (7)
 - [18-control-flow.md](reference/18-control-flow.md) — `let else`, `matches!`, intercepting deep nesting
