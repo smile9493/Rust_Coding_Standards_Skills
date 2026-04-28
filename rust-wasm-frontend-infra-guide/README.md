@@ -1,7 +1,7 @@
 # Rust to Wasm Vertical Compilation & Boundary Specification
 
-[![Version](https://img.shields.io/badge/Version-v3.0.0-purple.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-8%20Docs-blue.svg)]()
+[![Version](https://img.shields.io/badge/Version-v4.0.0-purple.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-11%20Docs-blue.svg)]()
 [![Domain](https://img.shields.io/badge/Domain-Wasm%20Vertical%20Base-9b59b6.svg)]()
 
 **Rust-Wasm Frontend Infrastructure Vertical Deepening Architectural Specification** — Hard constraints for `wasm32-unknown-unknown` target compilation configuration, cross-language boundary, linear memory management, concurrency model, and general code adaptation.
@@ -37,7 +37,7 @@ From these, four iron rules are derived:
 
 ## Document Index
 
-`references/` directory contains **8 reference documents**, strictly corresponding to the specification's stages:
+`references/` directory contains **11 reference documents**, strictly corresponding to the specification's stages:
 
 ### I. Iron Rules
 
@@ -87,6 +87,24 @@ From these, four iron rules are derived:
 |---|----------|----------|
 | **08** | [philosophy-v2.md](references/08-philosophy-v2.md) | Dialectical Materialism core creed + Jeet Kune Do unity of false and real + tiered defense + architecture decision tree + code review smells |
 
+### IX. Zero-Copy Resource Pool
+
+| # | Document | Coverage |
+|---|----------|----------|
+| **09** | [zero-copy-pool.md](references/09-zero-copy-pool.md) | Resource pool topology (static + transient segments) + JS injection via `TextEncoder.encodeInto` + Wasm resolution with boundary interception + frame lifecycle synchronization + hard constraints [F-05]~[F-07] |
+
+### X. Zero-Copy Command Bus V3.1
+
+| # | Document | Coverage |
+|---|----------|----------|
+| **10** | [command-bus-v3.md](references/10-command-bus-v3.md) | Double-buffer topology (`DoubleBuffer` header, 16 bytes) + atomic synchronization (`AcqRel` ordering) + JS Facade write cycle (`DataView` scalar injection) + Wasm safe consume loop (single slice dispatch) + lifecycle safety contract + hard constraints [F-08]~[F-11] |
+
+### XI. Toolchain & Lifecycle Automation V3.2
+
+| # | Document | Coverage |
+|---|----------|----------|
+| **11** | [toolchain-v3.md](references/11-toolchain-v3.md) | Compile-time layout assertions (`size_of` + `offset_of`) + binary size budget (`.wasm-size-budget.json`) + `twiggy` diagnostics + `performance.now()` telemetry + lifecycle checkpoints + hard constraints [F-12]~[F-15] |
+
 ---
 
 ## Relationship
@@ -117,7 +135,7 @@ rust-architecture-guide (Universal Constitution)
 rust-wasm-frontend-infra-guide/
 ├── SKILL.md                          # Skill entry (Agent instructions)
 ├── README.md                         # Document index
-└── references/                       # 8 reference documents
+└── references/                       # 11 reference documents
     ├── 01-iron-rules.md              # Iron Rules
     ├── 02-build-control.md           # Compilation & Artifact Control
     ├── 03-ffi-boundary.md            # FFI & Cross-Language Boundary
@@ -125,7 +143,10 @@ rust-wasm-frontend-infra-guide/
     ├── 05-concurrency-events.md      # Concurrency & Event-Driven
     ├── 06-wasm-adaptation.md         # General Code Wasm Adaptation
     ├── 07-prohibitions-checklist.md  # Prohibitions & Compliance Self-Check
-    └── 08-philosophy-v2.md           # Architectural Philosophy & Decision Meta-Spec
+    ├── 08-philosophy-v2.md           # Architectural Philosophy & Decision Meta-Spec
+    ├── 09-zero-copy-pool.md          # Zero-Copy Resource Pool
+    ├── 10-command-bus-v3.md          # Zero-Copy Command Bus V3.1
+    └── 11-toolchain-v3.md            # Toolchain & Lifecycle Automation V3.2
 ```
 
 ---

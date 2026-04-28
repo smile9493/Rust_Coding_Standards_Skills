@@ -1,7 +1,7 @@
 # Rust → Wasm 垂直基建编译与边界规范
 
-[![Version](https://img.shields.io/badge/Version-v2.0.0-purple.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-7%20Docs-blue.svg)]()
+[![Version](https://img.shields.io/badge/Version-v4.0.0-purple.svg)]()
+[![Reference Docs](https://img.shields.io/badge/Reference-11%20Docs-blue.svg)]()
 [![Domain](https://img.shields.io/badge/Domain-Wasm%20Vertical%20Base-9b59b6.svg)]()
 
 **Rust-Wasm 前端基建垂直深化架构规范** — 针对 `wasm32-unknown-unknown` 目标的编译配置、跨语言边界、线性内存管理、并发模型到通用代码适配的硬约束规范。
@@ -40,7 +40,7 @@
 
 ## 文档索引
 
-`references/` 目录包含 **7 份参考文档**，严格对应规范的 7 个阶段：
+`references/` 目录包含 **11 份参考文档**，严格对应规范的 11 个阶段：
 
 ### 一、核心哲学与铁律
 
@@ -90,6 +90,24 @@
 |------|------|---------|
 | **08** | [philosophy-v2.md](references/08-philosophy-v2.md) | 唯物辩证主义核心信条 + 截拳道虚实相生 + 分级防御策略 + 架构判准决策树 + 代码审查味道清单 |
 
+### 九、零拷贝资源池
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **09** | [zero-copy-pool.md](references/09-zero-copy-pool.md) | 资源池拓扑（持久段+瞬时段）+ JS 侧 `TextEncoder.encodeInto` 零拷贝注入 + Wasm 侧边界截击解析 + 帧生命周期同步 + 硬约束 [F-05]~[F-07] |
+
+### 十、零拷贝指令总线 V3.1
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **10** | [command-bus-v3.md](references/10-command-bus-v3.md) | 双缓冲拓扑（`DoubleBuffer` 头 16 字节）+ 原子同步协议（`AcqRel` 内存序）+ JS Facade 写入循环（`DataView` 标量注入）+ Wasm 安全消费循环（单一切片派发）+ 生命周期安全契约 + 硬约束 [F-08]~[F-11] |
+
+### 十一、工具链与全生命周期自动化 V3.2
+
+| 编号 | 文档 | 覆盖范围 |
+|------|------|---------|
+| **11** | [toolchain-v3.md](references/11-toolchain-v3.md) | 编译期布局断言（`size_of` + `offset_of`）+ 二进制体积预算（`.wasm-size-budget.json`）+ `twiggy` 诊断 + `performance.now()` 遥测 + 生命周期检查点 + 硬约束 [F-12]~[F-15] |
+
 ---
 
 ## 关系
@@ -121,7 +139,7 @@ rust-wasm-frontend-infra-guide/
 ├── SKILL.md                          # Skill 入口（Agent 指令）
 ├── README.md                         # 文档索引（英文）
 ├── README.zh-CN.md                   # 文档索引（中文）
-└── references/                        # 8 份参考文档
+└── references/                        # 11 份参考文档
     ├── 01-iron-rules.md              # 核心哲学与铁律
     ├── 02-build-control.md           # 编译与产物控制
     ├── 03-ffi-boundary.md            # FFI 与跨语言边界
@@ -129,7 +147,10 @@ rust-wasm-frontend-infra-guide/
     ├── 05-concurrency-events.md      # 并发与事件驱动
     ├── 06-wasm-adaptation.md         # 通用代码 Wasm 适配
     ├── 07-prohibitions-checklist.md  # 禁止清单与合规自检
-    └── 08-philosophy-v2.md           # 架构哲学与决策元规范
+    ├── 08-philosophy-v2.md           # 架构哲学与决策元规范
+    ├── 09-zero-copy-pool.md          # 零拷贝资源池
+    ├── 10-command-bus-v3.md          # 零拷贝指令总线 V3.1
+    └── 11-toolchain-v3.md            # 工具链与全生命周期自动化 V3.2
 ```
 
 ---

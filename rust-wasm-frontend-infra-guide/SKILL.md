@@ -155,6 +155,9 @@ Architectural solution: Through **unidirectional control (Rust is the brain, JS 
 | [06-wasm-adaptation.md](references/06-wasm-adaptation.md) | General Code Wasm Adaptation | `Result<T, JsValue>` + `console_error_panic_hook` + `tracing_wasm` |
 | [07-prohibitions-checklist.md](references/07-prohibitions-checklist.md) | Prohibitions & Compliance | 7 hard prohibitions + 10-item self-check list |
 | [08-philosophy-v2.md](references/08-philosophy-v2.md) | Architectural Philosophy & Decision Meta-Spec | Dialectical Materialism + Jeet Kune Do + tiered defense + decision tree + review smells |
+| [09-zero-copy-pool.md](references/09-zero-copy-pool.md) | Zero-Copy Resource Pool | Resource pool topology, JS injection via `encodeInto`, Wasm resolution with boundary interception, frame lifecycle sync |
+| [10-command-bus-v3.md](references/10-command-bus-v3.md) | Zero-Copy Command Bus V3.1 | Double-buffer topology, atomic synchronization (`AcqRel`), Facade write/consume cycle, lifecycle safety contract, hard constraints [F-08]~[F-11] |
+| [11-toolchain-v3.md](references/11-toolchain-v3.md) | Toolchain & Lifecycle Automation V3.2 | Layout assertions, binary size budget, twiggy diagnostics, performance telemetry, lifecycle checkpoints, hard constraints [F-12]~[F-15] |
 
 ---
 

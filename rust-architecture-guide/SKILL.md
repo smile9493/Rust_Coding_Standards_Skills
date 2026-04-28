@@ -195,7 +195,7 @@ flowchart TD
 - [05-glossary.md](references/05-glossary.md) — Centralized terminology definitions
 - [06-deviation-process.md](references/06-deviation-process.md) — Formal rule exception handling
 
-### Architecture Patterns (11)
+### Architecture Patterns (14)
 - **State & Types**
   - [07-state-machine.md](references/07-state-machine.md) — Type-driven state machines
   - [08-newtype.md](references/08-newtype.md) — Type-safe IDs and credentials
@@ -222,6 +222,15 @@ flowchart TD
   
 - **Tooling**
   - [17-toolchain.md](references/17-toolchain.md) — CI, Clippy, workspace, feature flags
+
+- **Memory Layout Transparency** (P0)
+  - [30-memory-layout.md](references/30-memory-layout.md) — Struct padding audit, `#[repr(C)]` mandate, cache-friendly design, false sharing prevention
+  
+- **Breakwater Architecture** (P0-P1)
+  - [31-breakwater-pattern.md](references/31-breakwater-pattern.md) — Facade/Core layered pattern, boundary interception protocol, type contraction
+  
+- **Physical Feasibility Audit** (P0)
+  - [32-physical-audit.md](references/32-physical-audit.md) — Pre-design mandatory audit: I/O budget, memory ceiling, concurrency true cost
 
 ### Idiomatic Style (7)
 - [18-control-flow.md](references/18-control-flow.md) — `let else`, `matches!`, intercepting deep nesting
