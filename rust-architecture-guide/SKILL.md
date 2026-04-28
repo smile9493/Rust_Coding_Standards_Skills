@@ -150,6 +150,37 @@ When receiving a Rust coding task, fold the logic with Jeet Kune Do intuition be
 
 ## 8. Reference Files
 
+### Document Relationship Map
+
+```mermaid
+flowchart TD
+    SKILL[SKILL.md<br/>Constitutional Foundation] --> Mode[00-mode-guide.md<br/>Execution Modes]
+    SKILL --> Pyramid[01-priority-pyramid.md<br/>P0-P3 Hierarchy]
+    
+    Pyramid --> Conflict[02-conflict-resolution.md<br/>Conflict Scenarios]
+    Pyramid --> Concurrency[11-concurrency.md<br/>Lock Spectrum]
+    
+    Mode --> Progressive[03-progressive-architecture.md<br/>MVP → Production]
+    Mode --> Deviation[06-deviation-process.md<br/>Rule Exceptions]
+    
+    Concurrency --> StateMachine[07-state-machine.md<br/>Type-Driven States]
+    Concurrency --> Async[12-async-internals.md<br/>Pin/Unpin/Waker]
+    
+    Async --> CloudInfra[Cloud Infra Guide<br/>Vertical Deepening]
+    
+    Pyramid --> DataArch[09-data-architecture.md<br/>Zero-Copy Principles]
+    DataArch --> Performance[25-performance-tuning.md<br/>Mechanical Sympathy]
+    
+    StateMachine --> Newtype[08-newtype.md<br/>Semantic IDs]
+    
+    Conflict --> Tradeoffs[04-trade-offs.md<br/>Decision Framework]
+    
+    style SKILL fill:#4a90d9,stroke:#2c5aa0,color:#fff
+    style Pyramid fill:#5cb85c,stroke:#4cae4c,color:#fff
+    style Concurrency fill:#f0ad4e,stroke:#ec971f,color:#000
+    style CloudInfra fill:#d9534f,stroke:#c9302c,color:#fff
+```
+
 ### Execution & Strategy (7)
 - [00-mode-guide.md](reference/00-mode-guide.md) — Execution modes and transition checklists
 - [01-priority-pyramid.md](reference/01-priority-pyramid.md) — The four-level hierarchy
@@ -196,11 +227,13 @@ When receiving a Rust coding task, fold the logic with Jeet Kune Do intuition be
 - [23-borrowing.md](reference/23-borrowing.md) — `AsRef`, `Cow`, memory economy
 - [24-refactor.md](reference/24-refactor.md) — Agent Self-Check List, Reduction Directive
 
-### Deep Dive (4)
-- [25-performance-tuning.md](reference/25-performance-tuning.md) — Mechanical Sympathy: memory, cache, lock-free, SIMD, BCE, prefetching
-- [26-advanced-testing.md](reference/26-advanced-testing.md) — Machine vs Machine: proptest, fuzzing, loom, Miri, turmoil, defense report
-- [27-review.md](reference/27-review.md) — Comprehensive review checklist
-- [28-usage-examples.md](reference/28-usage-examples.md) — Real-world scenarios
+### Deep Dive (P3 Only)
+> ⚠️ **Requirement**: All P3 optimizations MUST include profiler data proving bottleneck
+
+- [25-performance-tuning.md](reference/25-performance-tuning.md) — Mechanical Sympathy: SoA, SIMD, Arena, PGO (P3 only)
+- [26-advanced-testing.md](reference/26-advanced-testing.md) — Formal verification: proptest, fuzz, Loom, Miri (strict mode)
+- [27-review.md](reference/27-review.md) — Production review checklist
+- [28-usage-examples.md](reference/28-usage-examples.md) — Real-world scenarios with Decision Summaries
 
 ---
 

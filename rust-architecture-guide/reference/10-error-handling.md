@@ -1,3 +1,13 @@
+---
+title: "Error Handling Strategy"
+description: "Library vs Application error handling with thiserror and anyhow"
+category: "Patterns"
+priority: "P0-P1"
+applies_to: ["rapid", "standard", "strict"]
+prerequisites: []
+dependents: []
+---
+
 # Error Handling Strategy
 
 ## Library vs Application Layering

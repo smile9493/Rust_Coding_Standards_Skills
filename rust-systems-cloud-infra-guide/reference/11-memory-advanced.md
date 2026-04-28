@@ -12,8 +12,8 @@
 
 ## Philosophy
 
-* **Materialist Dialectics**: Accept memory fragmentation "entropy increase" as objective necessity; hardware heterogeneity determines upper-layer software behavior.
-* **Jeet Kune Do**: "One strike, instant destruction" inch punch (Arena); flow like water to hardware channels (Allocator API).
+* **Materialist Dialectics (唯物辩证法, Hardware Sympathy)**: Accept memory fragmentation "entropy increase" as objective necessity; hardware heterogeneity determines upper-layer software behavior.
+* **Jeet Kune Do (截拳道, Compile-time Defense First)**: "One strike, instant destruction" inch punch (Arena); flow like water to hardware channels (Allocator API).
 
 ---
 

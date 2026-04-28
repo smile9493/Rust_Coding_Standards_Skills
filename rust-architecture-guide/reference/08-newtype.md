@@ -1,3 +1,13 @@
+---
+title: "Newtype Pattern"
+description: "Type-safe wrappers for semantic isolation of domain IDs and credentials"
+category: "Patterns"
+priority: "P1"
+applies_to: ["standard", "strict"]
+prerequisites: []
+dependents: []
+---
+
 # Newtype Pattern
 
 ## When to Use Newtype

@@ -1,3 +1,13 @@
+---
+title: "Graceful Degradation & Resilience Engineering"
+description: "Graceful shutdown, lock poisoning recovery, health checks, and circuit breakers"
+category: "Infrastructure"
+priority: "P0-P1"
+applies_to: ["standard", "strict"]
+prerequisites: ["02-backpressure.md"]
+dependents: []
+---
+
 # Skill: Graceful Degradation & Resilience Engineering
 
 ## 👤 Profile

@@ -1,3 +1,13 @@
+---
+title: "Deviation Process — Formal Rule Exception Handling"
+description: "Formal process for documenting and reviewing rule deviations with // DEVIATION: annotations"
+category: "Process"
+priority: "P0-P3"
+applies_to: ["rapid", "standard", "strict"]
+prerequisites: ["00-mode-guide.md", "01-priority-pyramid.md"]
+dependents: []
+---
+
 # Deviation Process — Formal Rule Exception Handling
 
 ## Overview

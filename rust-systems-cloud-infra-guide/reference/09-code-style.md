@@ -1,3 +1,13 @@
+---
+title: "Code Style & Unsafe Boundaries"
+description: "Capacity-aware allocation, mandatory SAFETY comments, and FFI panic catching"
+category: "Infrastructure"
+priority: "P0-P1"
+applies_to: ["standard", "strict"]
+prerequisites: ["rust-architecture-guide/reference/15-ffi-interop.md"]
+dependents: ["10-ci-lints.md"]
+---
+
 # Skill: Code Style & Unsafe Boundaries
 
 ## 👤 Profile

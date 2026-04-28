@@ -1,3 +1,13 @@
+---
+title: "FFI & Cross-Language Interop: The Defense Wall"
+description: "Three-layer isolation model for safe FFI boundaries with C/C++"
+category: "Advanced"
+priority: "P0-P1"
+applies_to: ["standard", "strict"]
+prerequisites: []
+dependents: ["rust-systems-cloud-infra-guide/reference/03-syscall.md"]
+---
+
 # FFI & Cross-Language Interop: The Defense Wall
 
 > **Core Philosophy — The Defense Wall**: FFI boundaries are the "no-man's land" of the system. Rust's safety guarantees become void here. The architect must construct a physical isolation wall: outside the wall is the chaotic and unsafe C ABI; inside the wall is the rigorous Rust safety model. Any attempt to penetrate this wall must pass strict contract review.
@@ -6,7 +16,7 @@
 
 ## 1. Boundary Architecture: Three-Layer Isolation Model
 
-> **Intercepting Way — Intercept complexity at the outermost layer.**
+> **Intercepting Way (截拳道方式, Defense at Boundary) — Intercept complexity at the outermost layer.**
 
 ### 1.1 `sys` Layer: Raw Protocol Mirror
 

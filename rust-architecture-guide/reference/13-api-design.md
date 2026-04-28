@@ -1,3 +1,13 @@
+---
+title: "API Design & Boundaries"
+description: "Builder pattern, generics, forward compatibility with #[non_exhaustive], sealed traits"
+category: "Patterns"
+priority: "P1"
+applies_to: ["standard", "strict"]
+prerequisites: []
+dependents: []
+---
+
 # API Design & Boundaries
 
 ## Builder Pattern

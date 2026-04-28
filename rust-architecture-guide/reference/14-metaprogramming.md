@@ -1,6 +1,6 @@
 # Metaprogramming & Macro Magic: Intercepting Boilerplate
 
-> **Core Philosophy — Intercepting Boilerplate**: Macros are not for creating "magic," but for intercepting repetitive, mechanical, and error-prone boilerplate code at compile time. The highest-level metaprogramming should be **transparent**: the code it generates should be as efficient and debuggable as hand-written code.
+> **Core Philosophy — Intercepting Boilerplate (拦截样板, Compile-time Code Generation)**: Macros are not for creating "magic," but for intercepting repetitive, mechanical, and error-prone boilerplate code at compile time. The highest-level metaprogramming should be **transparent**: the code it generates should be as efficient and debuggable as hand-written code.
 
 ---
 

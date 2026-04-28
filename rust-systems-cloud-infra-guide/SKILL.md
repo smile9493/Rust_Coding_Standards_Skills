@@ -236,6 +236,52 @@ Database executor, large-scale structured data aggregation.
 
 ---
 
+## Document Relationship Map
+
+```mermaid
+flowchart TD
+    subgraph Foundation["rust-architecture-guide"]
+        ArchSkill[SKILL.md<br/>Constitution]
+        Concurrency[11-concurrency.md<br/>Lock Spectrum]
+        Async[12-async-internals.md<br/>Async Internals]
+        DataArch[09-data-architecture.md<br/>Zero-Copy]
+    end
+    
+    subgraph Cloud["rust-systems-cloud-infra-guide (Vertical Deepening)"]
+        CloudSkill[SKILL.md<br/>Cloud Infrastructure]
+        
+        subgraph IOLayer["I/O & Runtime"]
+            IOModel[01-io-model.md<br/>epoll/io_uring]
+            Backpressure[02-backpressure.md<br/>Bounded Channels]
+            Resilience[05-resilience.md<br/>Graceful Shutdown]
+        end
+        
+        subgraph MemoryLayer["Memory Architecture"]
+            Memory[11-memory-advanced.md<br/>Arena/Slab/NUMA]
+            Vectorized[08-vectorized.md<br/>SIMD/SoA]
+        end
+        
+        subgraph ConcurrencyLayer["Lock-free Concurrency"]
+            LockFree[07-lock-free.md<br/>RCU/Epoch]
+            Consensus[04-consensus.md<br/>Raft/Paxos]
+        end
+    end
+    
+    ArchSkill -.->|prerequisites| CloudSkill
+    Async -->|deepens| IOModel
+    Concurrency -->|deepens| LockFree
+    DataArch -->|deepens| Memory
+    DataArch -->|deepens| Vectorized
+    Backpressure --> Resilience
+    LockFree --> Consensus
+    
+    style ArchSkill fill:#4a90d9,stroke:#2c5aa0,color:#fff
+    style CloudSkill fill:#d9534f,stroke:#c9302c,color:#fff
+    style IOModel fill:#f0ad4e,stroke:#ec971f,color:#000
+    style Memory fill:#5cb85c,stroke:#4cae4c,color:#fff
+    style LockFree fill:#5bc0de,stroke:#46b8da,color:#000
+```
+
 ## Reference Files
 
 | File | Topic | Key Directive |

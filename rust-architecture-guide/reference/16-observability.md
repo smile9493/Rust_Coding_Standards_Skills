@@ -1,3 +1,13 @@
+---
+title: "Rust Observability & Production Diagnostics"
+description: "Tracing ecosystem, zero-cost metrics, panic defense, and core dumps"
+category: "Operations"
+priority: "P0-P1"
+applies_to: ["standard", "strict"]
+prerequisites: ["12-async-internals.md"]
+dependents: ["rust-systems-cloud-infra-guide/reference/06-observability.md"]
+---
+
 # Rust Observability & Production Diagnostics
 
 This specification covers the core areas of **Operations (Ops) and Observability** in system architecture.

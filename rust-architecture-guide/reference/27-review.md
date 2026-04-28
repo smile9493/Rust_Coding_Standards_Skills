@@ -1,3 +1,13 @@
+---
+title: "Comprehensive Review Checklist"
+description: "Code review checklist covering strategic, architectural, and style concerns"
+category: "Process"
+priority: "P0-P3"
+applies_to: ["rapid", "standard", "strict"]
+prerequisites: ["01-priority-pyramid.md", "00-mode-guide.md"]
+dependents: []
+---
+
 # Comprehensive Review Checklist
 
 ## Code Review Process

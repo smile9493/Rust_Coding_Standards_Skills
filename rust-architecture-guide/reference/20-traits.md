@@ -1,6 +1,6 @@
 # Traits & Conversion: Aligning with Physical Contracts
 
-> **Philosophy — Hardware Sympathy**: Leverage iterators and zero-copy types, align with the compiler's inline optimization.
+> **Philosophy — Hardware Sympathy (硬件同理心, Hardware-Aligned Optimization)**: Leverage iterators and zero-copy types, align with the compiler's inline optimization.
 
 ---
 

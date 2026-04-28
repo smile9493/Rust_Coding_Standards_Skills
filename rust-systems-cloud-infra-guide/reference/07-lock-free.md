@@ -12,8 +12,8 @@
 
 ## Philosophy
 
-* **Dialectical Materialism (Space vs Time)**: Acknowledge read and write as inherent contradictions. Resolve concurrency conflicts through spatial copying (RCU), and resolve old object destruction through temporal partitioning (Epoch).
-* **Jeet Kune Do (Be Water)**: Read operations must "flow like water" — absolute zero blocking, bypassing all mutex obstacles.
+* **Dialectical Materialism (唯物辩证法, Space-Time Trade-offs)**: Acknowledge read and write as inherent contradictions. Resolve concurrency conflicts through spatial copying (RCU), and resolve old object destruction through temporal partitioning (Epoch).
+* **Jeet Kune Do (截拳道, Zero-Blocking Flow)**: Read operations must "flow like water" — absolute zero blocking, bypassing all mutex obstacles.
 
 ---
 

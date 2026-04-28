@@ -1,6 +1,16 @@
+---
+title: "Advanced Testing & Quality Assurance: Machine vs Machine"
+description: "proptest, fuzzing, loom, miri, turmoil for machine-level verification"
+category: "Quality"
+priority: "P0-P1"
+applies_to: ["standard", "strict"]
+prerequisites: ["17-toolchain.md"]
+dependents: ["rust-systems-cloud-infra-guide/reference/06-observability.md"]
+---
+
 # Advanced Testing & Quality Assurance: Machine vs Machine
 
-> **Core Philosophy — Machine vs Machine, Intercepting the Edge, Deterministic Logic**: Human-written example-based tests only cover known territory. Against the extreme complexity of concurrency and edge cases in cloud infrastructure, we must unleash machine computation — algorithmically generating millions of adversarial inputs to comprehensively encircle bugs at the logical level.
+> **Core Philosophy — Machine vs Machine, Intercepting the Edge (边缘拦截, Bug Prevention), Deterministic Logic**: Human-written example-based tests only cover known territory. Against the extreme complexity of concurrency and edge cases in cloud infrastructure, we must unleash machine computation — algorithmically generating millions of adversarial inputs to comprehensively encircle bugs at the logical level.
 
 ---
 

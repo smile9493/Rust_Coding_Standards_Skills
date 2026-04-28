@@ -1,3 +1,13 @@
+---
+title: "Vectorized Execution & Columnar Memory Layout"
+description: "SIMD vectorization, SoA columnar layout, and auto-vectorization for compute-bound hot paths"
+category: "Infrastructure"
+priority: "P3"
+applies_to: ["strict"]
+prerequisites: ["rust-architecture-guide/reference/09-data-architecture.md", "rust-architecture-guide/reference/25-performance-tuning.md"]
+dependents: []
+---
+
 # Vectorized Execution & Columnar Memory Layout
 
 > **📚 Prerequisites**: This document assumes understanding of basic data layout principles from [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md) §3 (Cache Affinity & Data Layout) and [`25-performance-tuning.md`](../../rust-architecture-guide/reference/25-performance-tuning.md) §4 (SIMD Vectorization).
@@ -12,8 +22,8 @@
 
 ## Philosophy
 
-* **Dialectical Materialism (Physical Law Compliance)**: Acknowledge CPU cache hit rate as inviolable physical law. Abandon human-intuitive object arrays (AoS), adopt machine-intuitive columnar layout (SoA).
-* **Jeet Kune Do (One-Strike Kill)**: Discard byte-by-byte "fancy but useless" processing. Combine compressed time and space actions, using SIMD instructions to crush multiple data in one clock cycle, achieving GB/s throughput.
+* **Dialectical Materialism (唯物辩证法, Hardware Sympathy)**: Acknowledge CPU cache hit rate as inviolable physical law. Abandon human-intuitive object arrays (AoS), adopt machine-intuitive columnar layout (SoA).
+* **Jeet Kune Do (截拳道, One-Strike Optimization)**: Discard byte-by-byte "fancy but useless" processing. Combine compressed time and space actions, using SIMD instructions to crush multiple data in one clock cycle, achieving GB/s throughput.
 
 ---
 

@@ -1,3 +1,13 @@
+---
+title: "Backpressure & Resource Control"
+description: "Bounded channels, graceful degradation, and backpressure propagation in K8s environments"
+category: "Infrastructure"
+priority: "P0-P1"
+applies_to: ["standard", "strict"]
+prerequisites: ["rust-architecture-guide/reference/11-concurrency.md"]
+dependents: ["05-resilience.md"]
+---
+
 # Skill: Backpressure & Resource Control
 
 ## 👤 Profile

@@ -1,3 +1,13 @@
+---
+title: "Observability & Testing"
+description: "Structured logging, deterministic concurrency testing with loom/turmoil, and fault injection"
+category: "Infrastructure"
+priority: "P0-P1"
+applies_to: ["standard", "strict"]
+prerequisites: ["rust-architecture-guide/reference/16-observability.md", "rust-architecture-guide/reference/26-advanced-testing.md"]
+dependents: []
+---
+
 # Skill: Observability & Testing
 
 ## 👤 Profile

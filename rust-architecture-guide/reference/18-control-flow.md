@@ -1,6 +1,6 @@
 # Control Flow: Intercepting Deep Nesting
 
-> **Philosophy — Intercepting Boilerplate**: If a logic can be expressed in 1 line of pattern matching, never use 5 lines of nesting.
+> **Philosophy — Intercepting Boilerplate (拦截样板, Flatten Control Flow)**: If a logic can be expressed in 1 line of pattern matching, never use 5 lines of nesting.
 
 ---
 

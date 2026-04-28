@@ -1,3 +1,13 @@
+---
+title: "Progressive Architecture Framework"
+description: "MVP to Production architecture evolution patterns"
+category: "Architecture"
+priority: "P1"
+applies_to: ["rapid", "standard"]
+prerequisites: ["01-priority-pyramid.md", "02-conflict-resolution.md"]
+dependents: []
+---
+
 # Progressive Architecture Framework
 
 ## Philosophy

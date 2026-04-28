@@ -10,7 +10,7 @@ dependents: ["rust-systems-cloud-infra-guide/reference/08-vectorized.md", "rust-
 
 # Performance Tuning & Low-Level Optimization: Mechanical Sympathy
 
-> **Core Philosophy — Mechanical Sympathy**: Ultimate performance comes not from clever tricks, but from deep resonance between code logic and underlying physical hardware — CPU cache lines, pipelines, memory buses, and the kernel I/O stack.
+> **Core Philosophy — Mechanical Sympathy (硬件同理心, Hardware-Aligned Optimization)**: Ultimate performance comes not from clever tricks, but from deep resonance between code logic and underlying physical hardware — CPU cache lines, pipelines, memory buses, and the kernel I/O stack.
 
 > **📋 Document Profile**
 > - **Domain**: P3 performance optimization (profiler-proven bottlenecks only)

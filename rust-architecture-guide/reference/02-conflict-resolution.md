@@ -1,3 +1,13 @@
+---
+title: "Conflict Resolution Scenarios"
+description: "Specific conflict scenarios and resolution strategies for P0-P3 priority violations"
+category: "Architecture"
+priority: "P0-P3"
+applies_to: ["rapid", "standard", "strict"]
+prerequisites: ["01-priority-pyramid.md"]
+dependents: []
+---
+
 # Conflict Resolution Scenarios
 
 ## Conflict 1: Performance vs Elegance

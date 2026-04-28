@@ -1,6 +1,6 @@
 # Memory Economy: Eliminating Unnecessary Copies
 
-> **Philosophy — Economy of Motion**: Every line of code should point directly to intent. Eliminate redundant intermediate variables and implicit copies.
+> **Philosophy — Economy of Motion (经济法则, Zero-Copy Efficiency)**: Every line of code should point directly to intent. Eliminate redundant intermediate variables and implicit copies.
 
 ---
 

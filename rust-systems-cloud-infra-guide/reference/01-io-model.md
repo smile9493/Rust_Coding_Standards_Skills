@@ -1,3 +1,13 @@
+---
+title: "I/O Model & Zero-Copy Architecture"
+description: "Tokio epoll vs io_uring vs monoio decision tree for high-throughput scenarios"
+category: "Infrastructure"
+priority: "P1-P3"
+applies_to: ["standard", "strict"]
+prerequisites: ["rust-architecture-guide/reference/12-async-internals.md", "rust-architecture-guide/reference/09-data-architecture.md"]
+dependents: []
+---
+
 # I/O Model & Zero-Copy Architecture
 
 > **📚 Prerequisites**: This document assumes understanding of basic async Rust from [`12-async-internals.md`](../../rust-architecture-guide/reference/12-async-internals.md) and zero-copy principles from [`09-data-architecture.md`](../../rust-architecture-guide/reference/09-data-architecture.md) §1 (Zero-Copy Parsing).

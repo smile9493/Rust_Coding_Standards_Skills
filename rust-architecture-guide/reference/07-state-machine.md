@@ -1,3 +1,13 @@
+---
+title: "State Machine Design"
+description: "Type-driven state machines for compile-time state transition guarantees"
+category: "Patterns"
+priority: "P1"
+applies_to: ["standard", "strict"]
+prerequisites: ["03-progressive-architecture.md"]
+dependents: []
+---
+
 # State Machine Design
 
 ## When to Use State Machines

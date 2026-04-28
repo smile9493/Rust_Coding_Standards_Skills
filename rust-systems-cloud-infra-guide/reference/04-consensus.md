@@ -1,3 +1,13 @@
+---
+title: "Distributed Consensus & State Machine Consistency"
+description: "Deterministic Raft/Paxos state machines with zero-cost serialization"
+category: "Infrastructure"
+priority: "P0-P1"
+applies_to: ["strict"]
+prerequisites: ["rust-architecture-guide/reference/12-async-internals.md"]
+dependents: []
+---
+
 # Skill: Distributed Consensus & State Machine Consistency
 
 ## 👤 Profile

@@ -1,3 +1,13 @@
+---
+title: "Rust Async Internals & Custom Runtime"
+description: "Pin/Unpin, Waker mechanism, state machines, and custom runtime architecture"
+category: "Advanced"
+priority: "P1-P3"
+applies_to: ["standard", "strict"]
+prerequisites: ["11-concurrency.md"]
+dependents: ["rust-systems-cloud-infra-guide/reference/01-io-model.md"]
+---
+
 # Rust Async Internals & Custom Runtime
 
 This specification is designed for senior architects who need to break through `tokio` default barriers, build ultra-low-latency gateways, engage in embedded (`no_std`) async development, or troubleshoot mysterious concurrency performance bottlenecks.

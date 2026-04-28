@@ -4,6 +4,59 @@ This document centralizes definitions for specialized terms used across the Rust
 
 ---
 
+## Philosophy & Metaphor Terms
+
+The guide uses metaphors from Eastern philosophy and martial arts to describe engineering principles. These are **conceptual tools**, not literal violence or ideology. Below are the mappings from metaphor to engineering reality.
+
+### Quick Reference Table
+
+| 中文术语 | English Term | Engineering Translation | Core Concept |
+|---------|-------------|------------------------|--------------|
+| 截拳道 | Jeet Kune Do | **Compile-time Defense First** | Intercept bugs through type systems before runtime |
+| 唯物辩证法 | Dialectical Materialism | **Hardware Sympathy** | Acknowledge physical laws; Safe/Unsafe unity of opposites |
+| 寸劲 | One-Inch Punch | **Batch Deallocation / Zero-Copy** | Maximum effect with minimal cost (Arena, bulk free) |
+| 经济法则 | Economy of Motion | **Zero-Cost Abstraction** | Every line points directly to intent; no wasted motion |
+| 截击之道 | Intercepting Fist | **Parse, Don't Validate** | Stop errors at compilation, not runtime |
+| 对立统一 | Unity of Opposites | **Safety Through Abstraction** | Unsafe as foundation of safe APIs; error as resilience step |
+| 防波堤 | Breakwater | **FFI Safety Boundary** | Block C chaos from reaching business layer |
+| 对称分配 | Symmetric Allocation | **Allocator Ownership** | Who allocates must deallocate; no cross-boundary free |
+
+> 🤖 **For AI Agents**: When encountering these terms, map them to their **Engineering Translation** equivalents. These describe type safety, borrow checking, zero-cost abstractions, and mechanical sympathy.
+
+---
+
+### Detailed Definitions
+
+#### Jeet Kune Do (截拳道)
+**Engineering Translation**: Compile-time Defense First
+
+Bruce Lee's martial arts philosophy emphasizing efficiency, directness, and adaptation. Applied to Rust: eliminate boilerplate, write code that points directly to intent, adapt to hardware constraints.
+
+**Core Tenets**:
+- **Intercepting Boilerplate**: Stop repetitive patterns before they propagate (macros, generics, abstractions)
+- **Economy of Motion**: Every line has purpose; no redundant clones or allocations
+- **Form Without Form**: Adapt to the problem, don't force a pattern where it doesn't fit
+
+**Rust Applications**:
+- State machine enumization (invalid states unrepresentable)
+- Newtype pattern (type safety without runtime cost)
+- `let else` over nested `if let` (intercept complexity early)
+- `#[non_exhaustive]` (preserve API evolution rights)
+
+#### Dialectical Materialism (唯物辩证法)
+**Engineering Translation**: Hardware Sympathy
+
+Marxist philosophical framework applied to software: contradictions drive evolution, quantitative accumulation leads to qualitative leaps, and negation of negation leads to higher resilience.
+
+**In Rust Engineering**:
+- **Unity of Opposites**: `unsafe` is not the enemy of safe code but its material foundation. The `-sys` crate is unsafe so the wrapper can be safe.
+- **Quantitative to Qualitative**: An MVP's `Option<bool>` flags accumulate until business model stabilizes, then undergo qualitative change to Enum state machine. The compiler assists by identifying all call sites.
+- **Negation of Negation**: Errors are not endpoints but starting points — panic → catch → graceful degradation. Each negation reaches a higher level of resilience.
+
+---
+
+## Architecture & Design Terms
+
 ## Architecture & Design Terms
 
 ### Monomorphization Retreat

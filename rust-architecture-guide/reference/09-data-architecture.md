@@ -10,7 +10,7 @@ dependents: ["rust-systems-cloud-infra-guide/reference/11-memory-advanced.md"]
 
 # Data Architecture & Memory Management: Zero-Overhead Principles
 
-> **Core Philosophy — Intercepting Boilerplate**: Don't move data, just point to where it is. Zero-copy and stack-first designs improve both performance and predictability.
+> **Core Philosophy — Intercepting Boilerplate (拦截样板, Zero-Copy Design)**: Don't move data, just point to where it is. Zero-copy and stack-first designs improve both performance and predictability.
 
 > **📋 Document Profile**
 > - **Domain**: All Rust data structure design
@@ -40,7 +40,7 @@ dependents: ["rust-systems-cloud-infra-guide/reference/11-memory-advanced.md"]
 
 ## 1. Zero-Copy Parsing: Building Instant Views
 
-> **Philosophy**: Don't move data, just point to where it is.
+> **Philosophy — Zero-Copy (零拷贝, Reference-First Design)**: Don't move data, just point to where it is.
 
 ### 1.1 Lifetime Projection
 

@@ -15,3 +15,7 @@ target/
 # Environment
 .env
 .env.local
+
+# Internal working documents (not for remote)
+DOCUMENT_READING_REPORT.md
+COMMUNITY_SCAN_UPDATE.md

@@ -1,6 +1,6 @@
 # Agent Self-Check List & Reduction Directive
 
-> **Philosophy — Intercepting Boilerplate**: When receiving a Rust coding task, the Agent must fold the logic with Jeet Kune Do intuition before output — ensuring every line of code carries maximum energy density.
+> **Philosophy — Jeet Kune Do (截拳道, Compile-time Defense First)**: When receiving a Rust coding task, the Agent must fold the logic with interception intuition before output — ensuring every line of code carries maximum energy density.
 
 ---
 

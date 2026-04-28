@@ -1,3 +1,13 @@
+---
+title: "Toolchain & CI"
+description: "Clippy, Miri, cargo deny, Workspace organization, and CI pipeline design"
+category: "Tooling"
+priority: "P0-P2"
+applies_to: ["rapid", "standard", "strict"]
+prerequisites: []
+dependents: ["rust-systems-cloud-infra-guide/reference/10-ci-lints.md"]
+---
+
 # Toolchain & CI
 
 ## Clippy Configuration
