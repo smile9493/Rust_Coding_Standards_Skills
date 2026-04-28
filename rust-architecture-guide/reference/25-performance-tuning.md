@@ -4,27 +4,117 @@
 
 ---
 
-## 1. Memory Strategy: Eliminating Allocation Redundancy
+## 0. Positioning & Priority Alignment
 
-> **Economy of Motion — Reduce interaction with the operating system.**
+**This specification serves P3 (Extreme Performance) exclusively** — only activate when profiler has proven a code path is the system bottleneck.
 
-### 1.1 Arena Architecture: Intercepting Scattered Allocation
+### Execution Mode Integration
 
-**Rule**: For small objects sharing the same lifetime (request contexts, AST nodes), **prohibit** the global heap allocator. Must use `bumpalo` or `typed-arena`.
+| Mode | Enforcement | Benchmark Requirement |
+|------|-------------|----------------------|
+| `rapid` | **Ignore all P3 rules** | None |
+| `standard` | Warn on violations | Recommended |
+| `strict` | **MUST attach benchmark report** | `criterion` comparison proving >5% gain |
 
-**Benefit**: Reduces thousands of `malloc`/`free` calls to a single pointer offset — O(1) allocation efficiency.
+**P3 Iron Law**: Any Arena introduction, SIMD manual implementation, lock-free transformation, or memory layout adjustment **MUST** include `criterion` benchmark comparison proving benefit > 5%.
 
+### Scope Boundary
+
+**This guide covers** (Universal Rust Projects):
+- Diagnostic methodology and toolchain
+- Benchmark-driven workflow
+- Data layout principles (AoS → SoA)
+- Basic atomic operations and memory ordering
+- Auto-vectorization techniques
+- When to consider advanced optimizations
+
+**For cloud infrastructure scenarios** (database kernels, HFT, 10GbE+ gateways), refer to:
+- [`rust-systems-cloud-infra-guide`](../rust-systems-cloud-infra-guide/README.md) for:
+  - Hand-written SIMD and AVX-512 intrinsics
+  - Lock-free data structures with Epoch reclamation
+  - Arena allocators with Allocator API
+  - NUMA-aware memory placement
+  - Slab pre-allocation with mmap/mlock
+
+---
+
+## 1. Tuning Constitution: No Data, No Optimization
+
+### 1.1 Release Mode Configuration
+
+All benchmarks MUST run under `cargo build --release` with:
+
+```toml
+# Cargo.toml
+[profile.release]
+lto = true          # Link-Time Optimization: enables cross-crate inlining
+codegen-units = 1   # Single codegen unit: maximizes inlining opportunities
+```
+
+**Why**: Default release settings use 16 codegen units for faster compilation, but this prevents cross-unit inlining and other optimizations.
+
+### 1.2 Diagnostic Toolchain
+
+| Tool | Purpose | Command Example |
+|------|---------|----------------|
+| **perf stat** | Hardware performance counters | `perf stat -e cache-misses,instructions ./target/release/app` |
+| **flamegraph** | CPU hotspot visualization | `cargo flamegraph --bin app` |
+| **heaptrack / dhat** | Heap allocation pattern analysis | `heaptrack ./target/release/app` |
+| **cargo asm** | Inspect generated assembly | `cargo asm --lib my_crate::hot_function` |
+| **criterion** | Micro-benchmark framework | `cargo bench --bench my_benchmark` |
+
+### 1.3 Benchmark-Driven Workflow
+
+```bash
+# 1. Baseline measurement
+cargo bench --bench my_benchmark -- --save-baseline main
+
+# 2. Apply optimization
+
+# 3. Compare against baseline
+cargo bench --bench my_benchmark -- --baseline main
+
+# Output:
+# my_function             time:   [120.5 ns 121.2 ns 122.0 ns]
+#                         change: [-5.2% -4.8% -4.3%] (p = 0.00 < 0.05)
+#                         Performance has improved.
+```
+
+**Rule**: If improvement < 5%, revert optimization (not worth maintainability cost).
+
+---
+
+## 2. Memory Allocation Strategy
+
+### 2.1 When to Consider Arena Allocation
+
+**Activation Signal**: `perf` or `heaptrack` shows `malloc`/`free` occupying > 5% in hot path, AND allocated objects share unified lifecycle (e.g., AST nodes within single request, temporary graph structures).
+
+**Diagnosis**: `flamegraph` shows `__libc_malloc` at top of hot path.
+
+**Basic Pattern** (for universal projects):
 ```rust
 use bumpalo::Bump;
 
-let arena = Bump::new();
-let obj = arena.alloc(MyStruct { /* ... */ });
-// When arena goes out of scope, all objects freed at once
+fn handle_request() {
+    let arena = Bump::new();
+    
+    // Allocation is just pointer movement - lock-free, no syscall
+    let root = arena.alloc(parse_json(input));
+    process(root);
+    
+    // When arena drops, all allocations reclaimed at once
+}
 ```
 
-### 1.2 Capacity First: Pre-allocation Determinism
+**Benefit**: Reduces thousands of `malloc`/`free` calls to single pointer offset — O(1) allocation efficiency.
 
-**Rule**: Any construction involving `Vec`, `HashMap`, `String` must declare `with_capacity()` at initialization. Prohibit implicit reallocation on hot paths.
+**For advanced scenarios** (per-request AST, NUMA-aware allocation, custom Allocator API):
+→ See [`rust-systems-cloud-infra-guide/reference/11-memory-advanced.md`](../rust-systems-cloud-infra-guide/reference/11-memory-advanced.md)
+
+### 2.2 Pre-allocation Discipline
+
+**Rule**: Any construction involving `Vec`, `HashMap`, `String` must declare `with_capacity()` at initialization.
 
 ```rust
 // ❌ Implicit reallocations
@@ -34,9 +124,9 @@ let mut vec = Vec::new();
 let mut vec = Vec::with_capacity(1000);
 ```
 
-### 1.3 Custom Allocator Physical Isolation
+### 2.3 Custom Allocator Evaluation
 
-**Rule**: In high-performance server applications, evaluate replacing the global allocator with `tikv-jemallocator` (reduces fragmentation) or `mimalloc` (improves concurrent throughput).
+**For high-performance servers**, consider replacing global allocator:
 
 ```rust
 use tikv_jemallocator::Jemalloc;
@@ -45,33 +135,69 @@ use tikv_jemallocator::Jemalloc;
 static GLOBAL: Jemalloc = Jemalloc;
 ```
 
+**Expected benefit**: Reduced fragmentation, improved concurrent throughput.
+
 ---
 
-## 2. Data Layout: Aligning with Physics
+## 3. Data Layout: Aligning with Cache Physics
 
-> **Conform to cache laws, reduce memory bus oscillation.**
+### 3.1 AoS to SoA Transformation
 
-### 2.1 AoS to SoA Evolution (Struct of Arrays)
+**Rule**: When iterating entire collections, refactor `Vec<Struct { a, b }>` to `Struct { a: Vec<..>, b: Vec<..> }`.
 
-**Rule**: When processing large-scale data entities with high-frequency access to specific fields, must restructure `Vec<Struct>` into `Struct<Vec>`.
-
-**Benefit**: CPU loads cache lines in a continuous, predictable pattern — maximizing L1 Cache utilization.
+**Why**: CPU loads cache lines (64 bytes) contiguously. SoA ensures each cache line contains only needed data.
 
 ```rust
-// ❌ AoS — Cache pollution
-struct User { id: u64, name: String, is_active: bool }
-let users: Vec<User> = /* ... */;
+// ❌ AoS (Array of Structures) - cache pollution
+struct Particle { x: f32, y: f32, z: f32, mass: f32 }
+let particles: Vec<Particle>;
 
-// ✅ SoA — Cache resonance
-struct Users { ids: Vec<u64>, names: Vec<String>, is_actives: Vec<bool> }
+// When iterating only x coordinates:
+for p in &particles {
+    sum += p.x;  // Loads y, z, mass into cache unnecessarily
+}
+
+// ✅ SoA (Structure of Arrays) - cache resonance
+struct Particles {
+    x: Vec<f32>,
+    y: Vec<f32>,
+    z: Vec<f32>,
+    mass: Vec<f32>,
+}
+
+// When iterating only x:
+for &x in &particles.x {
+    sum += x;  // Cache contains only x values
+}
 ```
 
-### 2.2 Field Reordering & Alignment (Padding & Align)
+**Benefit**: 4x cache utilization improvement for single-field iteration.
 
-**Rule**: Core data structure fields should be arranged from largest to smallest to minimize padding.
+### 3.2 Eliminate Pointer Chasing
 
-**Advanced**: For fields frequently updated by multiple threads, use `#[repr(align(64))]` to isolate them to independent cache lines — eliminating **False Sharing**.
+**Prohibited**: `Vec<Box<T>>` or `Vec<Arc<T>>` on hot paths. Pointer chasing invalidates CPU prefetcher.
 
+**MUST**: Use flat `Vec<T>` for contiguous memory layout.
+
+```rust
+// ❌ Pointer chasing - prefetcher fails
+struct Engine {
+    entities: Vec<Box<Entity>>  // Each dereference jumps to random heap location
+}
+
+// ✅ Contiguous memory - prefetcher works perfectly
+struct Engine {
+    entities: Vec<Entity>  // Data laid out sequentially in memory
+}
+```
+
+**Diagnosis**: `perf stat -e cache-misses` shows high miss rate during iteration.
+
+### 3.3 False Sharing Awareness
+
+**Principle**: When two threads modify independent variables spaced < 64 bytes apart, CPU cache coherency protocol forces entire cache line to bounce between cores.
+
+**Basic Defense**:
 ```rust
 #[repr(align(64))]
 struct AlignedCounter {
@@ -79,113 +205,288 @@ struct AlignedCounter {
 }
 ```
 
-### 2.3 Flatten Indirection (Eliminate Pointer Chasing)
-
-**Rule**: Prohibit `Vec<Box<T>>` or `Vec<Rc<T>>` on hot paths. Data should be contiguously laid out in memory (`Vec<T>`), reducing pointer dereference (Pointer Chasing) that causes random memory access.
-
-```rust
-// ❌ Pointer chasing on hot path
-let nodes: Vec<Box<Node>> = /* ... */;
-
-// ✅ Flat, contiguous memory
-let nodes: Vec<Node> = /* ... */;
-```
+**For production systems** (using `CachePadded`, RCU patterns):
+→ See [`rust-systems-cloud-infra-guide/reference/07-lock-free.md`](../rust-systems-cloud-infra-guide/reference/07-lock-free.md)
 
 ---
 
-## 3. Extreme Concurrency: Flow Like Water
+## 4. SIMD Vectorization
 
-> **Eliminate synchronization locks, leverage hardware atomic energy.**
+### 4.1 Trust Auto-Vectorization
 
-### 3.1 Sharded Locks
+**SHOULD**: First write branch-free, boundary-determined iterator chains to trigger LLVM auto-vectorization.
 
-**Rule**: Globally shared collections must not use a single `RwLock`. Must adopt sharding (e.g., `DashMap`) to distribute contention pressure.
-
-```rust
-// ❌ Global lock bottleneck
-let map: RwLock<HashMap<K, V>> = /* ... */;
-
-// ✅ Sharded data structure
-let map: DashMap<K, V> = DashMap::new();
-```
-
-### 3.2 Atomic Operations: Lightweight Force
-
-**Rule**: Counters and status flags must use `Atomic*` series.
-
-**Memory Ordering Strategy**: Prohibit blind `Ordering::SeqCst` in non-logical-dependency scenarios. Use `Relaxed` for accumulation, `Acquire`/`Release` to protect critical sections.
+**Key Techniques**:
+1. Use `assert!(a.len() == b.len())` to eliminate bounds checks
+2. Use `step_by(4)` or similar to hint vectorization width
+3. Avoid branches inside loops
 
 ```rust
-// ❌ Avoid: SeqCst — high overhead
-counter.fetch_add(1, Ordering::SeqCst);
-
-// ✅ Preferred: Relaxed for simple accumulation
-counter.fetch_add(1, Ordering::Relaxed);
-
-// ✅ Acquire/Release for lock-free data structures
-counter.store(value, Ordering::Release);
-let val = counter.load(Ordering::Acquire);
-```
-
-### 3.3 Thread-per-Core (TPC) Architecture
-
-**Rule**: For 10M+ concurrent gateways, evaluate abandoning traditional work-stealing scheduling in favor of `monoio` — fixed-core, lock-free interaction runtimes achieving physical core-level linear scaling.
-
----
-
-## 4. Low-Level Interventions: Intercepting Overhead
-
-> **Penetrate abstractions, reach machine instructions directly.**
-
-### 4.1 Bounds Check Elimination (BCE)
-
-**Rule**: In profiler-verified extremely hot loops, if index safety is proven externally, use `get_unchecked()` or `get_unchecked_mut()` to eliminate CPU branch prediction pressure.
-
-```rust
-// SAFETY: i is guaranteed to be in bounds by loop condition
-for i in 0..vec.len() {
-    let val = unsafe { *vec.get_unchecked(i) };
+fn add_vectors(a: &[f32], b: &[f32], out: &mut [f32]) {
+    assert!(a.len() == b.len() && b.len() == out.len());
+    
+    // LLVM often auto-vectorizes this simple loop
+    for i in 0..a.len() {
+        out[i] = a[i] + b[i];
+    }
 }
 ```
 
-### 4.2 SIMD Vectorization
+**Verification**: `cargo asm --lib my_crate::add_vectors` to check for SIMD instructions (`vaddps`, `paddd`, etc.).
 
-**Rule**: For large-scale numerical computation, string search, or protocol parsing, explicitly invoke `std::simd` or platform-specific instruction sets (AVX-512) — single instruction, multiple data parallel burst.
+### 4.2 When to Consider Manual SIMD
 
+**MAY**: When auto-vectorization fails AND benchmark proves necessity.
+
+**For portable SIMD** (stable API):
 ```rust
 use std::simd::{f32x8, SimdFloat};
-let a = f32x8::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
-let b = f32x8::from_array([1.0; 8]);
-let c = a.mul(b); // Single instruction, 8 floats
+
+fn simd_add(a: &[f32], b: &[f32], out: &mut [f32]) {
+    let chunks = a.len() / 8;
+    
+    for i in 0..chunks {
+        let va = f32x8::from_slice(&a[i * 8..]);
+        let vb = f32x8::from_slice(&b[i * 8..]);
+        let vc = va + vb;
+        vc.copy_to_slice(&mut out[i * 8..]);
+    }
+    
+    // Handle remainder
+    for i in (chunks * 8)..a.len() {
+        out[i] = a[i] + b[i];
+    }
+}
 ```
 
-### 4.3 Prefetching Instructions
+**P0 Red Line**: **MUST** use runtime feature detection and provide scalar fallback for architecture-specific intrinsics.
 
-**Rule**: When processing non-contiguous access to large indexes (e.g., LSM-Tree lookups), use explicit prefetch intrinsics to load next-stage data into L1 cache ahead of time.
+**For advanced SIMD** (AVX-512 intrinsics, bitmask branch elimination):
+→ See [`rust-systems-cloud-infra-guide/reference/08-vectorized.md`](../rust-systems-cloud-infra-guide/reference/08-vectorized.md)
+
+---
+
+## 5. Atomic Operations & Memory Ordering
+
+### 5.1 Basic Memory Ordering
+
+**Default**: `Ordering::SeqCst` (safest, full memory barrier)
+
+**Common Patterns**:
+```rust
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+
+// Simple counter (doesn't affect control flow)
+static REQUEST_COUNT: AtomicUsize = AtomicUsize::new(0);
+
+fn handle_request() {
+    REQUEST_COUNT.fetch_add(1, Ordering::Relaxed);
+}
+
+// Flag synchronization (producer-consumer)
+static READY: AtomicBool = AtomicBool::new(false);
+
+fn producer() {
+    READY.store(true, Ordering::Release);
+}
+
+fn consumer() {
+    while !READY.load(Ordering::Acquire) {}
+}
+```
+
+### 5.2 When to Consider Lock-Free Structures
+
+**MUST** use battle-tested crates for lock-free operations:
+- `crossbeam-channel` / `flume` for lock-free queues
+- `dashmap` for concurrent hash maps
+- `crossbeam::epoch` for safe memory reclamation
+
+**Why**: ABA problem, memory reclamation timing, and platform differences are extremely difficult to handle correctly.
+
+**For advanced lock-free patterns** (RCU with arc-swap, Epoch-based reclamation, custom lock-free SkipList):
+→ See [`rust-systems-cloud-infra-guide/reference/07-lock-free.md`](../rust-systems-cloud-infra-guide/reference/07-lock-free.md)
+
+---
+
+## 6. Advanced Optimizations (Reference Only)
+
+### 6.1 Bounds Check Elimination
+
+**Rule**: In profiler-verified extremely hot loops, if index safety is proven externally:
 
 ```rust
-use std::arch::x86_64::_mm_prefetch;
+// SAFETY: i guaranteed in bounds by loop condition
+for i in 0..vec.len() {
+    let val = unsafe { *vec.get_unchecked(i) };
+    process(val);
+}
+```
 
-unsafe { _mm_prefetch(next_node_ptr as *const i8, _MM_HINT_T0); }
+**Verification**: `cargo asm` shows removal of `cmp` + `jb` instructions.
+
+### 6.2 Profile-Guided Optimization (PGO)
+
+**For latency-critical services**:
+
+```bash
+# 1. Build with instrumentation
+cargo rustc --release -- -C profile-generate=/tmp/pgo
+
+# 2. Run representative workload
+./target/release/app --workload representative
+
+# 3. Build with profile data
+cargo rustc --release -- -C profile-use=/tmp/pgo
+```
+
+**Expected gain**: 5-15% for latency-critical services.
+
+### 6.3 Advanced Topics
+
+For the following advanced scenarios, refer to cloud infrastructure guide:
+
+| Topic | Universal Guide | Cloud Infrastructure Guide |
+|-------|----------------|---------------------------|
+| **Arena Allocation** | Basic `bumpalo` usage | Allocator API, NUMA-aware, Slab pre-allocation |
+| **SIMD** | Auto-vectorization, portable SIMD | AVX-512 intrinsics, bitmask parsing |
+| **Lock-Free** | Basic atomics, crossbeam crates | RCU, Epoch reclamation, custom structures |
+| **Memory Ordering** | SeqCst, Relaxed, Acquire/Release | Fine-grained ordering proofs with loom |
+| **Cache Alignment** | `#[repr(align(64))]` | `CachePadded`, false sharing elimination |
+
+→ See [`rust-systems-cloud-infra-guide/README.md`](../rust-systems-cloud-infra-guide/README.md)
+
+---
+
+## 7. Integration with Overall Architecture
+
+### 7.1 Design Philosophy Alignment
+
+| Principle | Performance Application |
+|-----------|------------------------|
+| **Mechanical Sympathy** | Data layout aligned with cache lines |
+| **Economy of Motion** | Pre-allocation, arena for unified lifecycle |
+| **Flow Like Water** | SoA layout adapts to CPU prefetcher |
+
+### 7.2 Priority Constraints
+
+**P3 is constrained by**:
+- **P0 (Correctness)**: Never introduce UB for performance
+- **P1 (Maintainability)**: If optimization < 5%, prefer clarity
+
+### 7.3 Terminology Links
+
+All specialized terms defined in [`glossary.md`](05-glossary.md):
+- Cache Line
+- False Sharing
+- Bump Allocation
+- SIMD
+- Memory Ordering
+- Pointer Chasing
+- SoA vs AoS
+
+### 7.4 Testing Integration
+
+From [`advanced-testing.md`](26-advanced-testing.md):
+- **Loom**: Systematically explore thread interleavings for lock-free code
+- **Miri**: Detect UB in unsafe blocks
+- **cargo-fuzz**: Fuzz test parsers before optimization
+
+---
+
+## 8. Agent Performance Checklist
+
+Before applying any P3 optimization:
+
+### Prerequisites
+- [ ] Profiler data confirms this is bottleneck (flamegraph, perf)
+- [ ] Baseline benchmark established (`criterion`)
+- [ ] Optimization target quantified (>5% improvement)
+
+### Memory & Allocation
+- [ ] Hot path `format!` or `.to_string()` eliminated?
+- [ ] `Vec`/`HashMap` pre-allocated with capacity?
+- [ ] Arena considered for unified-lifecycle objects?
+- [ ] Custom allocator evaluated (jemallocator/mimalloc)?
+
+### Data Layout
+- [ ] SoA conversion for bulk iteration?
+- [ ] Pointer chasing (`Vec<Box<T>>`) eliminated?
+- [ ] False sharing prevented (align 64)?
+
+### SIMD & Vectorization
+- [ ] Auto-vectorization verified (`cargo asm`)?
+- [ ] Manual SIMD has runtime feature detection?
+- [ ] Scalar fallback provided?
+
+### Concurrency
+- [ ] Lock-free structures use battle-tested crates?
+- [ ] Memory ordering justified (not blind SeqCst)?
+- [ ] Loom verification for lock-free code?
+
+### Safety
+- [ ] All `unsafe` blocks have `SAFETY` comments?
+- [ ] Miri verification for unsafe code?
+- [ ] P0 correctness preserved?
+
+---
+
+## 9. Trade-offs & Decision Framework
+
+### When NOT to Optimize
+
+| Scenario | Decision | Rationale |
+|----------|----------|-----------|
+| Cold path (config, init) | **Skip** | P1 > P3: clarity wins |
+| Improvement < 5% | **Revert** | Not worth maintainability cost |
+| Adds significant complexity | **Reject** | P1 > P3 unless bottleneck critical |
+| No profiler data | **Defer** | No data, no optimization |
+
+### Progressive Optimization Path
+
+```
+rapid (MVP)
+├─ Use String, Vec, standard allocators
+└─ No P3 optimizations
+
+↓ (Profiler identifies bottleneck)
+
+standard (Production)
+├─ Apply targeted optimizations
+├─ Document with // P3: reason comments
+└─ Benchmark reports attached
+
+↓ (Extreme performance required)
+    AND cloud infrastructure scenario
+
+strict (Ultra-low latency)
+├─ Arena allocation with Allocator API
+├─ SIMD manual vectorization (AVX-512)
+├─ Lock-free data structures with Epoch
+├─ PGO enabled
+└─ Full benchmark suite + perf reports
+    ↓
+    Refer to rust-systems-cloud-infra-guide
 ```
 
 ---
 
-## 5. Diagnostic Toolkit
+## 10. Related
 
-> **Data-driven. Prohibit intuition-only optimization.**
+### Within rust-architecture-guide
+- [`00-mode-guide.md`](00-mode-guide.md) — Execution modes governing P3 enforcement
+- [`01-priority-pyramid.md`](01-priority-pyramid.md) — Priority framework (P0-P3)
+- [`05-glossary.md`](05-glossary.md) — Terminology: cache line, false sharing, SIMD, etc.
+- [`11-concurrency.md`](11-concurrency.md) — Lock strategies, atomic operations
+- [`26-advanced-testing.md`](26-advanced-testing.md) — Loom, Miri, fuzz testing
 
-1. **Criterion**: All optimizations must be accompanied by micro-benchmark reports.
-2. **Flamegraph**: Use `cargo-flamegraph` to locate CPU time consumption.
-3. **Miri/Valgrind**: Detect memory leaks and undefined behavior in unsafe blocks.
-4. **Perf/bpftrace**: Directly sample hardware performance counters (L1 Cache Misses, Branch Misses).
+### rust-systems-cloud-infra-guide (Advanced Scenarios)
+- [`07-lock-free.md`](../rust-systems-cloud-infra-guide/reference/07-lock-free.md) — RCU, Epoch reclamation, memory ordering proofs
+- [`08-vectorized.md`](../rust-systems-cloud-infra-guide/reference/08-vectorized.md) — SIMD intrinsics, bitmask parsing, SoA columnar
+- [`11-memory-advanced.md`](../rust-systems-cloud-infra-guide/reference/11-memory-advanced.md) — Arena allocators, Slab, NUMA, Allocator API
 
 ---
 
-## 6. Agent Performance Checklist
-
-1. **Hot path `format!` or `.to_string()`?** (Implicit allocation risk)
-2. **Critical loops inlined (`#[inline]`)?**
-3. **Data structure Cache Miss from excessive pointer nesting?**
-4. **Can compute at compile time (`const fn`)?**
-5. **Async Task holding oversized state across `.await`?** (Future state machine bloat risk)
+**Version History**: 
+- v2.0 — Clarified scope boundary with cloud infrastructure guide, added diagnostic toolchain, mode layering, anti-pattern diagnosis
+- v1.0 — Initial mechanical sympathy specification
