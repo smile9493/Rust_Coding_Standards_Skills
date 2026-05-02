@@ -1,11 +1,12 @@
 ---
 title: "Error Handling Strategy"
-description: "Library vs Application error handling with thiserror and anyhow"
+description: "Library vs Application error handling with thiserror and anyhow, plus miette, error-stack, and wrapping patterns"
 category: "Patterns"
 priority: "P0-P1"
 applies_to: ["rapid", "standard", "strict"]
 prerequisites: []
 dependents: []
+aligned_with: ["Rust API Guidelines C-GOOD-ERR", "Rust Error Guidelines (azdanov)", "Safety-Critical Rust Coding Guidelines"]
 ---
 
 # Error Handling Strategy
@@ -14,21 +15,29 @@ dependents: []
 
 ### Library / Public Crate
 
-**Must**: Define named, structured error enums.
+**Must**: Define named, structured error enums. Wrap third-party errors — never expose them directly in your public API.
 
 ```rust
-// ✅ Required: Structured error enum
+// ✅ Required: Structured error enum with #[non_exhaustive]
 #[derive(thiserror::Error, Debug)]
+#[non_exhaustive]
 pub enum DatabaseError {
     #[error("Connection failed: {0}")]
     Connection(String),
     #[error("Query failed: {0}")]
     Query(String),
+    #[error("Serialization failed: {0}")]
+    Serialization(#[from] serde_json::Error),
 }
 
 // ❌ Forbidden: Exposing anyhow::Error in public API
 pub fn query() -> anyhow::Result<Row> { } // Don't do this!
+
+// ❌ Forbidden: Exposing third-party error types directly
+pub fn parse() -> Result<Row, serde_json::Error> { } // Wraps into your error type instead
 ```
+
+> **Intercepting Third-Party Errors (截击第三方错误)**: Third-party error types are external chaos entering your system. The wrapper layer must be the "interception point" where external errors are translated into your domain's structured error types. This preserves API stability when upstream crates change their error types.
 
 ### Application / Binary
 
@@ -134,6 +143,7 @@ Classify errors to enable different handling strategies:
 
 ```rust
 #[derive(thiserror::Error, Debug)]
+#[non_exhaustive]
 pub enum AppError {
     // Transient: retry may succeed
     #[error("network timeout: {0}")]
@@ -155,18 +165,63 @@ impl AppError {
 }
 ```
 
-## `eyre` as Alternative to `anyhow`
+## Modern Error Crate Ecosystem
 
-`eyre` is a fork of `anyhow` with better error reports via `color-eyre`:
+### Error Reporters
 
-| Feature | `anyhow` | `eyre` |
-|---------|---------|--------|
-| Error chain | Yes | Yes |
-| Spantrace | No | Yes (with `color-eyre`) |
-| Backtrace | `RUST_BACKTRACE=1` | Automatic with `color-eyre` |
-| Custom handlers | No | Yes (`EyreHandler`) |
+| Crate | Strengths | When to Use |
+|-------|-----------|-------------|
+| `anyhow` | Simple, std-compatible, ubiquitous | Default application-level |
+| `eyre` + `color-eyre` | Rich spantrace, automatic backtrace | Debug-heavy applications |
+| `miette` | Beautiful diagnostic output with source code snippets | CLI tools, developer-facing errors |
+| `error-stack` | Attach key-value context, thread-safe reports | Structured observability, multi-layer context |
 
-**Rule**: Use `anyhow` by default. Switch to `eyre` + `color-eyre` when you need rich error reports in application-level debugging.
+```rust
+// miette: diagnostic-grade errors with source annotations
+use miette::{Diagnostic, SourceSpan};
+use thiserror::Error;
+
+#[derive(Error, Diagnostic, Debug)]
+#[error("Parse error at {position}")]
+#[diagnostic(help("Check the syntax at the indicated position"))]
+pub struct ParseError {
+    #[source_code]
+    src: String,
+    #[label("here")]
+    position: SourceSpan,
+}
+
+// error-stack: structured context attachment
+use error_stack::{Report, ResultExt};
+
+fn process() -> error_stack::Result<(), AppError> {
+    let config = read_config()
+        .attach_printable_lazy(|| format!("while reading config for env={}", std::env::var("ENV").unwrap_or_default()))?;
+    Ok(())
+}
+```
+
+### Selection Decision Tree
+
+```
+Is this a library (public API)?
+├─ Yes → thiserror + #[non_exhaustive] error enum
+└─ No (application/binary)
+   ├─ CLI tool / user-facing diagnostics?
+   │  └─ Yes → miette + thiserror
+   ├─ Need structured observability (key-value context, error aggregation)?
+   │  └─ Yes → error-stack
+   ├─ Need rich debug reports (spantrace, automatic backtrace)?
+   │  └─ Yes → eyre + color-eyre
+   └─ Default → anyhow
+```
+
+### Deprecated / Avoid
+
+| Crate | Status | Replacement |
+|-------|--------|-------------|
+| `failure` | Unmaintained | `anyhow` + `thiserror` |
+| `quick-error` | Unmaintained | `thiserror` |
 
 ## Trade-offs
 
@@ -178,6 +233,6 @@ impl AppError {
 
 ## Related
 
-- [api-design.md](13-api-design.md) — Error types in public APIs
+- [api-design.md](13-api-design.md) — Error types in public APIs; Rust API Guidelines C-GOOD-ERR
 - [toolchain.md](17-toolchain.md) — Clippy rules for error handling
 - [errors.md](21-errors.md) — Error combinators and chaining

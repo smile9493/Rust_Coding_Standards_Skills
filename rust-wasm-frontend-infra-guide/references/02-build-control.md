@@ -1,11 +1,12 @@
 ---
 title: "Compilation & Artifact Control"
-description: "Cargo.toml release profile, wasm-opt post-processing optimization, allocator replacement selection"
+description: "Cargo.toml release profile, wasm-opt post-processing optimization, allocator replacement selection, twiggy diagnostics, binary size budgeting"
 category: "Infrastructure"
 priority: "P0-P1"
 applies_to: ["standard", "strict"]
 prerequisites: ["01-iron-rules.md"]
-dependents: []
+dependents: ["11-toolchain-v3.md"]
+aligned_with: ["Leptos Binary Size Guide", "twiggy diagnostics", "wasm-opt -Oz"]
 ---
 
 # Stage 1: Compilation & Artifact Control

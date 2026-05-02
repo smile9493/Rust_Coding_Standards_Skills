@@ -226,9 +226,27 @@ let processors: Vec<Box<dyn Processor>> = vec![/* ... */];
 
 **Object safety vs Generics**: Object-safe traits enable `dyn Trait` but restrict method signatures. Use associated types to bridge the gap.
 
+## Rust API Guidelines Alignment
+
+This document aligns with the [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) checklist. Key mandatory items:
+
+| Guideline | Rule | Our Mapping |
+|-----------|------|-------------|
+| **C-CASE** | Casing conforms to RFC 430 | Jeet Kune Do naming (ref/22) |
+| **C-CONV** | `as_`, `to_`, `into_` conventions | Trait patterns (ref/20): `From`/`Into`/`AsRef` |
+| **C-MACRO-VIS** | Item macros support visibility specifiers | Metaprogramming (ref/14) |
+| **C-GOOD-ERR** | Good error types are meaningful | Error handling (ref/10): `#[non_exhaustive]`, structured enums |
+| **C-NONEXHAUSTIVE** | Types are `#[non_exhaustive]` for evolution | This document §Forward Compatibility |
+| **C-SEALED** | Traits are sealed where needed | This document §Sealed Trait Pattern |
+| **C-STABLE** | SemVer compatible changes only | Deprecation protocol §Deprecation Migration |
+| **C-EXAMPLE** | All items have rustdoc examples | `strict` mode: mandatory doc-tests |
+
+> **Agent Directive**: When designing or reviewing a public API, cross-reference the [Rust API Guidelines checklist](https://rust-lang.github.io/api-guidelines/checklist.html) and note deviations in the Decision Summary.
+
 ## Related
 
 - [error-handling.md](10-error-handling.md) — Error types in API boundaries
 - [newtype.md](08-newtype.md) — Type-safe parameters in APIs
 - [toolchain.md](17-toolchain.md) — Workspace and dependency management
 - [traits.md](20-traits.md) — Trait design patterns and zero-cost abstractions
+- [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) — Official API design checklist

@@ -102,6 +102,32 @@ members = [
 - Parallel compilation across independent crates
 - Clear dependency direction prevents circular coupling
 
+### Rule: Workspace Dependency Inheritance
+
+**Specification**: Use `workspace = true` to centralize dependency versions. Avoid version duplication across member crates.
+
+```toml
+# Cargo.toml (workspace root)
+[workspace.dependencies]
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+anyhow = "1"
+
+[workspace.metadata]
+rust-version = "1.85.0"
+```
+
+```toml
+# crates/xxx-core/Cargo.toml
+[dependencies]
+tokio = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+```
+
+**Rust 2024 Note**: `default-features = false` in workspace inheritance is now rejected unless the workspace definition explicitly does not enable default features. Always be explicit in workspace definitions.
+
 ### Rule: Dependency Slimming via Feature Flags
 
 **Specification**: Don't make users pay for features they don't need.

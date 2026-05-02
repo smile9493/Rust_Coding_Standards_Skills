@@ -161,7 +161,55 @@ syn = { version = "2.0", features = ["full"] }
 **MUST**:
 - Error messages must point to the exact user code location that triggered the error (accurate `Span`)
 - **Absolutely prohibit** using `panic!()` inside procedural macros
-- Must generate `compile_error!()` with proper span association
+- Must emit proper `proc_macro::Diagnostic`-level errors
+
+**Modern Toolchain**: Prefer `proc-macro-error2` crate for unified error reporting across compiler versions:
+
+```toml
+[dependencies]
+proc-macro-error2 = "2"
+```
+
+```rust
+use proc_macro_error2::{abort, emit_error, proc_macro_error};
+
+#[proc_macro_error]
+#[proc_macro_derive(MyTrait, attributes(my_attr))]
+pub fn derive_my_trait(input: TokenStream) -> TokenStream {
+    // Errors automatically attach to correct spans via syn
+    let input = parse_macro_input!(input as DeriveInput);
+
+    if input.ident.to_string().starts_with('_') {
+        abort!(input.ident, "Type name must not start with underscore");
+    }
+    // ...
+}
+```
+
+**For attribute-heavy derive macros**, use `darling` for ergonomic attribute parsing:
+
+```toml
+[dependencies]
+darling = "0.20"
+```
+
+```rust
+use darling::FromDeriveInput;
+
+#[derive(FromDeriveInput)]
+#[darling(attributes(my_crate))]
+struct MyDeriveOpts {
+    // Required field — error if missing
+    feature: String,
+
+    // Optional with default
+    #[darling(default)]
+    optional_flag: bool,
+
+    // "Did you mean" suggestions for typos — automatic!
+    // darling::Error::write_errors provides precise error locations
+}
+```
 
 **Correct Example**:
 ```rust

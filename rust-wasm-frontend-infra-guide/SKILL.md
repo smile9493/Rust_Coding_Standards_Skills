@@ -8,15 +8,23 @@ description: >
   be inherited and obeyed.
 license: MIT
 metadata:
-  version: "4.0.0"
+  version: "4.1.0"
   philosophy: "Dialectical Materialism & Jeet Kune Do — Wasm Vertical Base"
   domain: "wasm32-unknown-unknown compilation & boundary layer"
   relationship: "vertical-deepening-of:rust-architecture-guide"
+  rust_edition: "2024"
+  aligned_with: ["Leptos Binary Size Guide", "twiggy diagnostics", "wasm-opt -Oz", "talc allocator", "Wasm Component Model proposals"]
 ---
 
-# Rust to Wasm Vertical Compilation & Boundary Specification V4.0.0
+# Rust to Wasm Vertical Compilation & Boundary Specification V4.1.0
 
 This specification inherits the core philosophy from the Rust Architecture Guide and the Rust Project Lifecycle Guide, deepening vertically for the uniqueness of the `wasm32-unknown-unknown` target (linear memory, single-threaded event loop, cross-language boundary).
+
+V4.1.0 — **Binary Size Economics & Ecosystem Convergence**:
+- Aligns with Leptos official binary size optimization guide: streaming WASM compilation rationale, `twiggy` top functions analysis
+- Recommends `talc` allocator (replacing deprecated `wee_alloc`) with quantitative baseline (~10KB → ~1KB)
+- References Wasm Component Model proposals for future canonical ABI alignment
+- Adds `wasm-tools` stripping and `wasm-objdump` size auditing to the toolchain
 
 ## Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real
 
@@ -164,6 +172,13 @@ Architectural solution: Through **unidirectional control (Rust is the brain, JS 
 ---
 
 ## Changelog
+
+### V4.1.0
+- Version bumped to align with universal constitution V9.1.0
+- Added binary size diagnostics: twiggy top/dominators/paths workflow, binary size budget tiers, wasm-tools strip, wasm-objdump audit
+- Recommends `talc` allocator (replacing deprecated `wee_alloc`) with quantitative baseline (~10KB → ~1KB)
+- Aligns with Leptos official binary size optimization guide including streaming WASM compilation rationale
+- References Wasm Component Model proposals for future canonical ABI alignment
 
 ### V4.0.0
 - Version bumped to align with universal constitution V9.0.0 restructuring

@@ -3,19 +3,27 @@ name: rust-systems-cloud-infra-guide
 description: Use when building Rust cloud-native infrastructure (database kernels, distributed storage, high-performance gateways, container runtimes, eBPF control planes). Covers I/O model selection, zero-copy pipelines, backpressure, deterministic consensus, lock-free concurrency, SIMD vectorization, advanced memory architecture, breakwater pattern, and physical feasibility audit. Vertical deepening of rust-architecture-guide for long-running systems.
 license: MIT
 metadata:
-  version: "6.0.0"
+  version: "6.1.0"
   philosophy: "Mechanical Sympathy, Determinism, Resilience, Jeet Kune Do, Unity of False and Real"
   domain: "cloud-native infrastructure"
   relationship: "vertical-deepening-of:rust-architecture-guide"
+  rust_edition: "2024"
+  aligned_with: ["Tokio Graceful Shutdown", "io_uring Best Practices", "Safety-Critical Rust Guidelines", "Raft/Paxos Determinism Patterns"]
 ---
 
-# Rust Systems & Cloud Infrastructure Guide V6.0.0
+# Rust Systems & Cloud Infrastructure Guide V6.1.0
 
 Vertical deepening of `rust-architecture-guide` for world-class cloud-native infrastructure. Assumes long-running nodes (uptime > 1 year), 10GbE+ network, multi-NUMA architecture.
 
 V6.0.0 additions:
 1. **Breakwater Pattern** (ref/12): Facade/Core layered architecture for cloud services — high-tolerance external API, zero-overload internal kernel
 2. **Physical Feasibility Audit** (ref/13): Container memory limits, network latency budgets, NUMA topology awareness
+
+V6.1.0 — **Modern Resilience & Observability**:
+- Integrates `tokio-graceful-shutdown` and `async-shutdown` crate patterns for production-grade shutdown
+- Adds `tokio::task::JoinSet` structured concurrency for task lifecycle management
+- Incorporates Tokio official graceful shutdown best practices and `CancellationToken` patterns
+- Adds `ntex-neon-uring` benchmark awareness for io_uring vs epoll trade-off quantification
 
 ## Core Philosophy
 
@@ -303,3 +311,17 @@ flowchart TD
 | [11-memory-advanced.md](references/11-memory-advanced.md) | Advanced Memory Architecture | Arena, Slab, NUMA/PMEM physical addressing, Allocator API |
 | [12-breakwater-pattern.md](references/12-breakwater-pattern.md) | Breakwater Architecture | Facade/Core layered design, boundary interception, de-oxygenation protocol |
 | [13-physical-audit.md](references/13-physical-audit.md) | Physical Feasibility Audit | Container memory limits, network latency budgets, NUMA topology |
+| [14-ci-modern-cloud.md](references/14-ci-modern-cloud.md) | Modern CI/CD for Cloud Infrastructure | IO_uring benchmarks in CI, deterministic seed testing, long-running soak tests |
+
+---
+
+## Changelog
+
+### V6.1.0
+- Version bumped to align with universal constitution V9.1.0
+- Added `tokio-graceful-shutdown` and `async-shutdown` crate patterns for production-grade shutdown
+- Added `tokio::task::JoinSet` structured concurrency for task lifecycle management
+- Added `ntex-neon-uring` benchmark awareness for io_uring vs epoll trade-off quantification
+- New document: `14-ci-modern-cloud.md` — IO_uring benchmarks, consensus determinism CI, soak tests
+
+### V6.0.0

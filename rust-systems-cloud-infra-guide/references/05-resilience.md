@@ -1,11 +1,12 @@
 ---
 title: "Graceful Degradation & Resilience Engineering"
-description: "Graceful shutdown, lock poisoning recovery, health checks, and circuit breakers"
+description: "Graceful shutdown, tokio-graceful-shutdown, JoinSet structured concurrency, lock poisoning recovery, health checks, and circuit breakers"
 category: "Infrastructure"
 priority: "P0-P1"
 applies_to: ["standard", "strict"]
 prerequisites: ["02-backpressure.md"]
 dependents: []
+aligned_with: ["Tokio Graceful Shutdown Guide", "tokio-graceful-shutdown crate", "async-shutdown crate"]
 ---
 
 # Skill: Graceful Degradation & Resilience Engineering
@@ -17,6 +18,7 @@ dependents: []
 * **Philosophy**:
     * **Graceful Degradation**: Infrastructure must have self-protection, graceful exit, and partial recovery capabilities.
     * **Lock Poisoning Recovery**: Explicitly handle `PoisonError`, choose Fail-Fast or Recovery.
+    * **Structured Concurrency**: Tasks as first-class lifecycle entities — spawn, monitor, cancel as a group.
 
 ---
 

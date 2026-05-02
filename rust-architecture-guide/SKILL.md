@@ -3,20 +3,28 @@ name: rust-architecture-guide
 description: Comprehensive Rust engineering guide covering priority pyramid, architecture decisions, idiomatic coding style, memory layout transparency, breakwater pattern, and physical feasibility audit. Invoke when starting Rust projects, making trade-offs, writing idiomatic code, or designing system architecture. Based on Jeet Kune Do philosophy — intercept boilerplate, flow with hardware, fold logic to maximum energy density, unity of false and real.
 license: MIT
 metadata:
-  version: "9.0.0"
+  version: "9.1.0"
   philosophy: "Dialectical Materialism & Jeet Kune Do — Unity of False and Real"
   domain: "general Rust engineering"
   author: "rust-architect"
+  rust_edition: "2024"
+  aligned_with: ["Rust API Guidelines", "Rust 2024 Edition", "Tokio Best Practices", "Clippy pedantic/nursery", "Safety-Critical Rust Coding Guidelines"]
 ---
 
-# Rust Architecture & Engineering Decision Guide V9.0.0 — The Jeet Kune Do Edition
+# Rust Architecture & Engineering Decision Guide V9.1.0 — The Rust 2024 Edition
 
 This document serves as the **constitutional foundation** for Rust engineering decisions. It is structured for deterministic, reproducible decision-making suitable for AI-assisted development.
 
-V9.0.0 introduces three paradigm shifts:
+V9.0.0 introduced three paradigm shifts:
 1. **Memory Layout Transparency** (ref/30): From "ideological safety" to "materialist physics" — struct padding audit, `#[repr(C)]` mandate, cache-friendly design
 2. **Breakwater Architecture** (ref/31): Facade/Core layered pattern — ergonomic facade absorbs chaos, zero-overhead core maintains determinism
 3. **Physical Feasibility Audit** (ref/32): Mandatory audit between initiation and design — I/O budget, memory ceiling, concurrency true cost
+
+V9.1.0 — **Rust 2024 Edition Alignment**:
+- Adopts Rust 2024 Edition idioms: `unsafe extern` blocks, RPIT lifetime capture, `impl Trait` in return position sugar
+- Aligns with [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) checklist (C-CASE, C-CONV, C-MACRO-VIS, C-EXAMPLE)
+- Integrates [Safety-Critical Rust Coding Guidelines](https://github.com/rustfoundation/safety-critical-rust-coding-guidelines) for unsafe code governance
+- Adds `cargo-mutants` mutation testing, `kani` formal verification, `turmoil` network chaos to advanced testing arsenal
 
 ### Execution Mode
 
@@ -35,10 +43,12 @@ See [references/00-mode-guide.md](references/00-mode-guide.md) for full mode def
 ```markdown
 ## Decision Summary
 - **Mode**: [rapid|standard|strict]
+- **Edition**: [2021|2024] — Rust edition in use
 - **Rules Applied**: [list specific rules from P0-P3]
 - **Conflicts Resolved**: [PX > PY with justification, or "None"]
 - **Deviations**: [list with `// DEVIATION: reason` references, or "None"]
 - **Trade-offs**: [key trade-off decisions made]
+- **External Alignment**: [relevant Rust API Guidelines / Safety-Critical guidelines matched]
 ```
 
 ---
@@ -105,6 +115,8 @@ When conflicts arise, apply decisions top-down. Upper levels have absolute veto 
 3. **Are variable scopes minimized?** Can shadowing remove no-longer-needed `mut`?
 4. **Are there implicit copies?** Is `.to_string()` or `.clone()` misused on hot paths?
 5. **Is naming stuttering?** e.g., `user::UserConfig` should be `user::Config`.
+6. **Is Rust 2024 Edition leveraged?** Are `unsafe extern` blocks used? Are RPIT captures explicit with `use<...>`?
+7. **Are Clippy pedantic/nursery lints addressed?** For `strict` mode, no unjustified `#[allow]` on pedantic lints.
 
 ### Reduction Directive
 
@@ -221,7 +233,10 @@ flowchart TD
   - [16-observability.md](references/16-observability.md) — Tracing, metrics, panic hooks
   
 - **Tooling**
-  - [17-toolchain.md](references/17-toolchain.md) — CI, Clippy, workspace, feature flags
+  - [17-toolchain.md](references/17-toolchain.md) — CI, Clippy, workspace, feature flags, rust-toolchain.toml pinning
+
+### Modern CI & Formal Methods (V9.1.0 additions)
+  - [33-ci-modern.md](references/33-ci-modern.md) — Modern CI/CD pipeline: cargo-mutants, kani, turmoil, deterministic RNG, rust-toolchain.toml
 
 - **Memory Layout Transparency** (P0)
   - [30-memory-layout.md](references/30-memory-layout.md) — Struct padding audit, `#[repr(C)]` mandate, cache-friendly design, false sharing prevention
@@ -245,7 +260,7 @@ flowchart TD
 > ⚠️ **Requirement**: All P3 optimizations MUST include profiler data proving bottleneck
 
 - [25-performance-tuning.md](references/25-performance-tuning.md) — Mechanical Sympathy: SoA, SIMD, Arena, PGO (P3 only)
-- [26-advanced-testing.md](references/26-advanced-testing.md) — Formal verification: proptest, fuzz, Loom, Miri (strict mode)
+- [26-advanced-testing.md](references/26-advanced-testing.md) — Formal verification: proptest, fuzz, Loom, Miri, kani, cargo-mutants, turmoil (strict mode)
 - [27-review.md](references/27-review.md) — Production review checklist
 - [28-usage-examples.md](references/28-usage-examples.md) — Real-world scenarios with Decision Summaries
 

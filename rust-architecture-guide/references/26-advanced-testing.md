@@ -1,11 +1,12 @@
 ---
 title: "Advanced Testing & Quality Assurance: Machine vs Machine"
-description: "proptest, fuzzing, loom, miri, turmoil for machine-level verification"
+description: "proptest, fuzzing, loom, miri, turmoil, kani, cargo-mutants for machine-level verification"
 category: "Quality"
 priority: "P0-P1"
 applies_to: ["standard", "strict"]
-prerequisites: ["17-toolchain.md"]
+prerequisites: ["17-toolchain.md", "33-ci-modern.md"]
 dependents: ["rust-systems-cloud-infra-guide/references/06-observability.md"]
+aligned_with: ["Rust CI/CD Best Practices 2025-2026", "Safety-Critical Rust Coding Guidelines"]
 ---
 
 # Advanced Testing & Quality Assurance: Machine vs Machine
@@ -195,14 +196,96 @@ fn write_to_disk(data: &[u8]) -> io::Result<()> {
 
 ---
 
-## 6. Agent QA Checklist
+**Defense Report Directive**: When delivering any infrastructure-grade component, the Agent must attach a Defense Report listing which machine verification methods were applied, and declaring that the system maintained P0-level memory safety and state consistency under hundreds of millions of mutation iterations.
+
+---
+
+## 6. Formal Verification: Kani Model Checker
+
+> **Prove properties for all possible inputs, not just tested ones.**
+
+### 6.1 When to Use Kani
+
+**Rule**: For safety-critical algorithms (cryptographic invariants, consensus safety properties, memory allocator correctness), use `kani` to **prove** (not test) that assertions hold for all possible inputs.
+
+**Kani excels at**:
+- Bounded model checking for Rust code
+- Proving `assert!` conditions are never violated
+- Verifying integer overflow safety and arithmetic correctness
+- Catching logic errors that property tests might miss
+
+```rust
+#[kani::proof]
+fn test_allocator_invariant() {
+    let size: u64 = kani::any();
+    kani::assume(size > 0 && size < 1024 * 1024); // 1 byte to 1 MB
+
+    let layout = Layout::from_size_align(size as usize, 8).unwrap();
+    let ptr = unsafe { alloc(layout) };
+    assert!(!ptr.is_null(), "Allocator must not return null for valid layout");
+    // Not reached if assertion fails — kani reports proof failure
+}
+```
+
+```bash
+cargo kani --harness allocator_invariant
+```
+
+### 6.2 Kani vs Other Tools
+
+| Tool | Verifies | Exhaustive? | Speed |
+|------|----------|-------------|-------|
+| `proptest` | Property holds for sampled inputs | No (sampling) | Fast |
+| `cargo-fuzz` | No crash on mutated inputs | No (coverage-guided) | Medium |
+| `kani` | Property holds for ALL inputs within bounds | Yes (bounded) | Slow (CBD) |
+| `miri` | No UB for concrete test inputs | No (concrete) | Very slow |
+
+**Rule**: Use kani for **core invariants** (consensus safety, cryptographic properties). Use proptest/fuzz for **defense in depth** (parser robustness, protocol conformance).
+
+---
+
+## 7. Mutation Testing: cargo-mutants
+
+> **Test your tests — find gaps in your test coverage.**
+
+### 7.1 When to Use
+
+**Rule**: For `strict` mode libraries and infrastructure crates, run `cargo mutants` to identify untested code paths.
+
+**What it does**: Introduces small mutations (e.g., `>` → `>=`, `+` → `-`, removing function calls) and checks if tests catch them. Surviving mutants = untested code.
+
+```bash
+cargo mutants --in-place
+# Lists surviving mutants — each is a test coverage gap
+```
+
+```rust
+// mutation: `>` becomes `>=` — if no test fails, boundary is untested
+pub fn is_overdrawn(balance: i64) -> bool {
+    balance > 0  // What if this became `balance >= 0`? Would tests catch it?
+}
+```
+
+### 7.2 Integration into CI
+
+```yaml
+# .github/workflows/mutation.yml
+- name: Mutation testing
+  run: cargo mutants --timeout 300 --in-place -- --test-threads=4
+```
+
+**Rule**: Fix or document surviving mutants. A surviving mutant is either:
+1. Dead code (remove it)
+2. Missing test coverage (add a test)
+3. Equivalent mutant (document why the mutation is semantically equivalent)
+
+## 8. Agent QA Checklist
 
 1. **Parsing logic protected by `cargo-fuzz`?**
 2. **Complex algorithms proven via `proptest` symmetry or idempotency?**
 3. **Hand-written atomics verified in `loom`?**
 4. **`unsafe` code verified UB-free by `Miri`?**
 5. **Failed random cases converted to deterministic regression tests?**
-
----
-
-**Defense Report Directive**: When delivering any infrastructure-grade component, the Agent must attach a Defense Report listing which machine verification methods were applied, and declaring that the system maintained P0-level memory safety and state consistency under hundreds of millions of mutation iterations.
+6. **Core safety invariants formally verified by `kani`?**
+7. **Test coverage gaps identified by `cargo mutants`?**
+8. **Distributed consensus verified under network chaos by `turmoil`?**

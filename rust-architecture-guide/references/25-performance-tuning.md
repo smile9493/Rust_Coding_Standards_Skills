@@ -359,6 +359,51 @@ cargo rustc --release -- -C profile-use=/tmp/pgo
 
 **Expected gain**: 5-15% for latency-critical services.
 
+### 6.3 BOLT: Post-Link Optimization
+
+**For production binaries where LTO + PGO is already applied**:
+
+BOLT (Binary Optimization and Layout Tool) reorders binary layout based on actual execution profiles, yielding 5-15% additional improvement beyond PGO.
+
+```bash
+# 1. Build with linker flags preserving relocations
+RUSTFLAGS="-C link-arg=-Wl,--emit-relocs" cargo build --release
+
+# 2. Profile with perf
+perf record -e cycles:u -o /tmp/perf.data ./target/release/app --benchmark
+
+# 3. Convert perf data to BOLT format
+perf2bolt -p /tmp/perf.data ./target/release/app -o /tmp/perf.fdata
+
+# 4. Optimize binary
+llvm-bolt ./target/release/app -o ./target/release/app.bolt \
+    --data=/tmp/perf.fdata \
+    --reorder-blocks=ext-tsp \
+    --reorder-functions=hfsort+ \
+    --split-functions \
+    --split-all-cold \
+    --dyno-stats \
+    --hot-func-cutoff-max=32768
+```
+
+**When to apply BOLT**:
+- Binary size > 100MB where I-cache misses dominate
+- Long-running server applications (not CLI tools)
+- After PGO + LTO shows diminishing returns
+
+**Red Line**: BOLT is a **strict mode only** optimization. Requires LLVM 16+ and Linux perf. Not applicable to `wasm32` targets.
+
+### 6.4 PGO + BOLT Combined Pipeline
+
+```yaml
+# CI pipeline order: PGO → BOLT → final binary
+optimizations:
+  - LTO (codegen-units=1, lto=fat)
+  - PGO (profile-generate → collect → profile-use)
+  - BOLT (perf record → perf2bolt → llvm-bolt)
+  - Verify: benchmark comparison vs baseline
+```
+
 ### 6.3 Advanced Topics
 
 For the following advanced scenarios, refer to cloud infrastructure guide:
