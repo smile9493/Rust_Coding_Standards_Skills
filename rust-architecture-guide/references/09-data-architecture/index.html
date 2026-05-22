@@ -1,0 +1,1657 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Zero-copy parsing, Arena allocation, stack-first principles, and capacity management for Rust data structures">
+      
+      
+      
+        <link rel="canonical" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/09-data-architecture/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Data Architecture & Memory Management - Rust Coding Standards Skills</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#data-architecture-memory-management-zero-overhead-principles" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Rust Coding Standards Skills" class="md-header__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Rust Coding Standards Skills
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Data Architecture & Memory Management
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Rust Coding Standards Skills" class="md-nav__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Rust Coding Standards Skills
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Guide (Constitution)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-systems-cloud-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems & Cloud Infra Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-wasm-frontend-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wasm Frontend Infra Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-embedded-iot-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embedded & IoT Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-data-engineering-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Engineering Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-networking-protocols-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking Protocols Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-cli-devops-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI & DevOps Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-gamedev-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamedev Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-blockchain-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blockchain Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-ai-ml-inference-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI/ML Inference Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-positioning-priority-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Positioning &amp; Priority Alignment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. Positioning &amp; Priority Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#priority-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-mode-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Mode Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-zero-copy-parsing-building-instant-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Zero-Copy Parsing: Building Instant Views
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Zero-Copy Parsing: Building Instant Views">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-lifetime-projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Lifetime Projection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-copy-on-write-cow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Copy-on-Write (Cow)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-cross-async-passing-bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Cross-Async Passing: Bytes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-arena-architecture-bulk-allocation-instant-reclamation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Arena Architecture: Bulk Allocation, Instant Reclamation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Arena Architecture: Bulk Allocation, Instant Reclamation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-when-to-enable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 When to Enable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-safety-admonitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Safety Admonitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-stack-first-capacity-pre-judgment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Stack-First &amp; Capacity Pre-judgment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Stack-First &amp; Capacity Pre-judgment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-stack-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Stack Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-explicit-pre-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Explicit Pre-allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-verification-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verification &amp; Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Verification &amp; Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-agent-memory-management-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Agent Memory Management Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Agent Memory Management Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zero-copy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-Copy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arena-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arena Allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stack-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stack-First
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-integration-with-overall-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Integration with Overall Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Integration with Overall Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-design-philosophy-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Design Philosophy Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-priority-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Priority Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-terminology-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Terminology Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-related-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Related Documents
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-trade-offs-decision-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Trade-offs &amp; Decision Framework
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Trade-offs &amp; Decision Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-zero-copy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Zero-Copy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-arena" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Arena
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-stack-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Stack Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progressive-optimization-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progressive Optimization Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Related
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Related">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#within-rust-architecture-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Within rust-architecture-guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="data-architecture-memory-management-zero-overhead-principles">Data Architecture &amp; Memory Management: Zero-Overhead Principles<a class="headerlink" href="#data-architecture-memory-management-zero-overhead-principles" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Core Philosophy — Intercepting Boilerplate (拦截样板, Zero-Copy Design)</strong>: Don't move data, just point to where it is. Zero-copy and stack-first designs improve both performance and predictability.</p>
+<p><strong>📋 Document Profile</strong>
+- <strong>Domain</strong>: All Rust data structure design
+- <strong>Priority</strong>: P1 (maintainability) → P3 (performance optimization)
+- <strong>Modes</strong>: <code>rapid</code> (allow clone) → <code>standard</code> (prefer zero-copy) → <code>strict</code> (mandatory Miri/dhat)
+- <strong>Prerequisites</strong>: None (foundational document)
+- <strong>Deepened by</strong>: <a href="../../../rust-systems-cloud-infra-guide/references/11-memory-advanced/"><code>11-memory-advanced.md</code></a> (NUMA, Allocator API)</p>
+</blockquote>
+<hr />
+<h2 id="0-positioning-priority-alignment">0. Positioning &amp; Priority Alignment<a class="headerlink" href="#0-positioning-priority-alignment" title="Permanent link">&para;</a></h2>
+<h3 id="priority-framework">Priority Framework<a class="headerlink" href="#priority-framework" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Primary: P1 (Maintainability)</strong>: Zero-copy and stack-first improve code predictability and reduce cognitive load.</li>
+<li><strong>P3 Performance Acceleration</strong>: Arena allocation, <code>Bytes</code>, and capacity pre-judgment are <strong>enforced only when profiler proves allocation is the bottleneck</strong>.</li>
+</ul>
+<h3 id="execution-mode-integration">Execution Mode Integration<a class="headerlink" href="#execution-mode-integration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Enforcement</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rapid</code></td>
+<td><strong>Relaxed</strong></td>
+<td>Direct <code>.clone()</code> and <code>String</code> allowed; can ignore <code>Cow</code>, but encouraged to keep ownership clear</td>
+</tr>
+<tr>
+<td><code>standard</code></td>
+<td><strong>Full rules</strong></td>
+<td>All rules active; exceptions must be commented with justification</td>
+</tr>
+<tr>
+<td><code>strict</code></td>
+<td><strong>Enhanced</strong></td>
+<td><strong>Mandatory</strong> zero-copy, Arena, and capacity checks; CI includes <code>dhat</code> heap analysis and <code>cargo miri</code> safety verification</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1-zero-copy-parsing-building-instant-views">1. Zero-Copy Parsing: Building Instant Views<a class="headerlink" href="#1-zero-copy-parsing-building-instant-views" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Philosophy — Zero-Copy (零拷贝, Reference-First Design)</strong>: Don't move data, just point to where it is.</p>
+</blockquote>
+<h3 id="11-lifetime-projection">1.1 Lifetime Projection<a class="headerlink" href="#11-lifetime-projection" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong>: When extracting fields from input buffers (e.g., DPF/JSON), default to returning <code>&amp;str</code> or <code>&amp;[u8]</code> (borrowed views), not owned data.</p>
+<p><strong>Exception</strong>: If fields are numerous and must outlive the buffer (e.g., cross-thread传递), allow <code>Arc&lt;str&gt;</code> or <code>Bytes</code>, with justification comment.</p>
+<p><strong>Good Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// ✅ Zero-copy view</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">struct</span><span class="w"> </span><span class="nc">Record</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="n">payload</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="p">[</span><span class="kt">u8</span><span class="p">],</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">}</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">fn</span><span class="w"> </span><span class="nf">parse_record</span><span class="p">(</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">u8</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Record</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="c1">// Return borrowed references, no allocation</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="n">Record</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">std</span><span class="p">::</span><span class="kt">str</span><span class="p">::</span><span class="n">from_utf8</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="o">..</span><span class="mi">8</span><span class="p">]).</span><span class="n">unwrap</span><span class="p">(),</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="n">payload</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">data</span><span class="p">[</span><span class="mi">8</span><span class="o">..</span><span class="p">],</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>When to Own</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// ✅ Allowed: Field must outlive buffer</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">struct</span><span class="w"> </span><span class="nc">CachedRecord</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">Arc</span><span class="o">&lt;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Comment: Shared across threads</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="n">payload</span><span class="p">:</span><span class="w"> </span><span class="nc">bytes</span><span class="p">::</span><span class="n">Bytes</span><span class="p">,</span><span class="w">  </span><span class="c1">// Comment: Passed to async task</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="12-copy-on-write-cow">1.2 Copy-on-Write (Cow)<a class="headerlink" href="#12-copy-on-write-cow" title="Permanent link">&para;</a></h3>
+<p><strong>SHOULD</strong>: When data is mostly read-only but occasionally needs escaping or normalization, use <code>Cow&lt;'a, str&gt;</code>.</p>
+<p><strong>MUST</strong>: Only incur heap allocation when modification is truly necessary.</p>
+<p><strong>Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">borrow</span><span class="p">::</span><span class="n">Cow</span><span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">// ✅ Cow optimization: allocate only when modification needed</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">fn</span><span class="w"> </span><span class="nf">clean</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Cow</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="p">,</span><span class="w"> </span><span class="kt">str</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">raw</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="sc">&#39;\\&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="n">Cow</span><span class="p">::</span><span class="n">Owned</span><span class="p">(</span><span class="n">unescape</span><span class="p">(</span><span class="n">raw</span><span class="p">))</span><span class="w">  </span><span class="c1">// Allocate only for escaped strings</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="n">Cow</span><span class="p">::</span><span class="n">Borrowed</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span><span class="w">  </span><span class="c1">// Zero-copy for clean strings</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1">// Usage in parsing</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="k">fn</span><span class="w"> </span><span class="nf">parse_field</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Cow</span><span class="o">&lt;</span><span class="kt">str</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="n">clean</span><span class="p">(</span><span class="n">raw</span><span class="p">.</span><span class="n">trim</span><span class="p">())</span><span class="w">  </span><span class="c1">// Chain operations without allocation</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>When to Use Cow</strong>:
+- String escaping/unescaping
+- Unicode normalization
+- Trim operations (most strings already trimmed)
+- Default value substitution</p>
+<h3 id="13-cross-async-passing-bytes">1.3 Cross-Async Passing: Bytes<a class="headerlink" href="#13-cross-async-passing-bytes" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong>: When data blocks need to cross <code>.await</code> points or be shared between multiple tasks, use <code>bytes::Bytes</code> instead of <code>Vec&lt;u8&gt;</code> for O(1) reference-counted slice sharing.</p>
+<p><strong>Prohibited</strong>: <code>Vec::clone()</code> on async boundaries.</p>
+<p><strong>Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">use</span><span class="w"> </span><span class="n">bytes</span><span class="p">::</span><span class="n">Bytes</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">// ✅ Correct: Bytes for async boundaries</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">process_packet</span><span class="p">(</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nc">Bytes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="c1">// Zero-copy clone: just increment refcount</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="n">tokio</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="k">move</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="n">process</span><span class="p">(</span><span class="n">clone</span><span class="p">).</span><span class="k">await</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="c1">// Original data still usable</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">).</span><span class="k">await</span><span class="p">;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1">// ❌ Wrong: Vec clone on async boundary</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">process_packet_wrong</span><span class="p">(</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span><span class="w">  </span><span class="c1">// Full heap allocation!</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span><span class="c1">// ...</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Why Bytes</strong>:
+- O(1) clone: just increment atomic refcount
+- Zero-copy slicing: <code>bytes.slice(range)</code> shares underlying buffer
+- Immutable: safe to share across tasks</p>
+<hr />
+<h2 id="2-arena-architecture-bulk-allocation-instant-reclamation">2. Arena Architecture: Bulk Allocation, Instant Reclamation<a class="headerlink" href="#2-arena-architecture-bulk-allocation-instant-reclamation" title="Permanent link">&para;</a></h2>
+<h3 id="21-when-to-enable">2.1 When to Enable<a class="headerlink" href="#21-when-to-enable" title="Permanent link">&para;</a></h3>
+<p><strong>SHOULD</strong>: When parsing大量 short-lived, interconnected small objects (e.g., AST trees, DPF node lists), adopt <code>bumpalo::Bump</code>.</p>
+<p><strong>Activation Signal</strong>: Profiler shows frequent small allocations in hot path, and objects share unified lifecycle.</p>
+<p><strong>MUST</strong>: Arena lifecycle must be <strong>strictly bound</strong> to single parse or request scope. <strong>Prohibited</strong> as global static variable.</p>
+<p><strong>Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">use</span><span class="w"> </span><span class="n">bumpalo</span><span class="p">::</span><span class="n">Bump</span><span class="p">;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">fn</span><span class="w"> </span><span class="nf">parse_document</span><span class="p">(</span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">u8</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bump</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="c1">// All allocations tied to this arena</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bump</span><span class="p">.</span><span class="n">alloc</span><span class="p">(</span><span class="n">Node</span><span class="p">::</span><span class="n">Group</span><span class="p">(</span><span class="o">&amp;</span><span class="p">[]));</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">child1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bump</span><span class="p">.</span><span class="n">alloc</span><span class="p">(</span><span class="n">Node</span><span class="p">::</span><span class="n">Leaf</span><span class="p">(</span><span class="mi">42</span><span class="p">));</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">child2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bump</span><span class="p">.</span><span class="n">alloc</span><span class="p">(</span><span class="n">Node</span><span class="p">::</span><span class="n">Leaf</span><span class="p">(</span><span class="mi">43</span><span class="p">));</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="c1">// Link nodes (all in same arena)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="o">*</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Node</span><span class="p">::</span><span class="n">Group</span><span class="p">(</span><span class="o">&amp;</span><span class="p">[</span><span class="n">child1</span><span class="p">,</span><span class="w"> </span><span class="n">child2</span><span class="p">]);</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="c1">// Process...</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">process</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="c1">// When bump drops, ALL nodes reclaimed instantly - O(1) deallocation</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="n">result</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Benefit</strong>: Reduces thousands of <code>malloc</code>/<code>free</code> calls to single pointer movement — lock-free, no syscall overhead.</p>
+<h3 id="22-safety-admonitions">2.2 Safety Admonitions<a class="headerlink" href="#22-safety-admonitions" title="Permanent link">&para;</a></h3>
+<p><strong>P0 Red Line</strong>: <strong>Prohibited</strong> to return Arena-allocated objects to upper layers while Arena destructs first (dangling pointer). <strong>Must guarantee</strong> objects and Arena have same lifetime, or copy data.</p>
+<p><strong>Correct Pattern</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// ✅ Correct: Arena and objects share lifetime</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">fn</span><span class="w"> </span><span class="nf">parse_with_arena</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">bump</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">Bump</span><span class="p">,</span><span class="w"> </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="p">[</span><span class="kt">u8</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">Node</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bump</span><span class="p">.</span><span class="n">alloc</span><span class="p">(</span><span class="n">Node</span><span class="p">::</span><span class="n">Leaf</span><span class="p">(</span><span class="mi">42</span><span class="p">));</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">node</span><span class="w">  </span><span class="c1">// Node tied to Arena lifetime</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1">// ❌ Wrong: Returning Arena-allocated object</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">fn</span><span class="w"> </span><span class="nf">parse_wrong</span><span class="p">(</span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">u8</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">Node</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bump</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bump</span><span class="p">.</span><span class="n">alloc</span><span class="p">(</span><span class="n">Node</span><span class="p">::</span><span class="n">Leaf</span><span class="p">(</span><span class="mi">42</span><span class="p">));</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="n">node</span><span class="w">  </span><span class="c1">// ERROR: bump will drop, node becomes dangling</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Verification</strong>: Use <code>cargo miri</code> to check for self-referential or dangling references.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Run Miri to detect UB</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cargo<span class="w"> </span>+nightly<span class="w"> </span>miri<span class="w"> </span>run
+</code></pre></div>
+<hr />
+<h2 id="3-stack-first-capacity-pre-judgment">3. Stack-First &amp; Capacity Pre-judgment<a class="headerlink" href="#3-stack-first-capacity-pre-judgment" title="Permanent link">&para;</a></h2>
+<h3 id="31-stack-containers">3.1 Stack Containers<a class="headerlink" href="#31-stack-containers" title="Permanent link">&para;</a></h3>
+<p><strong>SHOULD</strong>: For collections with明确 upper bound (≤ 16 or 32) and short lifecycle, use <code>arrayvec::ArrayVec</code>, <code>tinyvec::TinyVec</code>, or fixed-size arrays to avoid heap allocation.</p>
+<p><strong>Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">use</span><span class="w"> </span><span class="n">arrayvec</span><span class="p">::</span><span class="n">ArrayVec</span><span class="p">;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">// ✅ Stack-allocated: no heap allocation for small collections</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">cols</span><span class="p">:</span><span class="w"> </span><span class="nc">ArrayVec</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ArrayVec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">cols</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="s">&quot;col1&quot;</span><span class="p">);</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">cols</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="s">&quot;col2&quot;</span><span class="p">);</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">// ... up to 16 elements, all on stack</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1">// ✅ Fixed-size array for known-small data</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">buffer</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="w"> </span><span class="mi">64</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="mi">64</span><span class="p">];</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">buffer</span><span class="p">[</span><span class="mi">0</span><span class="o">..</span><span class="mi">4</span><span class="p">].</span><span class="n">copy_from_slice</span><span class="p">(</span><span class="o">&amp;</span><span class="n">header</span><span class="p">);</span>
+</code></pre></div></p>
+<p><strong>When to Use</strong>:
+- CSV row parsing (typically &lt; 32 columns)
+- Protocol header fields
+- Temporary accumulation in hot loops
+- Intermediate results with known bounds</p>
+<h3 id="32-explicit-pre-allocation">3.2 Explicit Pre-allocation<a class="headerlink" href="#32-explicit-pre-allocation" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong>: All <code>Vec</code>/<code>HashMap</code> must call <code>with_capacity()</code> when minimum capacity is known. <strong>Prohibited</strong> to use bare <code>push</code> in loops causing multiple reallocations.</p>
+<p><strong>Good Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// ✅ Pre-allocate with known or estimated capacity</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">with_capacity</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">1000</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="n">items</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">Item</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">i</span><span class="p">));</span><span class="w">  </span><span class="c1">// No reallocation</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">}</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1">// ✅ Reserve if capacity unknown but estimable</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">items</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span><span class="w">  </span><span class="c1">// Pre-allocate to avoid early reallocations</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">for</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="n">items</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">item</span><span class="p">);</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Bad Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// ❌ Bad: Multiple reallocations in loop</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">1000</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="n">items</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">Item</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">i</span><span class="p">));</span><span class="w">  </span><span class="c1">// Reallocates ~10 times</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>strict Mode</strong>: Use <code>clippy::uninit_vec</code> and related lints to catch uninitialized access. Enable <code>dhat</code> for heap allocation monitoring.</p>
+<hr />
+<h2 id="4-verification-diagnostics">4. Verification &amp; Diagnostics<a class="headerlink" href="#4-verification-diagnostics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Mode Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cargo miri</code></td>
+<td>Check zero-copy/Arena for UB</td>
+<td><code>strict</code></td>
+</tr>
+<tr>
+<td><code>dhat / heaptrack</code></td>
+<td>Heap allocation analysis &amp; leak detection</td>
+<td><code>strict</code></td>
+</tr>
+<tr>
+<td><code>criterion</code></td>
+<td>Micro-benchmark to verify Arena replacement benefit</td>
+<td><code>strict</code></td>
+</tr>
+<tr>
+<td><code>clippy (perf group)</code></td>
+<td>Catch unpreallocated patterns</td>
+<td><code>standard+</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Miri for UB detection (especially zero-copy &amp; Arena)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cargo<span class="w"> </span>+nightly<span class="w"> </span>miri<span class="w"> </span>run
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. dhat for heap profiling</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>cargo<span class="w"> </span>+nightly<span class="w"> </span>build<span class="w"> </span>-Z<span class="w"> </span>build-std
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>valgrind<span class="w"> </span>--tool<span class="o">=</span>dhat<span class="w"> </span>./target/debug/app
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># 3. heaptrack for allocation patterns</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>heaptrack<span class="w"> </span>./target/release/app
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>heaptrack_gui<span class="w"> </span>heaptrack.app.gz
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># 4. Benchmark Arena vs standard allocation</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>cargo<span class="w"> </span>bench<span class="w"> </span>--bench<span class="w"> </span>arena_benchmark
+</code></pre></div>
+<hr />
+<h2 id="5-agent-memory-management-checklist">5. Agent Memory Management Checklist<a class="headerlink" href="#5-agent-memory-management-checklist" title="Permanent link">&para;</a></h2>
+<p>Before finalizing data architecture:</p>
+<h3 id="zero-copy">Zero-Copy<a class="headerlink" href="#zero-copy" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Are parsed fields returning references (<code>&amp;str</code>/<code>&amp;[u8]</code>) instead of <code>String</code> (unless necessary)?</li>
+<li>[ ] Is <code>Cow</code> used for escape/cleaning optimization?</li>
+<li>[ ] Is <code>Bytes</code> used for cross-async passing instead of <code>Vec&lt;u8&gt;</code>?</li>
+</ul>
+<h3 id="arena-allocation">Arena Allocation<a class="headerlink" href="#arena-allocation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Is Arena lifecycle strictly bound to request scope?</li>
+<li>[ ] Are Arena-allocated objects not returned beyond Arena lifetime?</li>
+<li>[ ] Has Miri verified zero-copy safety (no UB)?</li>
+</ul>
+<h3 id="stack-first">Stack-First<a class="headerlink" href="#stack-first" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Are small collections (≤ 16-32 elements) using <code>ArrayVec</code> or fixed arrays?</li>
+<li>[ ] Are all <code>Vec::new()</code> changed to <code>Vec::with_capacity()</code> when size known?</li>
+<li>[ ] Is <code>reserve()</code> used for estimable capacities?</li>
+</ul>
+<h3 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Has dhat/heaptrack analyzed heap patterns? (strict)</li>
+<li>[ ] Has criterion verified Arena benefit &gt; 5%? (strict)</li>
+<li>[ ] Have clippy perf lints been checked? (standard+)</li>
+</ul>
+<hr />
+<h2 id="6-integration-with-overall-architecture">6. Integration with Overall Architecture<a class="headerlink" href="#6-integration-with-overall-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="61-design-philosophy-alignment">6.1 Design Philosophy Alignment<a class="headerlink" href="#61-design-philosophy-alignment" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Memory Management Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Economy of Motion</strong></td>
+<td>Zero-copy: don't move, just point</td>
+</tr>
+<tr>
+<td><strong>Physical Alignment</strong></td>
+<td>Stack-first aligns with CPU cache</td>
+</tr>
+<tr>
+<td><strong>Unity of Opposites</strong></td>
+<td>Arena: bulk alloc, instant reclaim</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-priority-constraints">6.2 Priority Constraints<a class="headerlink" href="#62-priority-constraints" title="Permanent link">&para;</a></h3>
+<p><strong>P1 (Maintainability)</strong> is primary beneficiary:
+- Zero-copy improves predictability
+- Stack allocation reduces mental overhead
+- Clear ownership boundaries</p>
+<p><strong>P3 (Performance)</strong> is acceleration target:
+- Arena for hot-path small objects
+- Bytes for async boundaries
+- Pre-allocation to avoid reallocations</p>
+<h3 id="63-terminology-links">6.3 Terminology Links<a class="headerlink" href="#63-terminology-links" title="Permanent link">&para;</a></h3>
+<p>All specialized terms defined in <a href="../05-glossary/"><code>glossary.md</code></a>:
+- Zero-Copy
+- Copy-on-Write (Cow)
+- Arena Allocation
+- Bump Allocation
+- Stack vs Heap
+- Capacity Pre-judgment</p>
+<h3 id="64-related-documents">6.4 Related Documents<a class="headerlink" href="#64-related-documents" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="../00-mode-guide/"><code>00-mode-guide.md</code></a> — Execution modes (rapid/standard/strict)</li>
+<li><a href="../01-priority-pyramid/"><code>01-priority-pyramid.md</code></a> — P0-P3 priority framework</li>
+<li><a href="../11-concurrency/"><code>11-concurrency.md</code></a> — Sharing data across threads (Arc, Bytes)</li>
+<li><a href="../25-performance-tuning/"><code>25-performance-tuning.md</code></a> — Arena, cache locality, diagnostic tools</li>
+<li><a href="../26-advanced-testing/"><code>26-advanced-testing.md</code></a> — Miri, dhat, heaptrack</li>
+</ul>
+<hr />
+<h2 id="7-trade-offs-decision-framework">7. Trade-offs &amp; Decision Framework<a class="headerlink" href="#7-trade-offs-decision-framework" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-use-zero-copy">When to Use Zero-Copy<a class="headerlink" href="#when-to-use-zero-copy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parsing input buffers (DPF, JSON, protocol frames)</td>
+<td><strong>Use borrowed references</strong></td>
+<td>P1: Predictable, no allocation</td>
+</tr>
+<tr>
+<td>Fields must outlive parser</td>
+<td><strong>Use Arc/Bytes</strong></td>
+<td>Necessity: Lifetime extension</td>
+</tr>
+<tr>
+<td>Occasional string modification</td>
+<td><strong>Use Cow</strong></td>
+<td>P1: Allocate only when needed</td>
+</tr>
+<tr>
+<td>Cross-async data passing</td>
+<td><strong>Use Bytes</strong></td>
+<td>P1: O(1) clone, safe sharing</td>
+</tr>
+</tbody>
+</table>
+<h3 id="when-to-use-arena">When to Use Arena<a class="headerlink" href="#when-to-use-arena" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AST trees, DPF node lists</td>
+<td><strong>Use bumpalo</strong></td>
+<td>P3: Bulk alloc, O(1) reclaim</td>
+</tr>
+<tr>
+<td>Long-lived objects</td>
+<td><strong>Use Box/Arc</strong></td>
+<td>Necessity: Arena would leak</td>
+</tr>
+<tr>
+<td>Objects cross thread boundaries</td>
+<td><strong>Use Arc</strong></td>
+<td>Necessity: Arena not thread-safe</td>
+</tr>
+<tr>
+<td>Simple one-off allocations</td>
+<td><strong>Use standard alloc</strong></td>
+<td>P1: Simplicity over optimization</td>
+</tr>
+</tbody>
+</table>
+<h3 id="when-to-use-stack-containers">When to Use Stack Containers<a class="headerlink" href="#when-to-use-stack-containers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small fixed-size collections (≤ 16-32)</td>
+<td><strong>Use ArrayVec</strong></td>
+<td>P1: No heap, predictable</td>
+</tr>
+<tr>
+<td>Unknown or large size</td>
+<td><strong>Use Vec</strong></td>
+<td>Necessity: Stack overflow risk</td>
+</tr>
+<tr>
+<td>Growing beyond stack limits</td>
+<td><strong>Use Vec with reserve</strong></td>
+<td>P2: Avoid reallocation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="progressive-optimization-path">Progressive Optimization Path<a class="headerlink" href="#progressive-optimization-path" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>rapid (MVP)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>├─ Use String, Vec, standard allocation
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>└─ Ignore zero-copy, Arena
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>↓ (Profiler identifies allocation bottleneck)
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>standard (Production)
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>├─ Apply zero-copy parsing
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>├─ Use Cow for optional modification
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>├─ Pre-allocate with capacity
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>└─ Document exceptions with comments
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>↓ (Extreme performance required)
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>strict (Ultra-high throughput)
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>├─ Arena for short-lived objects
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>├─ Bytes for async boundaries
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>├─ ArrayVec for small collections
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>├─ dhat + Miri verification
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>└─ Criterion benchmark reports
+</code></pre></div>
+<hr />
+<h2 id="8-related">8. Related<a class="headerlink" href="#8-related" title="Permanent link">&para;</a></h2>
+<h3 id="within-rust-architecture-guide">Within rust-architecture-guide<a class="headerlink" href="#within-rust-architecture-guide" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="../00-mode-guide/"><code>00-mode-guide.md</code></a> — Execution modes governing memory enforcement</li>
+<li><a href="../01-priority-pyramid/"><code>01-priority-pyramid.md</code></a> — Priority framework (P0-P3)</li>
+<li><a href="../05-glossary/"><code>05-glossary.md</code></a> — Memory management terminology</li>
+<li><a href="../11-concurrency/"><code>11-concurrency.md</code></a> — Cross-thread sharing (Arc, Bytes)</li>
+<li><a href="../25-performance-tuning/"><code>25-performance-tuning.md</code></a> — Arena, cache locality, diagnostics</li>
+<li><a href="../26-advanced-testing/"><code>26-advanced-testing.md</code></a> — Miri, dhat, heaptrack</li>
+</ul>
+<h3 id="external-resources">External Resources<a class="headerlink" href="#external-resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://docs.rs/bytes"><code>bytes</code> crate documentation</a> — Bytes, Buf, BufMut traits</li>
+<li><a href="https://docs.rs/bumpalo"><code>bumpalo</code> crate documentation</a> — Fast bump allocation arena</li>
+<li><a href="https://docs.rs/arrayvec"><code>arrayvec</code> crate documentation</a> — Stack-allocated vectors</li>
+<li><a href="https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html">The Rust Programming Language — References and Borrowing</a></li>
+</ul>
+<hr />
+<p><strong>Version History</strong>: 
+- v6.0 — Integrated priority pyramid, three-tier modes, Miri/dhat validation, upgraded to Agent-executable Skill
+- v5.0 — Added zero-copy parsing, Cow optimization, Bytes for async
+- v4.0 — Initial arena allocation guidelines
+- v3.0 — Stack-first principle
+- v2.0 — Capacity pre-judgment
+- v1.0 — Initial data architecture specification</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
