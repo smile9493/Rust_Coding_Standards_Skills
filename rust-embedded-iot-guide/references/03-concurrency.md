@@ -201,7 +201,7 @@ Unlike threads in an OS (which each have their own stack), RTIC tasks and Embass
 4. RTIC locks must be held for minimal duration — no DMA operations inside a lock
 5. Embassy tasks must regularly `.await` — a task that never yields starves all other tasks
 6. Mixed priority inversion: a low-priority RTIC task must never wait on a high-priority Embassy future
-7. All interrupt handlers must be registered through RTIC `#[task(binds = ...)]` — never raw `#[interrupt]`
+7. All interrupt handlers must be registered through RTIC `#[task(binds = ...)]` (RTIC projects) or `bind_interrupts!` / HAL ISR macros (Embassy projects). Avoid raw `#[interrupt]` when a framework provides safer access patterns.
 
 ## References
 

@@ -9,7 +9,8 @@ A `rust-toolchain.toml` at the project root pins the exact Rust version and targ
 ```toml
 # rust-toolchain.toml
 [toolchain]
-channel = "nightly-2024-11-15"
+channel = "stable"  # Embassy, RTIC 2, probe-rs all support stable Rust
+# channel = "nightly-2026-01-15"  # Use only when a documented nightly feature is required
 components = [
     "rust-src",      # Required for building core + compiler-builtins
     "rustfmt",
@@ -34,7 +35,7 @@ Common target triples:
 | `riscv32imac-unknown-none-elf` | RISC-V RV32IMAC | None | ESP32-C3, GD32VF103 |
 | `riscv32imc-unknown-none-elf` | RISC-V RV32IMC | None | CH32V003 |
 
-**Red Line**: Every embedded project must have `rust-toolchain.toml`. The channel must be a specific date-stamped nightly (`nightly-2024-11-15`), not a floating version (`nightly`).
+**Red Line**: Every embedded project must have `rust-toolchain.toml`. Default to stable Rust (Embassy, RTIC 2, probe-rs, and most HAL crates support stable). Pin to a specific date-stamped nightly only when a documented nightly-only feature is required (e.g., certain test harnesses or unstable compiler intrinsics). Never use a floating `nightly` channel.
 
 ## `cargo-generate`: Project Templates
 
@@ -206,7 +207,7 @@ panic = "abort"          # Still no unwinding (not supported on embedded)
 
 ## Red Lines
 
-1. `rust-toolchain.toml` is MANDATORY — channel must be date-stamped nightly, never floating
+1. `rust-toolchain.toml` is MANDATORY — default to stable; pin to date-stamped nightly only when a documented feature requires it
 2. `.cargo/config.toml` must specify `target` and `runner` — "it works on my machine" is not acceptable
 3. `cargo size --release` output must be reviewed before every release — unexpected growth is a merge blocker
 4. Release profile must set `opt-level = "z"`, `lto = true`, `codegen-units = 1`, `strip = true`

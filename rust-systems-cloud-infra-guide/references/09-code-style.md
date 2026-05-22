@@ -145,7 +145,8 @@ struct SharedState {
 impl SharedState {
     fn get(&self, key: &Key) -> Option<Value> {
         let value = {
-            let cache = self.cache.lock().expect("cache poisoned");
+            // Use proper poison handling per architecture-guide 11-concurrency.md
+            let cache = self.cache.lock().unwrap_or_else(|poison| poison.into_inner());
             cache.get(key).cloned()
         };  // Lock released here
         
@@ -157,7 +158,7 @@ impl SharedState {
         let computed = expensive_load(key);
         
         {
-            let mut cache = self.cache.lock().expect("cache poisoned");
+            let mut cache = self.cache.lock().unwrap_or_else(|poison| poison.into_inner());
             cache.put(key.clone(), computed.clone());
         }
         

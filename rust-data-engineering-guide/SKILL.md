@@ -6,7 +6,8 @@ metadata:
   philosophy: "Mechanical Sympathy, Columnar Physics, Parquet-Native, Jeet Kune Do"
   domain: "data engineering & analytics"
   relationship: "vertical-deepening-of:[rust-architecture-guide, rust-systems-cloud-infra-guide]"
-  rust_edition: "2024"
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
   aligned_with: ["Apache Arrow Specification", "Parquet Format", "DataFusion Architecture", "Polars Internals", "Apache Iceberg Rust"]
 ---
 
@@ -30,7 +31,7 @@ Vertical deepening of `rust-architecture-guide` and `rust-systems-cloud-infra-gu
 Arrow defines the physical memory layout that all operators share.
 
 - **Arrays**: `PrimitiveArray<T>`, `StringArray`, `ListArray`, `StructArray` — typed buffers with null bitmaps
-- **Chunked Arrays** (`ChunkedArray<T>`): Zero-copy concatenation of same-type arrays
+- **Chunked Arrays** (`ChunkedArray<T>` from Polars, or `LargeListArray` / chunked batch patterns in `arrow-rs`): Zero-copy concatenation of same-type arrays
 - **RecordBatch**: A table slice — Schema + multiple Arrays with equal length
 - **Red Line**: Never copy Arrow data between operators. Use `Arc<ArrayData>` for shared ownership.
 
@@ -113,7 +114,7 @@ Rust engines serve Python/Node.js/Java clients. Zero-copy is critical at languag
 - **PyO3 + Arrow**: Pass Arrow C Data Interface (`ArrowArrayStream`) — zero-copy PyArrow ↔ Rust
 - **napi-rs**: Node.js Buffer → Arrow `Buffer` — zero-copy across V8 boundary
 - **Flight/Flight SQL**: gRPC-based Arrow streaming protocol for network transfer
-- **Red Line**: Prohibit `serde_json` for bulk data handoff. Use Arrow IPC/Flight.
+- **Red Line**: Prohibit `serde_json` for bulk columnar data handoff. Use Arrow IPC/Flight. JSON is permitted for metadata schemas, lineage records, and admin API boundaries.
 
 → [references/07-cross-language.md](references/07-cross-language.md)
 
@@ -138,7 +139,7 @@ Analytics workloads have unique memory patterns: large allocations, short-lived 
 |----------|------------|-----------|
 | Row-by-Row Eval | `for row in df.iter()` on hot paths | Vectorized columnar expressions |
 | Arrow Copy | `array.clone()` between operators | `Arc<ArrayData>` shared ownership |
-| JSON Handoff | `serde_json` for Py↔Rust data | Arrow C Data Interface / Flight |
+| JSON Handoff | `serde_json` for bulk columnar Py↔Rust data | Arrow C Data Interface / Flight |
 | Predicate Late | Filter at application layer | Pushdown to Parquet row group level |
 | Unbounded Stream State | No eviction policy | TTL / LRU / watermark-based cleanup |
 | Data Skew Ignored | Assume uniform distribution | Detect skew, apply salt/broadcast |

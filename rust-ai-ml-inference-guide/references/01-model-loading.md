@@ -38,6 +38,9 @@ pub struct GgufPipeline {
 }
 
 impl GgufPipeline {
+    // NOTE: `anyhow::Result` in public API is acceptable for model-loading
+    // in rapid mode. For standard/strict mode library crates, prefer `thiserror`
+    // per architecture-guide P1 error layering rules.
     pub fn load(config: GgufModelConfig, device: Device) -> anyhow::Result<Self> {
         let tokenizer = Tokenizer::from_file(&config.tokenizer_path)
             .map_err(|e| anyhow::anyhow!("Tokenizer load failed: {}", e))?;

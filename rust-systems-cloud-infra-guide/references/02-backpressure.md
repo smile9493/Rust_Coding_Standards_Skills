@@ -24,7 +24,8 @@ dependents: ["05-resilience.md"]
 
 ### Action 1: Mandatory Bounded Channels
 * **Scenario**: All producer-consumer models, connection pools, async task dispatch.
-* **Red Line**: **Absolutely prohibit** unbounded channels.
+* **Red Line**: **Absolutely prohibit** unbounded channels by default.
+* **Exception**: Unbounded channels may be used when consumption rate is proven to strictly exceed production rate, as documented in [`rust-architecture-guide/references/11-concurrency.md`](../rust-architecture-guide/references/11-concurrency.md). When using this exception, document the capacity proof and add a monitoring alert for channel depth.
 * **Execution**:
     * Use `tokio::sync::mpsc::channel(LIMIT)`.
     * Producer handles `SendError` (retry, drop, or block).
@@ -89,14 +90,15 @@ struct BackpressureController {
 
 impl BackpressureController {
     async fn handle_request(&self, req: Request) -> Result<Response, Error> {
+        // Acquire permit first — it bounds in-flight work
         let permit = self.semaphore.try_acquire()
             .map_err(|_| Error::TooManyRequests)?;
-        
-        self.queue_tx.send(req).await
-            .map_err(|_| Error::QueueFull)?;
-        
-        drop(permit);
-        Ok(Response::Accepted)
+
+        // Do the work while holding permit. Drop permit only after work completes.
+        let result = self.process(req).await;
+
+        drop(permit); // Permit bounds in-flight concurrency, not just enqueue
+        result
     }
 }
 ```

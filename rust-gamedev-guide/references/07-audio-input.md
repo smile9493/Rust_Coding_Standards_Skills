@@ -269,7 +269,9 @@ fn collect_input(
     if keyboard.just_pressed(KeyCode::Space) {
         input_buffer.actions.push(BufferedAction::Jump);
     }
-    if keyboard.just_pressed(MouseButton::Left) {
+    // Note: MouseButton input requires a separate ButtonInput<MouseButton> resource.
+    // This example assumes a combined input mapping for illustration.
+    if mouse.just_pressed(MouseButton::Left) {
         input_buffer.actions.push(BufferedAction::Shoot);
     }
     if keyboard.just_pressed(KeyCode::KeyE) {

@@ -106,6 +106,8 @@ impl TumblingWindow {
     }
 
     fn accumulate(&mut self, batch: &RecordBatch) {
+        // NOTE: This example uses per-row iteration for clarity on a control-plane sized batch.
+        // For production hot paths, use Arrow group-by / hash aggregate kernels instead.
         let keys = batch.column(0).as_any().downcast_ref::<StringArray>().unwrap();
         let values = batch.column(1).as_any().downcast_ref::<Float64Array>().unwrap();
 

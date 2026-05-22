@@ -151,12 +151,13 @@ fn filter_and_compute(batch: &RecordBatch) -> RecordBatch {
     let predicate: BooleanArray = lt_scalar(col_a, 100).unwrap();
     let filtered = filter_record_batch(batch, &predicate).unwrap();
 
+    let col_a_filtered = filtered.column(0).as_any().downcast_ref::<Int64Array>().unwrap();
     let col_b = filtered.column(1).as_any().downcast_ref::<Int64Array>().unwrap();
-    let sum = add(col_a, col_b).unwrap(); // SIMD-accelerated
+    let sum = add(col_a_filtered, col_b).unwrap(); // SIMD-accelerated on filtered data
 
     // build a new RecordBatch — buffers from original are NOT copied
     RecordBatch::try_from_iter(vec![
-        ("col_a", Arc::new(col_a.clone())),
+        ("col_a", Arc::new(col_a_filtered.clone())),
         ("sum", Arc::new(sum)),
     ])
     .unwrap()
@@ -199,8 +200,8 @@ fn make_batch() -> RecordBatch {
 
 | # | Rule | Consequence if violated |
 |---|------|------------------------|
-| 1 | **Never `clone()` Arrow arrays between operators** — pass `Arc<ArrayData>` or `Arc<dyn Array>` | Memory doubles; throughput collapses under GB-scale data |
-| 2 | **Never iterate element-by-element to compute aggregates** — use compute kernels | 100x+ slower than vectorized; branch predictor destroyed |
+| 1 | **Avoid deep buffer copies in hot paths** — pass `Arc<ArrayData>` or `Arc<dyn Array>` between operators. Explicit copies are permitted at shuffle/spill/encode boundaries. | Memory doubles under GB-scale data if copying on every operator |
+| 2 | **Never iterate element-by-element to compute aggregates on hot paths** — use compute kernels | 100x+ slower than vectorized; branch predictor destroyed |
 | 3 | **Always validate() at ingestion boundary** | Corrupted data silently propagates into downstream aggregations |
 | 4 | **Use `DictionaryArray<Int16Type>` for columns with ≤ 2^15 distinct values** | String columns waste L2/L3 cache and increase deserialization cost |
 | 5 | **RecordBatch length must be consistent across all columns** | `len()` mismatch breaks all downstream kernels silently |

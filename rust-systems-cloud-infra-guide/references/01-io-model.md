@@ -82,7 +82,7 @@ fn zero_copy_pipe_to_socket(
     pipe_in: impl AsRawFd,
     socket_out: impl AsRawFd,
     len: usize,
-) -> io::Result<usize> {
+) -> nix::Result<usize> {
     let transferred = splice(
         pipe_in.as_raw_fd(),
         None,
@@ -91,7 +91,7 @@ fn zero_copy_pipe_to_socket(
         len,
         SpliceFFlags::empty(),
     )?;
-    Ok(transferred as usize)
+    Ok(transferred)
 }
 ```
 

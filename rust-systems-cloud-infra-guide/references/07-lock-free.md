@@ -22,7 +22,7 @@
 ### Action 1: RCU Pattern (Read-Copy-Update) — Flow Like Water Past Obstacles
 
 * **Scenario**: Global routing tables or config trees with read-heavy, write-sparse access patterns.
-* **Red Line**: In such scenarios, **absolutely prohibit** `std::sync::RwLock` or `Mutex`. At 100+ core scale, even `RwLock` read locks cause severe performance collapse due to cache line contention.
+* **Red Line**: In such scenarios (100+ core, verified contention), **prefer** `arc-swap` over `std::sync::RwLock` or `Mutex`. At 100+ core scale, even `RwLock` read locks cause severe performance collapse due to cache line contention. For smaller-scale services, follow [`rust-architecture-guide/references/11-concurrency.md`](../../rust-architecture-guide/references/11-concurrency.md).
 * **Execution**:
     1. Use `Arc::make_mut` or dedicated RCU library (`arc-swap`) for absolute zero-blocking reads.
     2. Writer strategy: Clone a data snapshot (Copy), modify in invisible copy (Update), publish via atomic pointer swap (Swap).
@@ -71,8 +71,8 @@ impl GlobalRouter {
     }
 
     pub fn update_route(&self, key: String, dest: String) {
-        let current_arc = self.routes.load();
-        let mut new_routes = (*current_arc).clone();
+        let current = self.routes.load_full(); // returns Arc<HashMap<...>>
+        let mut new_routes = (*current).clone(); // deep-clone the HashMap
         new_routes.insert(key, dest);
         self.routes.store(Arc::new(new_routes));
     }

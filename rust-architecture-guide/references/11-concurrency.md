@@ -210,12 +210,17 @@ let (tx, rx) = mpsc::channel(100); // Bounded channel for backpressure
 #### tokio::sync::Mutex (Async)
 
 ```rust
-// ✅ Only for indivisible "async transactions"
+// ✅ Hold lock minimally — clone data, drop guard, then await
 use tokio::sync::Mutex;
 
 async fn transfer(account: Arc<Mutex<Account>>, amount: u64) {
-    let mut guard = account.lock().await;
-    guard.balance -= amount; // Allowed to await inside
+    let _guard;
+    {
+        let mut guard = account.lock().await;
+        guard.balance -= amount;
+        // drop(guard) happens here — lock is released before any further await
+    }
+    // Further async work can proceed without holding the lock
 }
 ```
 

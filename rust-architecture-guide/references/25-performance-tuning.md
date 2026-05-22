@@ -287,7 +287,7 @@ fn simd_add(a: &[f32], b: &[f32], out: &mut [f32]) {
 
 ### 5.1 Basic Memory Ordering
 
-**Default**: `Ordering::SeqCst` (safest, full memory barrier)
+**Default**: Acquire/Release pair for mutual exclusion; Relaxed for counters; `Ordering::SeqCst` only with explicit justification (full memory barrier cost is extremely high on multi-core systems)
 
 **Common Patterns**:
 ```rust

@@ -6,7 +6,8 @@ metadata:
   philosophy: "Hardware Synergy, Quantization Physics, Batch Efficiency, Jeet Kune Do"
   domain: "AI/ML inference & model serving"
   relationship: "vertical-deepening-of:[rust-architecture-guide, rust-systems-cloud-infra-guide]"
-  rust_edition: "2024"
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
   aligned_with: ["candle ML framework", "burn deep learning", "ort ONNX runtime", "llama.cpp GGUF", "tokenizers library"]
 ---
 
@@ -32,7 +33,7 @@ Models come in multiple formats. Rust inference must handle all of them.
 - **GGUF** (llama.cpp format): Quantized weights, tokenizer embedded, metadata. `candle`/`llama-cpp-rs` for loading.
 - **SafeTensors**: Safe serialization format. Random access without unsafe deserialization.
 - **ONNX**: Open Neural Network Exchange. `ort` crate for ONNX Runtime bindings. Cross-framework.
-- **Red Line**: Prohibit loading model weights from untrusted pickle/safetensors without checksum verification.
+- **Red Line**: Prohibit loading model weights from untrusted pickle/.pt formats. SafeTensors is a safe format but still requires provenance verification + checksum validation before loading.
 
 → [references/01-model-loading.md](references/01-model-loading.md)
 
@@ -84,7 +85,7 @@ Serving multiple requests concurrently maximizes GPU utilization.
 - **Static Batching**: Pad all requests to same length. Wasteful for variable-length inputs.
 - **Continuous Batching** (vLLM-style): Requests enter/leave batch dynamically. No padding waste.
 - **Prefill + Decode Splitting**: Prefill (process prompt) and decode (generate tokens) as separate GPU operations
-- **Red Line**: Unbatched single-request inference = 10x lower throughput. Always batch.
+- **Red Line**: Batch requests for throughput serving. For latency-sensitive interactive serving, batch=1 with a continuous batching scheduler is acceptable. Unbatched single-request inference on throughput benchmarks is misleading.
 
 → [references/05-batching.md](references/05-batching.md)
 
@@ -97,7 +98,7 @@ Embedding models convert text/images to vectors. Vector search finds nearest nei
 - **Embedding Models**: `candle-transformers` for BERT/sentence-transformers. Mean pooling for sentence embeddings.
 - **Vector Database**: `qdrant`/`pgvector` for storage. HNSW index for approximate nearest neighbor (ANN).
 - **Cosine Similarity**: Normalize vectors to unit length → dot product = cosine similarity
-- **Red Line**: Unnormalized embeddings → distance metrics invalid. Must L2-normalize before storing.
+- **Red Line**: Choose normalization per index type: L2-normalize for cosine/dot-product indexes; do NOT normalize for Euclidean distance indexes. Document the metric per index.
 
 → [references/06-embeddings.md](references/06-embeddings.md)
 
@@ -123,7 +124,7 @@ Measure quality and performance before deploying.
 - **Perplexity**: Measure language model quality. Lower = better. Compare before/after quantization.
 - **Throughput**: Tokens/second. Measure at batch sizes 1, 4, 8, 16. GPU vs CPU.
 - **TTFT** (Time to First Token): Latency from request to first token. Critical for UX.
-- **Red Line**: Quantized model must not exceed 5% perplexity degradation vs FP16 baseline.
+- **Red Line**: Quantized model must be evaluated against the FP16 baseline. Perplexity degradation limits are task-specific: ≤2% for safety-critical, ≤5% for most production use, ≤8% for throughput-first pipelines where human eval confirms acceptable quality.
 
 → [references/08-evaluation.md](references/08-evaluation.md)
 
@@ -138,7 +139,7 @@ Measure quality and performance before deploying.
 | GPU Memory | Unbounded KV-cache growth | Pre-allocation + backpressure on OOM |
 | Tokenizer | Mismatched tokenizer config | Verify `tokenizer.json` matches model |
 | Batching | Single-request inference | Continuous batching for throughput |
-| Embeddings | Unnormalized vectors | L2-normalize before storing/searching |
+| Embeddings | Unnormalized vectors for cosine/dot indexes | L2-normalize before storing/searching (per index metric type) |
 | Serving | Unbounded per-request timeout | Timeout + cancellation |
 | Streaming | Blocking token generation | SSE/gRPC streaming protocol |
 | Evaluation | Unmeasured model quality | Perplexity + TTFT + throughput benchmarks |

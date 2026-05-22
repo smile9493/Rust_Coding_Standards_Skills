@@ -6,7 +6,8 @@ metadata:
   philosophy: "Simplicity, Composability, Cross-Platform, Jeet Kune Do"
   domain: "CLI tools & DevOps"
   relationship: "vertical-deepening-of:rust-architecture-guide"
-  rust_edition: "2024"
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
   aligned_with: ["clap derive API", "cargo-dist", "kube-rs operator pattern", "indicatif UX", "ratatui TUI"]
 ---
 
@@ -32,7 +33,7 @@ Vertical deepening of `rust-architecture-guide` for command-line tools, develope
 - **Derive API**: `#[derive(Parser)]`, `#[command(subcommand)]`, `#[arg(short, long)]`
 - **Value Validation**: `value_parser!` for custom types, `PossibleValuesParser` for enums
 - **Shell Completions**: `clap_complete` generates bash/zsh/fish completions at build time
-- **Red Line**: Prohibit `std::env::args()` manual parsing. Use clap derive.
+- **Red Line**: Prohibit `std::env::args()` manual parsing in production CLIs. Use `clap` derive. Minimal tools (single flag, no subcommands) may use manual parsing with documented justification.
 
 → [references/01-clap-args.md](references/01-clap-args.md)
 
@@ -113,7 +114,7 @@ Testing a CLI requires different strategies than testing a library.
 - **`assert_cmd`**: Run binary as subprocess, assert stdout/stderr/exit code
 - **`trycmd` / `snapbox`**: Snapshot testing for terminal output — review diffs like code
 - **`tempfile`**: Isolated temp directories for file-system side effects
-- **Red Line**: Every subcommand must have at least one end-to-end `assert_cmd` test.
+- **Red Line**: Every critical subcommand and regression-prone command path must have end-to-end `assert_cmd` tests. Full coverage is aspirational; unit-test logic and E2E-test critical paths.
 
 → [references/07-testing.md](references/07-testing.md)
 
@@ -136,7 +137,7 @@ CLI error messages are the primary debugging interface for users.
 
 | Category | Prohibited | Mandatory |
 |----------|------------|-----------|
-| Arg Parsing | Manual `std::env::args()` | `clap` derive |
+| Arg Parsing | Manual `std::env::args()` in production CLIs | `clap` derive |
 | Progress | Progress bars piped to file | `is_terminal()` check, fallback to log |
 | Paths | Hardcoded `~/.config` | `dirs` crate for XDG-compliant paths |
 | Signals | Ignoring SIGTERM/CTRL_C | Graceful shutdown with cancellation |

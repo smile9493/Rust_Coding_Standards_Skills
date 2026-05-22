@@ -1,6 +1,6 @@
 ---
 title: "Zero-Copy Command Bus V3.1"
-description: "Ultimate physical protocol for zero-copy JS↔Wasm instruction pipeline: double-buffering topology, atomic synchronization, Facade write/consume dispatch cycle, and lifecycle safety contract"
+description: "Ultimate physical protocol for zero-copy JS↔Wasm command bus: double-buffering topology, atomic synchronization, Facade write/consume dispatch cycle, and lifecycle safety contract"
 category: "Architecture"
 priority: "P0"
 version: "3.1.0"

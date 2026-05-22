@@ -291,7 +291,7 @@ fn build_pinned_client_config(pin_hash: [u8; 32]) -> ClientConfig {
 
 ## Red Lines
 
-1. Never disable certificate verification in production. `dangerous_configuration` is for tests and pinning only.
+1. Never disable certificate verification in production. `dangerous_configuration` is for tests and pinning only. When `dangerous_configuration` is used with a custom verifier (e.g., for internal PKI), document with `// DEVIATION: per architecture-guide 06-deviation-process.md §custom-tls-verifier`.
 2. Validate hostnames against the certificate's SAN (Subject Alternative Name). `ServerName::try_from` handles this.
 3. ALPN must be explicitly set on both client and server. No default protocol guessing.
 4. Certificate private keys must never be logged or hardcoded. Use environment variables or secret managers.

@@ -6,7 +6,8 @@ metadata:
   philosophy: "Protocol First, Mechanical Sympathy, Defense in Depth, Jeet Kune Do"
   domain: "network protocol engineering"
   relationship: "vertical-deepening-of:[rust-architecture-guide, rust-systems-cloud-infra-guide]"
-  rust_edition: "2024"
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
   aligned_with: ["QUIC RFC 9000", "HTTP/3 RFC 9114", "rustls architecture", "tokio codec", "nom/winnow parsing"]
 ---
 
@@ -67,7 +68,7 @@ QUIC is TCP+TLS+HTTP/2 reimagined on UDP with 0-RTT and connection migration.
 
 ## Action 4: TLS Integration
 
-TLS is not optional. All production protocols must encrypt by default.
+TLS is not optional for public internet protocols. All internet-facing production protocols must encrypt by default. Internal trusted LAN services, Unix socket control planes, and WireGuard/IPsec mesh endpoints may omit TLS with documented threat model rationale.
 
 - **rustls**: Pure-Rust TLS. `ServerConfig`/`ClientConfig` with `Arc<CryptoProvider>`.
 - **Certificate Management**: `rcgen` for self-signed, `rustls-acme` for Let's Encrypt automation
@@ -126,7 +127,7 @@ Network protocols are attack surfaces. Fuzz them aggressively.
 - **cargo-fuzz / libfuzzer**: Structure-aware fuzzing with `arbitrary::Arbitrary` for wire format structs
 - **proptest**: Property-based testing for protocol invariants (round-trip, idempotency)
 - **AFL++ / honggfuzz**: Coverage-guided fuzzing for complex protocol parsers
-- **Red Line**: Every protocol parser must have a fuzz target. No exceptions.
+- **Red Line**: P0 wire-format protocol parsers must have a fuzz target. Fixed-structure parsers and internal formats may defer fuzzing to release gates. CI smoke fuzz (60s) acceptable for PRs; long fuzz (hours) reserved for pre-release.
 
 → [references/08-fuzzing-security.md](references/08-fuzzing-security.md)
 

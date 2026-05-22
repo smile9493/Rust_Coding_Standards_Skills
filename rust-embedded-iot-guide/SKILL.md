@@ -6,8 +6,10 @@ metadata:
   philosophy: "Mechanical Sympathy, Determinism, Minimalism, Jeet Kune Do"
   domain: "embedded systems & IoT"
   relationship: "vertical-deepening-of:rust-architecture-guide"
-  rust_edition: "2024"
-  aligned_with: ["embedded-hal traits", "RTIC framework", "Embassy async", "Cortex-M RTFM", "ESP-IDF Rust bindings"]
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
+  aligned_with: ["embedded-hal traits", "RTIC framework", "Embassy async", "Cortex-M RTFM"]
+  note: "ESP-IDF Rust (std + FreeRTOS) requires a separate vertical guide; this guide covers bare-metal no_std targets only."
 ---
 
 # Rust Embedded & IoT Guide V1.0.0
@@ -62,7 +64,7 @@ No threads. No `std::sync`. Concurrency is interrupt-driven.
 - **RTIC** (Real-Time Interrupt-driven Concurrency): Static priority ceiling protocol, deadlock-free by construction
 - **Embassy**: Async executor on bare-metal. `#[embassy_executor::task]`, `await` on DMA completion
 - **Red Line**: Prohibit busy-waiting (`loop { if flag {} }`). Use interrupt or WFI/WFE.
-- **Red Line**: `static mut` for shared state is UB. Use `CriticalSection` or RTIC resource locks.
+- **Red Line**: Unsynchronized shared mutable `static mut` is UB. Use `CriticalSection`, RTIC resource locks, `portable-atomic`, or `static_cell` patterns.
 
 → [references/03-concurrency.md](references/03-concurrency.md)
 
@@ -88,7 +90,7 @@ Every µA matters for battery-powered devices.
 
 - Sleep/Deep-Sleep/Standby state machine. Wake sources: RTC, external interrupt, WDT.
 - Clock gating: disable unused peripheral clocks. Dynamic frequency scaling.
-- **Red Line**: Must measure actual current draw with power profiler (not simulator). Target < 10µA in deep sleep.
+  - **Red Line**: Must measure actual current draw with power profiler (not simulator). Define a product-specific sleep budget based on MCU/board/radio requirements; the &lt;10µA figure is typical for ultra-low-power designs but varies by hardware.
 
 → [references/05-power-management.md](references/05-power-management.md)
 

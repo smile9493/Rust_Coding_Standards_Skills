@@ -6,7 +6,8 @@ metadata:
   philosophy: "Frame Budget, Data-Oriented, GPU-Friendly, Jeet Kune Do"
   domain: "game development & real-time rendering"
   relationship: "vertical-deepening-of:rust-architecture-guide"
-  rust_edition: "2024"
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
   aligned_with: ["Bevy ECS", "wgpu API", "naga shader compiler", "kira audio", "rapier physics"]
 ---
 
@@ -33,7 +34,7 @@ Entity-Component-System is the standard game architecture in Rust.
 - **Components**: Plain data structs (`Position`, `Velocity`, `Health`). Derive `Component`.
 - **Systems**: Functions that iterate queries. `fn move_system(mut query: Query<(&mut Position, &Velocity)>)`
 - **Resources**: Global singletons (`Time`, `AssetServer`, `Input<KeyCode>`)
-- **Red Line**: Prohibit OOP inheritance hierarchies. ECS is flat. Components are tags.
+- **Red Line**: Prefer ECS (Entities/Components/Systems) for large entity counts. OOP inheritance hierarchies are discouraged on hot paths but acceptable in small-scope engines or UI modules.
 
 → [references/01-ecs-bevy.md](references/01-ecs-bevy.md)
 
@@ -60,7 +61,7 @@ GPU resources have unique lifetime and synchronization requirements.
 - **Textures**: `wgpu::Texture` with `TextureView` for sampling. Mipmap generation.
 - **Staging Belt**: CPU-writable staging buffer → `copy_buffer_to_buffer` → GPU buffer
 - **Bind Groups**: Group resources (buffer + texture + sampler) for shader access
-- **Red Line**: Prohibit mapping GPU buffers directly on render thread. Use staging belt.
+- **Red Line**: Prefer staging belts for GPU buffer uploads. Avoid synchronous `map_async` on the render thread; use staging belts or async readback when GPU→CPU transfer is needed.
 
 → [references/03-gpu-wgpu.md](references/03-gpu-wgpu.md)
 
@@ -74,7 +75,7 @@ The rendering pipeline transforms 3D/2D data into pixels on screen.
 - **Frustum Culling**: AABB/sphere test against camera frustum. Eliminate invisible objects early.
 - **LOD (Level of Detail)**: Distance-based mesh/ texture resolution. Mipmaps for textures.
 - **Instancing**: Draw many copies of the same mesh with per-instance data (transform, color)
-- **Red Line**: Draw calls must be batched. < 1000 draw calls per frame target for 60 FPS.
+- **Red Line**: Draw calls should be batched. &lt;1000 draw calls per frame is a profiling reference value, not a universal cap; depends on GPU, API, and content complexity (mobile vs desktop, 2D vs 3D).
 
 → [references/04-rendering-pipeline.md](references/04-rendering-pipeline.md)
 
@@ -113,7 +114,7 @@ Game feel depends on responsive input and spatial audio.
 - **Audio**: `kira` for spatial audio (3D positioning, attenuation). `rodio` for simple playback.
 - **Input**: `Input<KeyCode>`, `Input<MouseButton>`, `Input<GamepadButton>`. Action mapping via `leafwing-input-manager`.
 - **Input Buffering**: Collect inputs per frame. Process in fixed update. Avoid "one input = many actions".
-- **Red Line**: Audio and input must run on separate threads from rendering.
+- **Red Line**: Audio I/O and network input must not block the render thread. Use non-blocking APIs; dedicated threads are one option but not the only valid architecture.
 
 → [references/07-audio-input.md](references/07-audio-input.md)
 
@@ -136,7 +137,7 @@ Physics runs at fixed timestep. Collision detection drives gameplay.
 
 | Category | Prohibited | Mandatory |
 |----------|------------|-----------|
-| Architecture | OOP class hierarchy | ECS: flat components + systems |
+| Architecture | OOP class hierarchy on hot paths | ECS: flat components + systems |
 | Physics | Variable timestep | Fixed timestep (60/120 Hz) |
 | GPU Buffer Map | Direct map on render thread | Staging belt async upload |
 | Draw Calls | Unbatched per-object draws | Instancing + batching (< 1000 dc/frame) |

@@ -6,7 +6,8 @@ metadata:
   philosophy: "Dialectical Materialism & Jeet Kune Do — Unity of False and Real"
   domain: "general Rust engineering"
   author: "rust-architect"
-  rust_edition: "2024"
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
   aligned_with: ["Rust API Guidelines", "Rust 2024 Edition", "Tokio Best Practices", "Clippy pedantic/nursery", "Safety-Critical Rust Coding Guidelines"]
 ---
 
@@ -35,19 +36,18 @@ Before applying any rule, determine the execution mode:
 
 See [references/00-mode-guide.md](references/00-mode-guide.md) for full mode definitions.
 
-### Mandatory Output Contract
+### Decision Summary Contract
 
-**Every code generation or review output MUST end with a Decision Summary block:**
+**Architecture decisions, security-sensitive changes, and multi-rule conflicts MUST end with a Decision Summary block. For trivial edits (comment fixes, style-only, single-rule clear-cut), the summary is optional.**
 
 ```markdown
 ## Decision Summary
 - **Mode**: [rapid|standard|strict]
-- **Edition**: [2021|2024] — Rust edition in use
+- **Edition**: [2021|2024] — as configured in project Cargo.toml
 - **Rules Applied**: [list specific rules from P0-P3]
 - **Conflicts Resolved**: [PX > PY with justification, or "None"]
 - **Deviations**: [list with `// DEVIATION: reason` references, or "None"]
 - **Trade-offs**: [key trade-off decisions made]
-- **External Alignment**: [relevant Rust API Guidelines / Safety-Critical guidelines matched]
 ```
 
 ---
@@ -60,7 +60,7 @@ When conflicts arise, apply decisions top-down. Upper levels have absolute veto 
 |:------|:--------------|:-------|:-------|
 | **P0** | **Safety & Correctness** | Compile-time borrow checking, Miri-verified unsafe | Any UB, race conditions, unproven unsafe |
 | **P1** | **Maintainability** | Semantic naming, ownership transfer, trait decoupling | Deeply nested lifetimes, overly complex generics |
-| **P2** | **Engineering Efficiency** | `Box<dyn Trait>`, workspace division, feature isolation | Binary bloat from monomorphization |
+| **P2** | **Compile Time** | `Box<dyn Trait>`, workspace division, feature isolation | Binary bloat from monomorphization, slow CI builds |
 | **P3** | **Runtime Performance** | SoA layout, lock-free, SIMD, profiling-proven | Intuition-based premature optimization |
 
 ---
@@ -110,7 +110,7 @@ When conflicts arise, apply decisions top-down. Upper levels have absolute veto 
 ### Agent Self-Check List
 
 1. **Are code paths flat?** Can `let else` or `?` eliminate `if let` nesting?
-2. **Are manual loops eliminated?** Can collection processing be converted to iterator adapter chains?
+2. **Are collection operations idiomatic?** Prefer iterator adapters where they improve clarity; a simple `for` loop is acceptable when it reads more clearly or when early-exit logic is needed.
 3. **Are variable scopes minimized?** Can shadowing remove no-longer-needed `mut`?
 4. **Are there implicit copies?** Is `.to_string()` or `.clone()` misused on hot paths?
 5. **Is naming stuttering?** e.g., `user::UserConfig` should be `user::Config`.
@@ -119,7 +119,7 @@ When conflicts arise, apply decisions top-down. Upper levels have absolute veto 
 
 ### Reduction Directive
 
-When receiving a Rust coding task, fold the logic with Jeet Kune Do intuition before output — ensuring every line of code carries maximum energy density. The goal is **high signal-to-noise ratio**.
+When receiving a Rust coding task, aim for high signal-to-noise ratio: eliminate unnecessary ceremony, use idiomatic patterns, and prefer clarity over cleverness. The philosophy labels (Jeet Kune Do, Economy of Motion, Intercepting Boilerplate) are branding metaphors — operational rules are defined by the priority pyramid and execution mode system above.
 
 ---
 
