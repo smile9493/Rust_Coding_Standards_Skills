@@ -11,7 +11,8 @@ metadata:
   philosophy: "Dialectical Materialism & Jeet Kune Do — Wasm Vertical Base"
   domain: "wasm32-unknown-unknown compilation & boundary layer"
   relationship: "vertical-deepening-of:rust-architecture-guide"
-  rust_edition: "2024"
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
   aligned_with: ["Leptos Binary Size Guide", "twiggy diagnostics", "wasm-opt -Oz", "talc allocator", "Wasm Component Model proposals"]
 ---
 
@@ -27,7 +28,7 @@ V4.1.0 — **Binary Size Economics & Ecosystem Convergence**:
 
 ## Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real
 
-This specification is the engineering implementation of the "Dialectical Materialism and Jeet Kune Do" architectural philosophy at the compilation and boundary layer. Legal weight: This specification is the final criterion and thinking framework for all technical decisions, code reviews, and architectural evolution. Any concrete Skill or implementation specification that conflicts with this creed must itself be revised.
+This specification is the engineering implementation of the "Dialectical Materialism and Jeet Kune Do" architectural philosophy at the compilation and boundary layer. For conflicts with `rust-architecture-guide`, the architecture guide serves as the **constitutional foundation** (see [constitution conflict resolution](../../rust-architecture-guide/references/06-deviation-process.md)). This Wasm specification provides **vertical-default guidance** for `wasm32-unknown-unknown` targets, not an absolute veto over higher-level rules.
 
 ### 0.1 Materialist Foundation: Reverence for Physical Boundaries
 

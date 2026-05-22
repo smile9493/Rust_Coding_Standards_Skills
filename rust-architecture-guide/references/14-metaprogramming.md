@@ -163,11 +163,12 @@ syn = { version = "2.0", features = ["full"] }
 - **Absolutely prohibit** using `panic!()` inside procedural macros
 - Must emit proper `proc_macro::Diagnostic`-level errors
 
-**Modern Toolchain**: Prefer `proc-macro-error2` crate for unified error reporting across compiler versions:
+**Modern Toolchain**: Prefer the stable `proc_macro::Diagnostic` API (stabilized in Rust 1.72+) for emitting structured errors. The `proc-macro-error2` crate remains a valid alternative for projects targeting older compiler versions:
 
 ```toml
 [dependencies]
-proc-macro-error2 = "2"
+# Use stable Diagnostic for compiler >= 1.72
+# proc-macro-error2 = "2"  # alternative for older compilers
 ```
 
 ```rust
@@ -274,7 +275,7 @@ fn ui_tests() {
 - Generating code that relies on specific `use` statements in caller scope
 
 **MUST**:
-- Use absolute paths for all references (e.g., `::std::vec::Vec`)
+- Use fully-qualified paths for external types (e.g., `::std::vec::Vec`), or ensure callers have the required imports. In Rust 2024, `use` paths are generally preferred over absolute `::std::` prefixes.
 - Avoid missing `use` statements causing compilation errors
 
 ```rust
@@ -283,9 +284,11 @@ quote! {
     Vec::new()
 }
 
-// ✅ Good: Absolute path, always works
+// ✅ Good: Use fully-qualified path from crate root (stable across Rust editions)
 quote! {
-    ::std::vec::Vec::new()
+    std::vec::Vec::new()
+    // Note: `::std::` prefix is not required; `std::` alone resolves correctly
+    // when no conflicting `std` name exists in caller scope.
 }
 ```
 

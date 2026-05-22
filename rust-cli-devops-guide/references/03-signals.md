@@ -45,6 +45,7 @@ async fn drain_connections() {
 #[tokio::main]
 async fn main() {
     let (shutdown_tx, shutdown_rx) = watch::channel(false);
+    let shutdown_tx2 = shutdown_tx.clone();
 
     let signal_handle = tokio::spawn(async move {
         signal::ctrl_c().await.expect("failed to listen for ctrl_c");
@@ -57,7 +58,7 @@ async fn main() {
             .expect("failed to register SIGTERM handler");
         sigterm.recv().await;
         tracing::info!("SIGTERM received, initiating shutdown");
-        shutdown_tx.send(true).ok();
+        shutdown_tx2.send(true).ok();
     });
 
     run_server(shutdown_rx).await;

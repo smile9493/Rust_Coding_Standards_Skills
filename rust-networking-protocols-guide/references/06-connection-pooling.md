@@ -343,10 +343,11 @@ impl ConnectionWithHealth {
         self.last_used = Instant::now();
     }
 
-    async fn is_alive(stream: &tokio::net::TcpStream) -> bool {
-        match stream.try_read(&mut [0u8; 1]) {
-            Ok(0) => false,
-            Err(ref e) if e.kind() == std::io::ErrorKind::WouldBlock => true,
+    async fn is_alive(stream: &tokio::net::TcpStream, timeout_dur: Duration) -> bool {
+        match tokio::time::timeout(timeout_dur, stream.try_read(&mut [0u8; 1])).await {
+            Ok(Ok(0)) => false,                          // EOF — peer closed
+            Ok(Err(ref e)) if e.kind() == std::io::ErrorKind::WouldBlock => true, // still open, just no data
+            Err(_elapsed) => false,                      // timeout — treat as dead
             _ => false,
         }
     }

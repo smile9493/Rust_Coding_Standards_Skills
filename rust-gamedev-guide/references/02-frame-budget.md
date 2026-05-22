@@ -4,7 +4,7 @@ Status: **Core** | Prerequisites: 01-ecs-bevy.md
 
 ## Overview
 
-Frame budget is the maximum time a single frame can take. At 60 FPS, the budget is ~16.67ms. At 120 FPS, ~8.33ms. Every system in the update loop must fit within this budget. The frame budget is law — exceeding it means dropped frames, input lag, and stuttering.
+Frame budget is the maximum time a single frame can take. At 60 FPS, the budget is ~16.67ms. At 120 FPS, ~8.33ms. At 144Hz+, budgets drop to ~6.9ms or less — always cap main-thread work to the measured display refresh rate. Every system in the update loop must fit within this budget. The frame budget is law — exceeding it means dropped frames, input lag, and stuttering.
 
 ## Fixed Timestep
 

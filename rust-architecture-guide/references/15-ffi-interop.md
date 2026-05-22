@@ -76,7 +76,17 @@ pub unsafe extern "C" fn destroy_engine(ptr: *mut Engine) {
 
 ### 3.1 Cross-Language Panic Death Ban
 
-**Red Line Rule**: **All** exported `extern "C"` functions must be wrapped in `std::panic::catch_unwind`.
+**Red Line Rule**: Exported `extern "C"` functions that **may** panic must be wrapped in `std::panic::catch_unwind`. Provably panic-free functions (no `.unwrap()`, no indexing, no arithmetic overflow without checks) do not require wrapping. In `panic = "abort"` builds, `catch_unwind` cannot catch panics — instead design FFI paths to be panic-free.
+
+**Rust 2024 Edition**: Use `unsafe extern` blocks for declaring foreign functions:
+
+```rust
+unsafe extern "C" {
+    fn foreign_library_call(x: i32) -> i32;
+}
+```
+
+All `extern "C" { }` blocks must be marked `unsafe` in Rust 2024.
 
 **Reason**: Rust Panic penetrating C ABI is undefined behavior (UB), causing direct process crash or memory corruption.
 

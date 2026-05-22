@@ -18,7 +18,7 @@ The browser main thread must not be blocked; the event loop must be complied wit
 
 ## 4.1 Seamless Async Mapping (MUST)
 
-All I/O operations must use `wasm-bindgen-futures`, which provides `JsFuture` (Promise to Future) and `future_to_promise` (Future to Promise) bidirectional conversion.
+All I/O operations must use non-blocking single-thread executor primitives: `wasm-bindgen-futures` (`JsFuture` / `future_to_promise`), `gloo` timers and events, Leptos reactive runtime, or WIT Component Model async. The core requirement is non-blocking discipline; the specific crate is a choice.
 
 ```rust
 use wasm_bindgen_futures::spawn_local;

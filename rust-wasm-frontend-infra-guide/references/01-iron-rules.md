@@ -23,7 +23,7 @@ From these, four iron rules are derived:
 
 ## [IRON-01] Binary Size Is Paramount
 
-Compilation artifacts must be aggressively compressed, all debug info, unwind tables, and redundant sections stripped.
+Compilation artifacts must be aggressively compressed: debug info and unwind tables stripped in the shipped release artifact (dev/profile builds retain debug information for diagnostics). Redundant sections removed via `wasm-opt`.
 
 **Physical Basis**: WASM binaries must be downloaded, compiled, and instantiated on every page load. Every byte directly impacts first load time. Production configurations of mainstream projects like Leptos, NEAR, and SWC all use this as baseline.
 

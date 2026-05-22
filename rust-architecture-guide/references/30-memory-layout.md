@@ -21,19 +21,26 @@ Every byte of struct padding is dead weight — it consumes cache lines, inflate
 ### Padding Audit Example
 
 ```rust
-// ❌ 24 bytes — 14 bytes wasted as padding (58% waste!)
-struct BadLayout {
-    flag: u8,      // 1 byte + 7 padding
-    name: String,  // 24 bytes (ptr + len + cap)
-    count: u32,    // 4 bytes + 4 padding
-}
+use std::mem::size_of;
 
-// ✅ 16 bytes — only 3 bytes padding (19% waste)
-struct GoodLayout {
-    name: String,  // 24 bytes → but reordered
-    count: u32,    // 4 bytes
-    flag: u8,      // 1 byte
+#[repr(C)] // fixed layout for predictable sizes
+struct BadLayout {
+    flag: u8,      // 1 byte @ offset 0
+    // 7 bytes padding (to align u64)
+    value: u64,    // 8 bytes @ offset 8
+    count: u32,    // 4 bytes @ offset 16
+    // 4 bytes padding (to align to 8-byte boundary)
 }
+// size_of::<BadLayout>() == 24 bytes — 10 bytes wasted as padding (42% waste!)
+
+#[repr(C)]
+struct GoodLayout {
+    value: u64,    // 8 bytes @ offset 0
+    count: u32,    // 4 bytes @ offset 8
+    flag: u8,      // 1 byte @ offset 12
+    // 3 bytes padding (to align to 8-byte boundary)
+}
+// size_of::<GoodLayout>() == 16 bytes — only 3 bytes padding (19% waste)
 ```
 
 ### Hard Constraint: Field Ordering by Alignment Descending
@@ -41,15 +48,15 @@ struct GoodLayout {
 **Rule**: Sort struct fields from largest alignment to smallest. This minimizes padding waste automatically.
 
 ```rust
-// Ordering rule: String (align 8) > u64 (align 8) > u32 (align 4) > u16 (align 2) > u8 (align 1)
+// Ordering rule: u64 (align 8) > u32 (align 4) > u16 (align 2) > u8 (align 1)
 struct OptimizedLayout {
-    big_field: String,    // align 8
-    counter: u64,         // align 8
-    index: u32,           // align 4
-    flags: u16,           // align 2
-    tag: u8,              // align 1
+    counter: u64,         // align 8 @ offset 0
+    index: u32,           // align 4 @ offset 8
+    flags: u16,           // align 2 @ offset 12
+    tag: u8,              // align 1 @ offset 14
     // 1 byte trailing padding (unavoidable for array alignment)
 }
+// size_of::<OptimizedLayout>() == 16 bytes
 ```
 
 ---

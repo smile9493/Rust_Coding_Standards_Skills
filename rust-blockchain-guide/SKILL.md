@@ -6,8 +6,10 @@ metadata:
   philosophy: "Determinism, Account Model, Verifiable Compute, Jeet Kune Do"
   domain: "blockchain & Web3"
   relationship: "vertical-deepening-of:[rust-architecture-guide, rust-embedded-iot-guide]"
-  rust_edition: "2024"
-  aligned_with: ["Solana BPF constraints", "Substrate FRAME", "Anchor framework", "SPL Token standard", "NEAR SDK"]
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
+  aligned_with: ["Solana BPF constraints", "Substrate FRAME", "Anchor framework", "SPL Token standard"]
+  note: "Scope covers Solana programs and Substrate pallets. Cosmos SDK and Stacks are mentioned in description but not covered in depth."
 ---
 
 # Rust Blockchain & Web3 Guide V1.0.0
@@ -31,7 +33,7 @@ Blockchain state is an account database, not a traditional database.
 
 - **Solana**: Programs are stateless. Accounts hold state. `AccountInfo` with `data: Rc<RefCell<&mut [u8]>>`.
 - **Substrate**: FRAME pallets with `StorageMap`/`StorageValue`. Merkle-Patricia trie backend.
-- **Account Serialization**: `borsh` (Solana), `parity-scale-codec` (Substrate), `bincode` (NEAR)
+- **Account Serialization**: `borsh` (Solana), `parity-scale-codec` (Substrate), `borsh` (NEAR)
 - **Red Line**: Programs must not store state internally. All state must be in accounts.
 
 → [references/01-account-model.md](references/01-account-model.md)
@@ -58,7 +60,7 @@ Solana programs compile to BPF (Berkeley Packet Filter) bytecode, not native mac
 - **BPF Constraints**: No `std` (use `solana-program`). 200KB max program size. 200K CU budget.
 - **No Floating Point**: BPF has no native f64/f32. Use fixed-point arithmetic (`u64` with 9 decimals).
 - **No Dynamic Dispatch**: No `Box<dyn Trait>`, no `Rc`, no `Arc`. Static dispatch only.
-- **Red Line**: Exceeding CU budget → transaction fails. Profile with `solana_compute_budget`.
+- **Red Line**: Program size and compute unit limits are chain-specific and evolve. Verify current limits from the target chain's official documentation at build time. (Solana historically ~200KB program, ~200K CU; Substrate weight varies by runtime.)
 
 → [references/03-bpf-constraints.md](references/03-bpf-constraints.md)
 
@@ -124,7 +126,7 @@ Blockchain programs handle real money. Security is P0.
 - **Integer Overflow**: Use `checked_*` math. `overflow-checks = true` in release (Solana default).
 - **Access Control**: Every instruction must verify signer authority. `#[account(signer)]` on Anchor.
 - **Fuzzing**: `trident` framework for Solana program fuzzing. `cargo-fuzz` for parser/deserializer.
-- **Red Line**: Programs holding value must be audited by third party before mainnet.
+- **Red Line**: Programs holding significant value on mainnet must undergo third-party security audit. Testnet and internal deployments do not require full audit.
 
 → [references/08-security.md](references/08-security.md)
 
@@ -143,7 +145,7 @@ Blockchain programs handle real money. Security is P0.
 | CPI | Unchecked return values | Verify `invoke()` result |
 | PDA | Predictable seeds | Include unique identifiers, bump seed |
 | Weights | Unbounded extrinsic weight | Benchmark-derived `#[pallet::weight]` |
-| Security | Unaudited mainnet program | Third-party audit + formal verification |
+| Security | Unaudited mainnet program with significant value | Third-party audit + formal verification |
 
 ---
 

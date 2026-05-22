@@ -103,7 +103,7 @@ async fn handle_bidirectional_stream(
 
 ## 3. Stream Multiplexing
 
-QUIC supports unlimited independent streams per connection. Each stream has its own flow control and can be read/written concurrently. There is no head-of-line blocking between streams.
+QUIC supports unlimited independent streams per connection. Each stream has its own flow control and can be read/written concurrently. There is no inter-stream head-of-line blocking between streams; however, data within a single stream is still ordered — intra-stream HOL blocking remains for ordered byte-stream delivery.
 
 ```rust
 use quinn::{Connection, SendStream, RecvStream};

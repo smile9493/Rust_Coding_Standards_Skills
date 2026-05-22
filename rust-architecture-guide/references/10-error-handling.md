@@ -128,7 +128,7 @@ where
 For external service calls, use a circuit breaker to prevent cascading failures:
 
 ```rust
-// Use `tower` middleware or a dedicated crate like `breakpad`
+// Use `tower` middleware (buffer/retry/circuit_breaker layers) for external service calls
 // Rule: Never retry indefinitely — always have a circuit breaker or timeout
 ```
 
@@ -171,7 +171,7 @@ impl AppError {
 
 | Crate | Strengths | When to Use |
 |-------|-----------|-------------|
-| `anyhow` | Simple, std-compatible, ubiquitous | Default application-level |
+| `anyhow` | Simple, error-type-agnostic, ubiquitous | Default application-level |
 | `eyre` + `color-eyre` | Rich spantrace, automatic backtrace | Debug-heavy applications |
 | `miette` | Beautiful diagnostic output with source code snippets | CLI tools, developer-facing errors |
 | `error-stack` | Attach key-value context, thread-safe reports | Structured observability, multi-layer context |

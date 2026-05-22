@@ -21,7 +21,7 @@
 
 ## 1. Checks-Effects-Interactions（反重入）
 
-这是区块链安全最重要的模式。永远在 CPI 之前完成所有状态变更：
+On Solana, single-program synchronous reentrancy is not possible because transactions are atomic — a program cannot be re-entered mid-execution. However, CEI remains critical for **CPI-related state corruption**: always complete your state changes before making CPIs to untrusted programs. Solana-specific attack vectors include: CPI ordering attacks, account substitution (passing different accounts than expected), and duplicate mutable accounts. The Anchor `#[derive(Accounts)]` macro with `#[account(mut, signer, constraint = ...)]` catches these at the constraint level.
 
 ```rust
 pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {

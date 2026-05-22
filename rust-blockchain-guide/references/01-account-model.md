@@ -208,7 +208,7 @@ impl<T: Config> Pallet<T> {
 
 ## 序列化方案对比
 
-| 特性 | Borsh (Solana) | Parity SCALE (Substrate) | Bincode (NEAR) |
+| 特性 | Borsh (Solana) | Parity SCALE (Substrate) | Borsh (NEAR) |
 |------|---------------|--------------------------|----------------|
 | Schema | 无 schema | 无 schema | 无 schema |
 | 端序 | LE | LE | LE |

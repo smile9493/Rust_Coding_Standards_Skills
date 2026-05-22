@@ -306,9 +306,9 @@ fs.chmodSync(path.join(BIN_DIR, `devkit${ext}`), 0o755);
 
 | Rule | Rationale |
 |------|-----------|
-| **Mandatory**: `strip = true` in release profile | Debug symbols must never ship to users. Binaries must be minimal. |
-| **Mandatory**: `lto = true`, `codegen-units = 1` | Fat LTO produces smallest, fastest binaries. Accept longer CI build time. |
-| **Mandatory**: `musl` target for Linux | Static linking avoids glibc version mismatches across distros. |
+| **Recommended**: `strip = true` in release profile | Debug symbols should not ship to end users. Use `split-debuginfo = "packed"` when postmortem debugging is needed. |
+| **Recommended**: `lto = true`, `codegen-units = 1` | Fat LTO produces smallest, fastest binaries. Accept longer CI build time; skip for rapid/dev builds. |
+| **Preferred**: `musl` target for maximum Linux portability | Static linking avoids glibc version mismatches. glibc targets are acceptable for distro-specific packages where musl brings unnecessary complexity. |
 | **Forbid** GitHub Release without checksums | Every binary archive must have a SHA256 checksum for integrity verification. |
 | **Forbid** `curl | sh` without `set -eu` | Silent failures are indistinguishable from success. Fail explicitly. |
 

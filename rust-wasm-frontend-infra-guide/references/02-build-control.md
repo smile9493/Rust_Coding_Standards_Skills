@@ -51,7 +51,7 @@ wasm-opt -Oz --enable-simd -o output.wasm input.wasm
 The choice of global allocator directly affects the .wasm baseline size:
 
 - **Deprecation Warning**: `wee_alloc` has been unmaintained for a long time, **new projects must not use it**.
-- **Recommended**: `talc` (modern, actively maintained) or `MiniAlloc` (Wasm-optimized, uses zero-filled pages to reduce memory footprint).
+- **Recommended**: `talc` (modern, actively maintained). `MiniAlloc` is an older Wasm-optimized allocator using zero-filled pages; prefer `talc` for new projects.
 - **Benefit**: Default allocator is ~10KB, replacement can reduce to ~1KB, the most direct way to shrink baseline size.
 
 Decision records must include volume benchmark results for the chosen allocator.

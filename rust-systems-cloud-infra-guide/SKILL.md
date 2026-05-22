@@ -6,7 +6,8 @@ metadata:
   philosophy: "Mechanical Sympathy, Determinism, Resilience, Jeet Kune Do, Unity of False and Real"
   domain: "cloud-native infrastructure"
   relationship: "vertical-deepening-of:rust-architecture-guide"
-  rust_edition: "2024"
+  default_edition: "2024"
+  supported_editions: ["2021", "2024"]
   aligned_with: ["Tokio Graceful Shutdown", "io_uring Best Practices", "Safety-Critical Rust Guidelines", "Raft/Paxos Determinism Patterns"]
 ---
 
@@ -64,7 +65,8 @@ Cloud-native environment with strict K8s Cgroups limits.
 - Use bounded `mpsc`, `Semaphore`
 - Producer handles `SendError` or blocks
 - Propagate backpressure upstream (HTTP 503) or internally
-- **Red Line**: Absolutely prohibit unbounded channels
+- **Red Line**: Absolutely prohibit unbounded channels by default.
+- **Exception**: Unbounded channels may be used when consumption rate is proven to strictly exceed production rate per [`rust-architecture-guide/references/11-concurrency.md`](../rust-architecture-guide/references/11-concurrency.md). When using this exception, document the capacity proof and monitor channel depth.
 
 → [references/02-backpressure.md](references/02-backpressure.md)
 
@@ -73,7 +75,7 @@ Cloud-native environment with strict K8s Cgroups limits.
 Client may disconnect at any time (timeout or cancel).
 
 - Unsafe operations (non-idempotent writes) must `spawn` independent task + `oneshot`
-- Use `futures::future::Abortable` with explicit cleanup
+- Use `tokio_util::sync::CancellationToken` with explicit cleanup
 - **Red Line**: All operations in `select!` must be cancellation-safe
 
 → [references/02-backpressure.md](references/02-backpressure.md)
@@ -163,6 +165,7 @@ Read-heavy, write-sparse global routing tables or config trees (10GbE NIC, 128+ 
 - Writer: clone snapshot (Copy), modify in copy (Update), atomic pointer swap (Swap)
 - Readers flow like water past writer boulders
 - **Red Line**: Absolutely prohibit `std::sync::RwLock` or `Mutex` in read-heavy paths at scale — cache line contention causes performance collapse
+- **Scope**: This applies at 100+ core scale with measured contention. For services with <16 cores, follow [`rust-architecture-guide/references/11-concurrency.md`](../rust-architecture-guide/references/11-concurrency.md) RwLock guidance. When moving from RwLock to arc-swap, include contention metrics in the decision record.
 
 → [references/07-lock-free.md](references/07-lock-free.md)
 
@@ -212,13 +215,17 @@ Database executor, large-scale structured data aggregation.
 
 ## Mandatory CI Lints
 
+See [references/10-ci-lints.md](references/10-ci-lints.md) for the complete and authoritative lint list. Key lints:
+
 ```rust
 #![deny(clippy::await_holding_lock)]
 #![deny(clippy::await_holding_refcell_ref)]
 #![deny(clippy::large_stack_frames)]
 #![deny(clippy::undocumented_unsafe_blocks)]
 #![deny(clippy::unwrap_used)]
+#![deny(clippy::expect_used)]
 #![deny(clippy::todo)]
+#![deny(clippy::unimplemented)]
 #![deny(clippy::dbg_macro)]
 #![deny(unsafe_op_in_unsafe_fn)]
 ```

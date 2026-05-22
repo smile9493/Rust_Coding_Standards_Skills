@@ -90,7 +90,7 @@ Required: custom `#[global_allocator]` backed by a memory pool in a `.bss` stati
 ## Red Lines
 1. Application code MUST NOT import PAC crates directly
 2. No `use std::*` — instant compile error with `#![no_std]`
-3. `static mut` for shared state is UB — use RTIC resource locks or `CriticalSection`
+3. Unsynchronized shared mutable `static mut` is UB — use `core::cell::UnsafeCell` with `critical_section`, RTIC `#[shared]` resource locks, `portable-atomic`, or `static_cell`/`once_cell` patterns.
 4. Every embedded crate must specify `#![no_std]` at crate root
 
 ## References

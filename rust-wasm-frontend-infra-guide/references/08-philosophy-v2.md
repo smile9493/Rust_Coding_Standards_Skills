@@ -10,7 +10,7 @@ dependents: []
 
 # Architectural Philosophy & Decision Meta-Spec V2.0
 
-> **Legal Weight**: This specification is the final criterion and thinking framework for all technical decisions, code reviews, and architectural evolution. Any concrete Skill or implementation specification that conflicts with this creed must itself be revised.
+> **Governance**: This specification provides the philosophical and technical foundations for Wasm-targeting Rust. For any conflict with `rust-architecture-guide`, that guide serves as the **constitutional authority** per [DEVIATION protocol](../../rust-architecture-guide/references/06-deviation-process.md). This document defines **vertical-default guidance** for `wasm32-unknown-unknown` — not an absolute override of the universal constitution.
 
 ---
 
