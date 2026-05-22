@@ -1,511 +1,1781 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/01-model-loading/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/01-model-loading/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/01-model-loading/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/01-model-loading/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/02-quantization/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/02-quantization/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/02-quantization/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/02-quantization/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/03-gpu-memory/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/03-gpu-memory/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/03-gpu-memory/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/03-gpu-memory/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/04-tokenizer/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/04-tokenizer/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/04-tokenizer/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/04-tokenizer/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/05-batching/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/05-batching/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/05-batching/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/05-batching/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/06-embeddings/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/06-embeddings/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/06-embeddings/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/06-embeddings/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/07-serving-api/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/07-serving-api/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/07-serving-api/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/07-serving-api/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/08-evaluation/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/08-evaluation/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/08-evaluation/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/08-evaluation/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/00-mode-guide/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/00-mode-guide/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/00-mode-guide/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/00-mode-guide/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/01-priority-pyramid/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/01-priority-pyramid/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/01-priority-pyramid/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/01-priority-pyramid/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/02-conflict-resolution/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/02-conflict-resolution/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/02-conflict-resolution/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/02-conflict-resolution/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/03-progressive-architecture/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/03-progressive-architecture/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/03-progressive-architecture/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/03-progressive-architecture/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/04-trade-offs/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/04-trade-offs/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/04-trade-offs/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/04-trade-offs/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/05-glossary/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/05-glossary/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/05-glossary/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/05-glossary/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/06-deviation-process/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/06-deviation-process/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/06-deviation-process/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/06-deviation-process/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/07-state-machine/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/07-state-machine/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/07-state-machine/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/07-state-machine/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/08-newtype/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/08-newtype/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/08-newtype/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/08-newtype/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/09-data-architecture/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/09-data-architecture/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/09-data-architecture/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/09-data-architecture/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/10-error-handling/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/10-error-handling/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/10-error-handling/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/10-error-handling/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/11-concurrency/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/11-concurrency/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/11-concurrency/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/11-concurrency/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/12-async-internals/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/12-async-internals/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/12-async-internals/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/12-async-internals/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/13-api-design/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/13-api-design/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/13-api-design/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/13-api-design/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/14-metaprogramming/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/14-metaprogramming/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/14-metaprogramming/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/14-metaprogramming/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/15-ffi-interop/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/15-ffi-interop/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/15-ffi-interop/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/15-ffi-interop/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/16-observability/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/16-observability/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/16-observability/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/16-observability/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/17-toolchain/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/17-toolchain/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/17-toolchain/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/17-toolchain/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/18-control-flow/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/18-control-flow/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/18-control-flow/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/18-control-flow/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/19-iterators/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/19-iterators/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/19-iterators/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/19-iterators/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/20-traits/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/20-traits/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/20-traits/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/20-traits/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/21-errors/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/21-errors/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/21-errors/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/21-errors/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/22-data-struct/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/22-data-struct/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/22-data-struct/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/22-data-struct/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/23-borrowing/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/23-borrowing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/23-borrowing/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/23-borrowing/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/24-refactor/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/24-refactor/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/24-refactor/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/24-refactor/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/25-performance-tuning/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/25-performance-tuning/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/25-performance-tuning/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/25-performance-tuning/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/26-advanced-testing/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/26-advanced-testing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/26-advanced-testing/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/26-advanced-testing/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/27-review/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/27-review/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/27-review/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/27-review/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/28-usage-examples/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/28-usage-examples/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/28-usage-examples/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/28-usage-examples/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/30-memory-layout/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/30-memory-layout/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/30-memory-layout/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/30-memory-layout/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/31-breakwater-pattern/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/31-breakwater-pattern/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/31-breakwater-pattern/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/31-breakwater-pattern/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/32-physical-audit/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/32-physical-audit/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/32-physical-audit/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/32-physical-audit/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/33-ci-modern/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/33-ci-modern/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/33-ci-modern/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/33-ci-modern/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/01-account-model/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/01-account-model/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/01-account-model/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/01-account-model/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/02-pda/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/02-pda/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/02-pda/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/02-pda/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/03-bpf-constraints/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/03-bpf-constraints/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/03-bpf-constraints/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/03-bpf-constraints/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/04-anchor-framework/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/04-anchor-framework/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/04-anchor-framework/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/04-anchor-framework/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/05-cpi/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/05-cpi/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/05-cpi/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/05-cpi/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/06-substrate-pallets/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/06-substrate-pallets/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/06-substrate-pallets/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/06-substrate-pallets/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/07-token-economics/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/07-token-economics/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/07-token-economics/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/07-token-economics/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/08-security/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/08-security/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/08-security/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/08-security/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/01-clap-args/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/01-clap-args/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/01-clap-args/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/01-clap-args/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/02-distribution/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/02-distribution/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/02-distribution/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/02-distribution/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/03-signals/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/03-signals/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/03-signals/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/03-signals/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/04-progress-ux/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/04-progress-ux/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/04-progress-ux/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/04-progress-ux/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/05-configuration/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/05-configuration/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/05-configuration/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/05-configuration/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/06-k8s-operator/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/06-k8s-operator/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/06-k8s-operator/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/06-k8s-operator/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/07-testing/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/07-testing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/07-testing/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/07-testing/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/08-error-messages/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/08-error-messages/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/08-error-messages/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/08-error-messages/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/01-arrow-memory-model/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/01-arrow-memory-model/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/01-arrow-memory-model/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/01-arrow-memory-model/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/02-vectorized-expressions/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/02-vectorized-expressions/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/02-vectorized-expressions/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/02-vectorized-expressions/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/03-query-optimizer/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/03-query-optimizer/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/03-query-optimizer/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/03-query-optimizer/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/04-parquet-storage/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/04-parquet-storage/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/04-parquet-storage/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/04-parquet-storage/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/05-streaming-etl/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/05-streaming-etl/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/05-streaming-etl/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/05-streaming-etl/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/06-partitioning/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/06-partitioning/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/06-partitioning/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/06-partitioning/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/07-cross-language/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/07-cross-language/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/07-cross-language/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/07-cross-language/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/08-memory-management/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/08-memory-management/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/08-memory-management/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/08-memory-management/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/01-no-std-architecture/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/01-no-std-architecture/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/01-no-std-architecture/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/01-no-std-architecture/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/02-memory-layout/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/02-memory-layout/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/02-memory-layout/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/02-memory-layout/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/03-concurrency/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/03-concurrency/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/03-concurrency/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/03-concurrency/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/04-peripheral-drivers/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/04-peripheral-drivers/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/04-peripheral-drivers/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/04-peripheral-drivers/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/05-power-management/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/05-power-management/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/05-power-management/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/05-power-management/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/06-debugging/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/06-debugging/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/06-debugging/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/06-debugging/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/07-toolchain/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/07-toolchain/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/07-toolchain/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/07-toolchain/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/08-testing/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/08-testing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/08-testing/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/08-testing/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/01-ecs-bevy/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/01-ecs-bevy/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/01-ecs-bevy/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/01-ecs-bevy/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/02-frame-budget/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/02-frame-budget/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/02-frame-budget/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/02-frame-budget/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/03-gpu-wgpu/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/03-gpu-wgpu/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/03-gpu-wgpu/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/03-gpu-wgpu/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/04-rendering-pipeline/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/04-rendering-pipeline/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/04-rendering-pipeline/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/04-rendering-pipeline/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/05-shaders/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/05-shaders/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/05-shaders/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/05-shaders/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/06-asset-pipeline/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/06-asset-pipeline/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/06-asset-pipeline/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/06-asset-pipeline/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/07-audio-input/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/07-audio-input/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/07-audio-input/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/07-audio-input/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/08-physics/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/08-physics/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/08-physics/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/08-physics/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/01-state-machines/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/01-state-machines/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/01-state-machines/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/01-state-machines/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/02-zero-copy-parsing/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/02-zero-copy-parsing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/02-zero-copy-parsing/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/02-zero-copy-parsing/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/03-quic-http3/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/03-quic-http3/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/03-quic-http3/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/03-quic-http3/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/04-tls-integration/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/04-tls-integration/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/04-tls-integration/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/04-tls-integration/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/05-congestion-control/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/05-congestion-control/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/05-congestion-control/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/05-congestion-control/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/06-connection-pooling/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/06-connection-pooling/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/06-connection-pooling/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/06-connection-pooling/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/07-dns-discovery/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/07-dns-discovery/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/07-dns-discovery/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/07-dns-discovery/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/08-fuzzing-security/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/08-fuzzing-security/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/08-fuzzing-security/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/08-fuzzing-security/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/01-io-model/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/01-io-model/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/01-io-model/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/01-io-model/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/02-backpressure/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/02-backpressure/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/02-backpressure/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/02-backpressure/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/03-syscall/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/03-syscall/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/03-syscall/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/03-syscall/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/04-consensus/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/04-consensus/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/04-consensus/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/04-consensus/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/05-resilience/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/05-resilience/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/05-resilience/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/05-resilience/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/06-observability/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/06-observability/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/06-observability/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/06-observability/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/07-lock-free/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/07-lock-free/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/07-lock-free/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/07-lock-free/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/08-vectorized/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/08-vectorized/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/08-vectorized/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/08-vectorized/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/09-code-style/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/09-code-style/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/09-code-style/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/09-code-style/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/10-ci-lints/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/10-ci-lints/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/10-ci-lints/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/10-ci-lints/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/11-memory-advanced/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/11-memory-advanced/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/11-memory-advanced/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/11-memory-advanced/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/12-breakwater-pattern/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/12-breakwater-pattern/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/12-breakwater-pattern/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/12-breakwater-pattern/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/13-physical-audit/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/13-physical-audit/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/13-physical-audit/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/13-physical-audit/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/14-ci-modern-cloud/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/14-ci-modern-cloud/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/14-ci-modern-cloud/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/14-ci-modern-cloud/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/SKILL/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/SKILL/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/01-iron-rules/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/01-iron-rules/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/01-iron-rules/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/01-iron-rules/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/02-build-control/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/02-build-control/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/02-build-control/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/02-build-control/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/03-ffi-boundary/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/03-ffi-boundary/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/03-ffi-boundary/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/03-ffi-boundary/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/04-memory-lifecycle/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/04-memory-lifecycle/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/04-memory-lifecycle/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/04-memory-lifecycle/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/05-concurrency-events/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/05-concurrency-events/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/05-concurrency-events/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/05-concurrency-events/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/06-wasm-adaptation/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/06-wasm-adaptation/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/06-wasm-adaptation/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/06-wasm-adaptation/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/07-prohibitions-checklist/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/07-prohibitions-checklist/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/07-prohibitions-checklist/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/07-prohibitions-checklist/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/08-philosophy-v2/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/08-philosophy-v2/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/08-philosophy-v2/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/08-philosophy-v2/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/09-zero-copy-pool/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/09-zero-copy-pool/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/09-zero-copy-pool/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/09-zero-copy-pool/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/10-command-bus-v3/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/10-command-bus-v3/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/10-command-bus-v3/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/10-command-bus-v3/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/11-toolchain-v3/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/11-toolchain-v3/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/11-toolchain-v3/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/11-toolchain-v3/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/12-domain-engines-v4/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/12-domain-engines-v4/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/12-domain-engines-v4/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/12-domain-engines-v4/"/>
     </url>
     <url>
-         <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/13-cross-platform-isomorphism-v5/</loc>
-         <lastmod>2026-05-22</lastmod>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/13-cross-platform-isomorphism-v5/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/13-cross-platform-isomorphism-v5/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/13-cross-platform-isomorphism-v5/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/01-model-loading/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/01-model-loading/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/01-model-loading/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/02-quantization/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/02-quantization/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/02-quantization/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/03-gpu-memory/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/03-gpu-memory/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/03-gpu-memory/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/04-tokenizer/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/04-tokenizer/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/04-tokenizer/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/05-batching/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/05-batching/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/05-batching/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/06-embeddings/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/06-embeddings/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/06-embeddings/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/07-serving-api/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/07-serving-api/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/07-serving-api/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/08-evaluation/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-ai-ml-inference-guide/references/08-evaluation/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-ai-ml-inference-guide/references/08-evaluation/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/00-mode-guide/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/00-mode-guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/00-mode-guide/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/01-priority-pyramid/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/01-priority-pyramid/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/01-priority-pyramid/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/02-conflict-resolution/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/02-conflict-resolution/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/02-conflict-resolution/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/03-progressive-architecture/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/03-progressive-architecture/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/03-progressive-architecture/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/04-trade-offs/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/04-trade-offs/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/04-trade-offs/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/05-glossary/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/05-glossary/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/05-glossary/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/06-deviation-process/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/06-deviation-process/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/06-deviation-process/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/07-state-machine/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/07-state-machine/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/07-state-machine/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/08-newtype/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/08-newtype/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/08-newtype/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/09-data-architecture/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/09-data-architecture/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/09-data-architecture/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/10-error-handling/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/10-error-handling/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/10-error-handling/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/11-concurrency/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/11-concurrency/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/11-concurrency/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/12-async-internals/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/12-async-internals/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/12-async-internals/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/13-api-design/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/13-api-design/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/13-api-design/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/14-metaprogramming/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/14-metaprogramming/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/14-metaprogramming/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/15-ffi-interop/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/15-ffi-interop/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/15-ffi-interop/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/16-observability/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/16-observability/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/16-observability/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/17-toolchain/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/17-toolchain/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/17-toolchain/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/18-control-flow/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/18-control-flow/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/18-control-flow/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/19-iterators/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/19-iterators/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/19-iterators/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/20-traits/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/20-traits/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/20-traits/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/21-errors/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/21-errors/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/21-errors/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/22-data-struct/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/22-data-struct/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/22-data-struct/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/23-borrowing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/23-borrowing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/23-borrowing/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/24-refactor/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/24-refactor/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/24-refactor/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/25-performance-tuning/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/25-performance-tuning/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/25-performance-tuning/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/26-advanced-testing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/26-advanced-testing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/26-advanced-testing/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/27-review/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/27-review/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/27-review/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/28-usage-examples/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/28-usage-examples/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/28-usage-examples/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/30-memory-layout/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/30-memory-layout/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/30-memory-layout/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/31-breakwater-pattern/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/31-breakwater-pattern/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/31-breakwater-pattern/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/32-physical-audit/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/32-physical-audit/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/32-physical-audit/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/33-ci-modern/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/33-ci-modern/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-architecture-guide/references/33-ci-modern/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/01-account-model/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/01-account-model/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/01-account-model/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/02-pda/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/02-pda/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/02-pda/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/03-bpf-constraints/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/03-bpf-constraints/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/03-bpf-constraints/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/04-anchor-framework/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/04-anchor-framework/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/04-anchor-framework/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/05-cpi/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/05-cpi/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/05-cpi/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/06-substrate-pallets/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/06-substrate-pallets/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/06-substrate-pallets/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/07-token-economics/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/07-token-economics/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/07-token-economics/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/08-security/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-blockchain-guide/references/08-security/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-blockchain-guide/references/08-security/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/01-clap-args/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/01-clap-args/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/01-clap-args/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/02-distribution/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/02-distribution/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/02-distribution/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/03-signals/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/03-signals/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/03-signals/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/04-progress-ux/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/04-progress-ux/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/04-progress-ux/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/05-configuration/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/05-configuration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/05-configuration/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/06-k8s-operator/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/06-k8s-operator/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/06-k8s-operator/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/07-testing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/07-testing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/07-testing/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/08-error-messages/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-cli-devops-guide/references/08-error-messages/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-cli-devops-guide/references/08-error-messages/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/01-arrow-memory-model/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/01-arrow-memory-model/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/01-arrow-memory-model/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/02-vectorized-expressions/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/02-vectorized-expressions/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/02-vectorized-expressions/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/03-query-optimizer/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/03-query-optimizer/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/03-query-optimizer/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/04-parquet-storage/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/04-parquet-storage/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/04-parquet-storage/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/05-streaming-etl/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/05-streaming-etl/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/05-streaming-etl/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/06-partitioning/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/06-partitioning/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/06-partitioning/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/07-cross-language/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/07-cross-language/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/07-cross-language/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/08-memory-management/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-data-engineering-guide/references/08-memory-management/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-data-engineering-guide/references/08-memory-management/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/01-no-std-architecture/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/01-no-std-architecture/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/01-no-std-architecture/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/02-memory-layout/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/02-memory-layout/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/02-memory-layout/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/03-concurrency/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/03-concurrency/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/03-concurrency/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/04-peripheral-drivers/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/04-peripheral-drivers/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/04-peripheral-drivers/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/05-power-management/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/05-power-management/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/05-power-management/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/06-debugging/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/06-debugging/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/06-debugging/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/07-toolchain/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/07-toolchain/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/07-toolchain/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/08-testing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-embedded-iot-guide/references/08-testing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-embedded-iot-guide/references/08-testing/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/01-ecs-bevy/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/01-ecs-bevy/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/01-ecs-bevy/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/02-frame-budget/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/02-frame-budget/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/02-frame-budget/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/03-gpu-wgpu/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/03-gpu-wgpu/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/03-gpu-wgpu/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/04-rendering-pipeline/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/04-rendering-pipeline/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/04-rendering-pipeline/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/05-shaders/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/05-shaders/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/05-shaders/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/06-asset-pipeline/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/06-asset-pipeline/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/06-asset-pipeline/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/07-audio-input/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/07-audio-input/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/07-audio-input/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/08-physics/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-gamedev-guide/references/08-physics/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-gamedev-guide/references/08-physics/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/01-state-machines/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/01-state-machines/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/01-state-machines/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/02-zero-copy-parsing/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/02-zero-copy-parsing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/02-zero-copy-parsing/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/03-quic-http3/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/03-quic-http3/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/03-quic-http3/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/04-tls-integration/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/04-tls-integration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/04-tls-integration/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/05-congestion-control/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/05-congestion-control/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/05-congestion-control/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/06-connection-pooling/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/06-connection-pooling/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/06-connection-pooling/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/07-dns-discovery/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/07-dns-discovery/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/07-dns-discovery/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/08-fuzzing-security/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-networking-protocols-guide/references/08-fuzzing-security/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-networking-protocols-guide/references/08-fuzzing-security/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/01-io-model/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/01-io-model/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/01-io-model/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/02-backpressure/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/02-backpressure/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/02-backpressure/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/03-syscall/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/03-syscall/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/03-syscall/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/04-consensus/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/04-consensus/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/04-consensus/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/05-resilience/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/05-resilience/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/05-resilience/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/06-observability/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/06-observability/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/06-observability/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/07-lock-free/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/07-lock-free/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/07-lock-free/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/08-vectorized/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/08-vectorized/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/08-vectorized/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/09-code-style/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/09-code-style/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/09-code-style/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/10-ci-lints/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/10-ci-lints/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/10-ci-lints/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/11-memory-advanced/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/11-memory-advanced/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/11-memory-advanced/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/12-breakwater-pattern/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/12-breakwater-pattern/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/12-breakwater-pattern/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/13-physical-audit/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/13-physical-audit/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/13-physical-audit/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/14-ci-modern-cloud/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/references/14-ci-modern-cloud/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide/references/14-ci-modern-cloud/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/SKILL/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/SKILL/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/SKILL/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/01-iron-rules/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/01-iron-rules/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/01-iron-rules/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/02-build-control/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/02-build-control/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/02-build-control/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/03-ffi-boundary/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/03-ffi-boundary/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/03-ffi-boundary/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/04-memory-lifecycle/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/04-memory-lifecycle/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/04-memory-lifecycle/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/05-concurrency-events/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/05-concurrency-events/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/05-concurrency-events/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/06-wasm-adaptation/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/06-wasm-adaptation/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/06-wasm-adaptation/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/07-prohibitions-checklist/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/07-prohibitions-checklist/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/07-prohibitions-checklist/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/08-philosophy-v2/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/08-philosophy-v2/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/08-philosophy-v2/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/09-zero-copy-pool/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/09-zero-copy-pool/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/09-zero-copy-pool/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/10-command-bus-v3/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/10-command-bus-v3/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/10-command-bus-v3/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/11-toolchain-v3/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/11-toolchain-v3/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/11-toolchain-v3/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/12-domain-engines-v4/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/12-domain-engines-v4/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/12-domain-engines-v4/"/>
+    </url>
+    <url>
+        <loc>https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/13-cross-platform-isomorphism-v5/</loc>
+        <lastmod>2026-05-22</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/references/13-cross-platform-isomorphism-v5/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide/references/13-cross-platform-isomorphism-v5/"/>
     </url>
 </urlset>

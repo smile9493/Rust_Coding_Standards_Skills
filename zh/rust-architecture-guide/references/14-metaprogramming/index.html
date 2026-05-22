@@ -1,0 +1,1831 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive set of Rust engineering skill guides covering architecture, systems, Wasm, embedded, data engineering, networking, CLI/devops, gamedev, blockchain, and AI/ML inference.">
+      
+      
+      
+        <link rel="canonical" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/14-metaprogramming/">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="../../../../rust-architecture-guide/references/14-metaprogramming/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Metaprogramming & Macro Magic: Intercepting Boilerplate - Rust Coding Standards Skills</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#metaprogramming-macro-magic-intercepting-boilerplate" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../../" title="Rust Coding Standards Skills" class="md-header__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Rust Coding Standards Skills
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Metaprogramming &amp; Macro Magic: Intercepting Boilerplate
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../../rust-architecture-guide/references/14-metaprogramming/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../" title="Rust Coding Standards Skills" class="md-nav__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Rust Coding Standards Skills
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构指南（宪法）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-systems-cloud-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统与云基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-wasm-frontend-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wasm 前端基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-embedded-iot-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入式与物联网指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-data-engineering-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据工程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-networking-protocols-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    网络协议指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-cli-devops-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI 与 DevOps 指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-gamedev-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    游戏开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-blockchain-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    区块链指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-ai-ml-inference-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI/ML 推理指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-positioning-priority-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Positioning &amp; Priority Alignment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. Positioning &amp; Priority Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#priority-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-mode-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Mode Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-macro-selection-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Macro Selection Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-declarative-macros-macro_rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Declarative Macros (macro_rules!)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Declarative Macros (macro_rules!)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-scope-limitation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Scope Limitation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-readability-red-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Readability Red Lines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-hygiene-explicit-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Hygiene &amp; Explicit Contracts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-complexity-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Complexity Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-procedural-macros-procedural-macros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Procedural Macros (Procedural Macros)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Procedural Macros (Procedural Macros)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-compile-time-cost-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Compile-Time Cost Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-error-reporting-span-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Error Reporting &amp; Span Accuracy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-derive-macro-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Derive Macro Priority
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-unit-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Unit Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-hygiene-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Hygiene &amp; Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Hygiene &amp; Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-principle-of-least-astonishment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Principle of Least Astonishment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-expansion-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Expansion Audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-safety-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Safety Boundaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Safety Boundaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-p0-red-line-unsafe-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 P0 Red Line: Unsafe Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-review-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Review Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-toolchain-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Toolchain &amp; Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Toolchain &amp; Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-integration-with-overall-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Integration with Overall Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Integration with Overall Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-design-philosophy-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Design Philosophy Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-priority-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Priority Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-terminology-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Terminology Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-related-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Related Documents
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-agent-metaprogramming-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Agent Metaprogramming Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Agent Metaprogramming Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#macro-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Macro Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declarative-macros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declarative Macros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#procedural-macros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Procedural Macros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safety
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-trade-offs-decision-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Trade-offs &amp; Decision Framework
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Trade-offs &amp; Decision Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-macros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Macros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-not-to-use-macros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When NOT to Use Macros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progressive-complexity-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progressive Complexity Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Related
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Related">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#within-rust-architecture-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Within rust-architecture-guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="metaprogramming-macro-magic-intercepting-boilerplate">Metaprogramming &amp; Macro Magic: Intercepting Boilerplate<a class="headerlink" href="#metaprogramming-macro-magic-intercepting-boilerplate" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Core Philosophy — Intercepting Boilerplate (拦截样板, Compile-time Code Generation)</strong>: Macros are not for creating "magic," but for intercepting repetitive, mechanical, and error-prone boilerplate code at compile time. The highest-level metaprogramming should be <strong>transparent</strong>: the code it generates should be as efficient and debuggable as hand-written code.</p>
+</blockquote>
+<hr />
+<h2 id="0-positioning-priority-alignment">0. Positioning &amp; Priority Alignment<a class="headerlink" href="#0-positioning-priority-alignment" title="Permanent link">&para;</a></h2>
+<h3 id="priority-framework">Priority Framework<a class="headerlink" href="#priority-framework" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Primary: P1 (Maintainability)</strong>: Eliminate boilerplate, provide type-safe abstractions.</li>
+<li><strong>Constrained by: P2 (Compile Efficiency)</strong>: Macro-expanded code increases compilation time; overuse degrades build speed.</li>
+<li><strong>P0 Red Line</strong>: Macros must <strong>never</strong> implicitly generate unchecked <code>unsafe</code> blocks.</li>
+</ul>
+<h3 id="execution-mode-integration">Execution Mode Integration<a class="headerlink" href="#execution-mode-integration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Enforcement</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rapid</code></td>
+<td><strong>Relaxed</strong></td>
+<td>High-frequency declarative macros allowed; proc-macros still require separate crate, but can skip <code>cargo-bloat</code> checks</td>
+</tr>
+<tr>
+<td><code>standard</code></td>
+<td><strong>Full rules</strong></td>
+<td>All rules active; proc-macros require <code>cargo-expand</code> audit + <code>trybuild</code> tests</td>
+</tr>
+<tr>
+<td><code>strict</code></td>
+<td><strong>Enhanced</strong></td>
+<td>Additional compile-time monitoring (<code>cargo-timing</code>); <code>clippy</code> checks on macro-expanded code</td>
+</tr>
+</tbody>
+</table>
+<h3 id="design-philosophy">Design Philosophy<a class="headerlink" href="#design-philosophy" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>"If it can be solved with generics, traits, or functions, never use macros."</strong></p>
+</blockquote>
+<p>Macros generate code that is unfriendly to IDEs and increases cognitive load for downstream developers.</p>
+<p><strong>Goal</strong>: Provide type-safe abstractions, not magical side effects.</p>
+<p><strong>Terminology</strong>: Hygiene, TokenStream, derive macros, attribute macros, etc. defined in <a href="../05-glossary/"><code>glossary.md</code></a>.</p>
+<hr />
+<h2 id="1-macro-selection-decision-tree">1. Macro Selection Decision Tree<a class="headerlink" href="#1-macro-selection-decision-tree" title="Permanent link">&para;</a></h2>
+<p>Before deciding to use macros, check in order:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Is it simple code substitution or repetition?
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   ├─ Yes → Declarative Macro (macro_rules!)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   └─ No → Continue
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>2. Need to parse complex syntax or implement custom derive attributes?
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   ├─ Yes → Procedural Macro (Proc-macro)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>   └─ No → Continue
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>3. For P3 extreme performance?
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>   ├─ Yes → Evaluate const fn, generic specialization, or manual implementation first
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>   └─ No → Use functions/generics (DO NOT use macros)
+</code></pre></div>
+<p><strong>Key Principle</strong>: Macros are the <strong>last resort</strong>, not the first choice.</p>
+<hr />
+<h2 id="2-declarative-macros-macro_rules">2. Declarative Macros (<code>macro_rules!</code>)<a class="headerlink" href="#2-declarative-macros-macro_rules" title="Permanent link">&para;</a></h2>
+<h3 id="21-scope-limitation">2.1 Scope Limitation<a class="headerlink" href="#21-scope-limitation" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong>:
+- Prohibit <code>#[macro_export]</code> except for global utilities (e.g., <code>vec!</code>-level)
+- Prefer defining macros in private modules
+- Export via <code>pub(crate)</code> to avoid polluting downstream namespaces</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// ❌ Bad: Pollutes global namespace</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="cp">#[macro_export]</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="fm">macro_rules!</span><span class="w"> </span><span class="n">internal_helper</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">// ✅ Good: Scoped export</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">pub</span><span class="p">(</span><span class="k">crate</span><span class="p">)</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">internal_macros</span><span class="p">::</span><span class="n">helper</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="22-readability-red-lines">2.2 Readability Red Lines<a class="headerlink" href="#22-readability-red-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Prohibited</strong>:
+- Nested repetition patterns exceeding 3 levels
+- Overly complex TT munchers (upgrade to proc-macro instead)</p>
+<p><strong>SHOULD</strong>:
+- Provide clear syntax indicators for parameters (<code>$name:ident</code>, <code>$expr:expr</code>)
+- Use single repetition pattern when possible</p>
+<p><strong>Good Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// ✅ Clear, single repetition pattern</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="fm">macro_rules!</span><span class="w"> </span><span class="n">vec_of_strings</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="p">(</span><span class="cp">$($x</span><span class="p">:</span><span class="nc">expr</span><span class="p">),</span><span class="o">*</span><span class="w"> </span><span class="cp">$(,</span><span class="p">)</span><span class="o">?</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="fm">vec!</span><span class="p">[</span><span class="cp">$($x</span><span class="p">.</span><span class="n">to_string</span><span class="p">()),</span><span class="o">*</span><span class="p">]</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="p">};</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vec_of_strings</span><span class="o">!</span><span class="p">[</span><span class="s">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;baz&quot;</span><span class="p">];</span>
+</code></pre></div></p>
+<p><strong>Bad Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// ❌ Nested repetition &gt; 3 levels — hard to debug</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="fm">macro_rules!</span><span class="w"> </span><span class="n">complex_parser</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="p">(</span><span class="cp">$($(</span><span class="p">(</span><span class="cp">$($tt</span><span class="p">:</span><span class="nc">tt</span><span class="p">)</span><span class="o">*</span><span class="p">),)</span><span class="o">*</span><span class="p">),</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="23-hygiene-explicit-contracts">2.3 Hygiene &amp; Explicit Contracts<a class="headerlink" href="#23-hygiene-explicit-contracts" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: <code>macro_rules!</code> must maintain hygiene. <strong>Prohibit</strong> implicitly capturing external scope variables. All dependent identifiers must be explicitly passed as parameters.</p>
+<p><strong>Purpose</strong>: Ensure logical consistency when macros are called across different modules, avoiding naming pollution.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// ❌ Implicit capture — fragile</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="fm">macro_rules!</span><span class="w"> </span><span class="n">process</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cp">$db_conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="o">..</span><span class="p">.)</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">// ✅ Explicit contract — robust</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="fm">macro_rules!</span><span class="w"> </span><span class="n">process</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="p">(</span><span class="cp">$conn</span><span class="p">:</span><span class="nc">ident</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cp">$conn</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="o">..</span><span class="p">.)</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="24-complexity-control">2.4 Complexity Control<a class="headerlink" href="#24-complexity-control" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: Prohibit writing recursive macros (TT Munchers) with more than 3 levels of nested parsing logic.</p>
+<p><strong>Judgment</strong>: If a macro's logic starts involving complex Token transformations, it <strong>must</strong> be upgraded to a procedural macro.</p>
+<hr />
+<h2 id="3-procedural-macros-procedural-macros">3. Procedural Macros (Procedural Macros)<a class="headerlink" href="#3-procedural-macros-procedural-macros" title="Permanent link">&para;</a></h2>
+<h3 id="31-compile-time-cost-management">3.1 Compile-Time Cost Management<a class="headerlink" href="#31-compile-time-cost-management" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong>:
+- Procedural macros must be isolated in separate crates with <code>proc-macro = true</code>
+- Keep proc-macro crates lightweight and focused</p>
+<p><strong>SHOULD</strong>:
+- Enable <code>syn</code> features on-demand; disable <code>full</code> unless parsing complete Rust syntax is necessary
+- Use <code>quote</code> for token generation (provides hygiene benefits)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># ✅ Good: Minimal syn dependencies</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">[dependencies]</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">syn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">features</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;derive&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;parsing&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">quote</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">proc-macro2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># ❌ Bad: Enables everything (slow compilation)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">[dependencies]</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">syn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">features</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;full&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>SHOULD</strong> (<code>strict</code> mode):
+- Regularly use <code>cargo-timing</code> to monitor compilation time
+- Use <code>cargo-bloat</code> to check binary size inflation</p>
+<h3 id="32-error-reporting-span-accuracy">3.2 Error Reporting &amp; Span Accuracy<a class="headerlink" href="#32-error-reporting-span-accuracy" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong>:
+- Error messages must point to the exact user code location that triggered the error (accurate <code>Span</code>)
+- <strong>Absolutely prohibit</strong> using <code>panic!()</code> inside procedural macros
+- Must emit proper <code>proc_macro::Diagnostic</code>-level errors</p>
+<p><strong>Modern Toolchain</strong>: Prefer the stable <code>proc_macro::Diagnostic</code> API (stabilized in Rust 1.72+) for emitting structured errors. The <code>proc-macro-error2</code> crate remains a valid alternative for projects targeting older compiler versions:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">[dependencies]</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Use stable Diagnostic for compiler &gt;= 1.72</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># proc-macro-error2 = &quot;2&quot;  # alternative for older compilers</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">use</span><span class="w"> </span><span class="n">proc_macro_error2</span><span class="p">::{</span><span class="n">abort</span><span class="p">,</span><span class="w"> </span><span class="n">emit_error</span><span class="p">,</span><span class="w"> </span><span class="n">proc_macro_error</span><span class="p">};</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="cp">#[proc_macro_error]</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="cp">#[proc_macro_derive(MyTrait, attributes(my_attr))]</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">derive_my_trait</span><span class="p">(</span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="nc">TokenStream</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">TokenStream</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="c1">// Errors automatically attach to correct spans via syn</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parse_macro_input</span><span class="o">!</span><span class="p">(</span><span class="n">input</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">DeriveInput</span><span class="p">);</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">input</span><span class="p">.</span><span class="n">ident</span><span class="p">.</span><span class="n">to_string</span><span class="p">().</span><span class="n">starts_with</span><span class="p">(</span><span class="sc">&#39;_&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">        </span><span class="n">abort</span><span class="o">!</span><span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">ident</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Type name must not start with underscore&quot;</span><span class="p">);</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="c1">// ...</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>For attribute-heavy derive macros</strong>, use <code>darling</code> for ergonomic attribute parsing:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">[dependencies]</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">darling</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.20&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">use</span><span class="w"> </span><span class="n">darling</span><span class="p">::</span><span class="n">FromDeriveInput</span><span class="p">;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="cp">#[derive(FromDeriveInput)]</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="cp">#[darling(attributes(my_crate))]</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">struct</span><span class="w"> </span><span class="nc">MyDeriveOpts</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="c1">// Required field — error if missing</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="n">feature</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="c1">// Optional with default</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="cp">#[darling(default)]</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="n">optional_flag</span><span class="p">:</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="c1">// &quot;Did you mean&quot; suggestions for typos — automatic!</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="c1">// darling::Error::write_errors provides precise error locations</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Correct Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// ✅ Correct: Error precisely points to violating field</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">use</span><span class="w"> </span><span class="n">syn</span><span class="p">::{</span><span class="n">spanned</span><span class="p">::</span><span class="n">Spanned</span><span class="p">,</span><span class="w"> </span><span class="n">Error</span><span class="p">};</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="n">Error</span><span class="p">::</span><span class="n">new_spanned</span><span class="p">(</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="n">field_ident</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="s">&quot;This field type does not support this attribute&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">).</span><span class="n">into_compile_error</span><span class="p">());</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1">// Or using quote_spanned!</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">quote_spanned</span><span class="o">!</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">field</span><span class="p">.</span><span class="n">span</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="fm">compile_error!</span><span class="p">(</span><span class="s">&quot;This field type does not support this attribute&quot;</span><span class="p">);</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Wrong Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// ❌ Wrong: Panic loses span information</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="n">supported_type</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="fm">panic!</span><span class="p">(</span><span class="s">&quot;Unsupported type!&quot;</span><span class="p">);</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="33-derive-macro-priority">3.3 Derive Macro Priority<a class="headerlink" href="#33-derive-macro-priority" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: When building plugin systems or serialization frameworks, prioritize in this order:</p>
+<ol>
+<li><strong><code>#[derive(Trait)]</code></strong> (most IDE-friendly, appends code only)</li>
+<li><strong>Attribute macros <code>#[attr]</code></strong> (modifies structure)</li>
+<li><strong>Function-like macros <code>macro!()</code></strong> (least type inference support)</li>
+</ol>
+<p><strong>Reason</strong>: Derive macros only append code without modifying the original structure, making them most IDE-friendly for type inference — conforming to the principle of "aligning with the physical substrate."</p>
+<h3 id="34-unit-testing">3.4 Unit Testing<a class="headerlink" href="#34-unit-testing" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong>:
+- Use <code>trybuild</code> to write compile-fail tests
+- Ensure users get clear error messages when misusing macros</p>
+<p><strong>SHOULD</strong>:
+- Provide expanded example code as part of documentation</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="cp">#[test]</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">fn</span><span class="w"> </span><span class="nf">ui_tests</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trybuild</span><span class="p">::</span><span class="n">TestCases</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="n">t</span><span class="p">.</span><span class="n">compile_fail</span><span class="p">(</span><span class="s">&quot;tests/ui/*.rs&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// Verify error messages are clear</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="n">t</span><span class="p">.</span><span class="n">pass</span><span class="p">(</span><span class="s">&quot;tests/ui/valid/*.rs&quot;</span><span class="p">);</span><span class="w">   </span><span class="c1">// Verify valid code compiles</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="4-hygiene-debugging">4. Hygiene &amp; Debugging<a class="headerlink" href="#4-hygiene-debugging" title="Permanent link">&para;</a></h2>
+<h3 id="41-principle-of-least-astonishment">4.1 Principle of Least Astonishment<a class="headerlink" href="#41-principle-of-least-astonishment" title="Permanent link">&para;</a></h3>
+<p><strong>Prohibited</strong>:
+- Implicitly introducing undeclared external dependencies in macro-generated code
+- Generating code that relies on specific <code>use</code> statements in caller scope</p>
+<p><strong>MUST</strong>:
+- Use fully-qualified paths for external types (e.g., <code>::std::vec::Vec</code>), or ensure callers have the required imports. In Rust 2024, <code>use</code> paths are generally preferred over absolute <code>::std::</code> prefixes.
+- Avoid missing <code>use</code> statements causing compilation errors</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">// ❌ Bad: Relies on caller having `use std::vec::Vec;`</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">quote</span><span class="o">!</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">()</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="p">}</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1">// ✅ Good: Use fully-qualified path from crate root (stable across Rust editions)</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="n">quote</span><span class="o">!</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="n">std</span><span class="p">::</span><span class="n">vec</span><span class="p">::</span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">()</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span><span class="c1">// Note: `::std::` prefix is not required; `std::` alone resolves correctly</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="c1">// when no conflicting `std` name exists in caller scope.</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="42-expansion-audit">4.2 Expansion Audit<a class="headerlink" href="#42-expansion-audit" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong> (<code>standard</code> mode and above):
+- For complex macros, use <code>cargo expand</code> to inspect expanded code
+- Ensure no redundancy or potential risks</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>cargo<span class="w"> </span>expand<span class="w"> </span>--lib<span class="w">  </span><span class="c1"># Review all macro expansions in the crate</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>cargo<span class="w"> </span>expand<span class="w"> </span>my_macro_test<span class="w">  </span><span class="c1"># Review specific test expansion</span>
+</code></pre></div>
+<p><strong>SHOULD</strong> (<code>strict</code> mode):
+- Submit <code>cargo-expand</code> output to documentation or review records
+- Check for: redundant clones, unnecessary allocations, missing optimizations</p>
+<p><strong>Self-check points</strong>:
+- Does the expanded code contain redundant <code>clone()</code> calls?
+- Are there unnecessary heap allocations?
+- Is the generated code as efficient as hand-written code?</p>
+<hr />
+<h2 id="5-safety-boundaries">5. Safety Boundaries<a class="headerlink" href="#5-safety-boundaries" title="Permanent link">&para;</a></h2>
+<h3 id="51-p0-red-line-unsafe-generation">5.1 P0 Red Line: Unsafe Generation<a class="headerlink" href="#51-p0-red-line-unsafe-generation" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong>:
+- Macros must <strong>never</strong> implicitly generate <code>unsafe</code> blocks
+- If unavoidable, must force users to explicitly confirm via parameters
+- Generated code must include complete <code>// SAFETY:</code> comments</p>
+<p><strong>Example</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">// ❌ Forbidden: Implicit unsafe generation</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="fm">macro_rules!</span><span class="w"> </span><span class="n">unsafe_op</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">        </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">            </span><span class="c1">// Hidden danger!</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="p">};</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="p">}</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1">// ✅ Required: Explicit user confirmation</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="fm">macro_rules!</span><span class="w"> </span><span class="n">unsafe_op</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="p">(</span><span class="k">unsafe</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">        </span><span class="c1">// SAFETY: User explicitly acknowledged unsafe semantics</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">        </span><span class="c1">// [Detailed safety invariant explanation]</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">        </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">            </span><span class="c1">// ...</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">    </span><span class="p">};</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="52-review-checklist">5.2 Review Checklist<a class="headerlink" href="#52-review-checklist" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong>: Any macro containing <code>unsafe</code> generation must be listed separately in code reviews.</p>
+<p><strong>Review points</strong>:
+- [ ] Is the <code>unsafe</code> truly necessary?
+- [ ] Are safety invariants documented with <code>// SAFETY:</code> comments?
+- [ ] Does the user explicitly opt-in to unsafe behavior?
+- [ ] Has the expanded code been audited with <code>cargo expand</code>?</p>
+<hr />
+<h2 id="6-toolchain-validation">6. Toolchain &amp; Validation<a class="headerlink" href="#6-toolchain-validation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Mode Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cargo expand</code></td>
+<td>View macro-expanded code</td>
+<td><code>standard</code>, <code>strict</code></td>
+</tr>
+<tr>
+<td><code>trybuild</code></td>
+<td>Write compile-fail tests</td>
+<td><code>standard</code>, <code>strict</code></td>
+</tr>
+<tr>
+<td><code>cargo bloat</code></td>
+<td>Check binary size inflation</td>
+<td><code>strict</code></td>
+</tr>
+<tr>
+<td><code>cargo timing</code></td>
+<td>Monitor compilation time</td>
+<td><code>strict</code> (regular)</td>
+</tr>
+<tr>
+<td><code>clippy</code></td>
+<td>Lint macro-expanded code</td>
+<td><code>strict</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Expand macros for review</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>cargo<span class="w"> </span>expand<span class="w"> </span>--lib<span class="w"> </span>&gt;<span class="w"> </span>expanded.rs
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># 2. Run compile-fail tests</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>cargo<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--test<span class="w"> </span>ui_tests
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># 3. Check binary size (strict mode)</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>cargo<span class="w"> </span>bloat<span class="w"> </span>--release
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># 4. Monitor compile time (strict mode)</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>cargo<span class="w"> </span>+nightly<span class="w"> </span>build<span class="w"> </span>-Z<span class="w"> </span>timings
+</code></pre></div>
+<hr />
+<h2 id="7-integration-with-overall-architecture">7. Integration with Overall Architecture<a class="headerlink" href="#7-integration-with-overall-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="71-design-philosophy-alignment">7.1 Design Philosophy Alignment<a class="headerlink" href="#71-design-philosophy-alignment" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Metaprogramming Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Economy of Motion</strong></td>
+<td>Eliminate boilerplate, not create magic</td>
+</tr>
+<tr>
+<td><strong>Physical Alignment</strong></td>
+<td>Generated code = hand-written efficiency</td>
+</tr>
+<tr>
+<td><strong>Unity of Opposites</strong></td>
+<td>Magic must be auditable (expand, trybuild)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="72-priority-constraints">7.2 Priority Constraints<a class="headerlink" href="#72-priority-constraints" title="Permanent link">&para;</a></h3>
+<p><strong>P1 (Maintainability)</strong> is the primary beneficiary:
+- Eliminate repetitive boilerplate
+- Provide type-safe abstractions
+- Reduce human error in mechanical code</p>
+<p><strong>P2 (Compile Time)</strong> is the constraint:
+- Proc-macro crates add compilation overhead
+- Complex <code>syn</code> parsing slows builds
+- Must monitor with <code>cargo-timing</code></p>
+<p><strong>P0 (Safety)</strong> is the red line:
+- No implicit <code>unsafe</code> generation
+- Explicit user opt-in for unsafe operations
+- Full <code>// SAFETY:</code> comments required</p>
+<h3 id="73-terminology-links">7.3 Terminology Links<a class="headerlink" href="#73-terminology-links" title="Permanent link">&para;</a></h3>
+<p>All specialized terms defined in <a href="../05-glossary/"><code>glossary.md</code></a>:
+- Hygiene
+- TokenStream
+- TT Muncher
+- Span
+- Derive Macro
+- Attribute Macro
+- Function-like Macro</p>
+<h3 id="74-related-documents">7.4 Related Documents<a class="headerlink" href="#74-related-documents" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="../00-mode-guide/"><code>00-mode-guide.md</code></a> — Execution modes (rapid/standard/strict)</li>
+<li><a href="../01-priority-pyramid/"><code>01-priority-pyramid.md</code></a> — P0-P3 priority framework</li>
+<li><a href="../05-glossary/"><code>05-glossary.md</code></a> — Metaprogramming terminology</li>
+<li><a href="../17-toolchain/"><code>17-toolchain.md</code></a> — Cargo tools and CI integration</li>
+<li><a href="../26-advanced-testing/"><code>26-advanced-testing.md</code></a> — UI testing with trybuild</li>
+</ul>
+<hr />
+<h2 id="8-agent-metaprogramming-checklist">8. Agent Metaprogramming Checklist<a class="headerlink" href="#8-agent-metaprogramming-checklist" title="Permanent link">&para;</a></h2>
+<p>Before generating any macro code:</p>
+<h3 id="macro-selection">Macro Selection<a class="headerlink" href="#macro-selection" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Can this be replaced with <code>impl Trait</code> generics? (If yes, abandon macro)</li>
+<li>[ ] Does it follow the decision tree (Section 1)?</li>
+<li>[ ] Is it for boilerplate elimination (not showing off)?</li>
+</ul>
+<h3 id="declarative-macros">Declarative Macros<a class="headerlink" href="#declarative-macros" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Nested repetition ≤ 3 levels?</li>
+<li>[ ] Explicit parameter contracts (no implicit capture)?</li>
+<li>[ ] Avoided <code>#[macro_export]</code> unless global utility?</li>
+<li>[ ] Uses absolute paths (<code>::std::...</code>)?</li>
+</ul>
+<h3 id="procedural-macros">Procedural Macros<a class="headerlink" href="#procedural-macros" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Isolated in separate crate with <code>proc-macro = true</code>?</li>
+<li>[ ] Minimal <code>syn</code> features enabled?</li>
+<li>[ ] Error handling uses <code>syn::Error</code> with correct <code>Span</code>?</li>
+<li>[ ] No <code>panic!()</code> calls?</li>
+<li>[ ] Has <code>trybuild</code> compile-fail tests?</li>
+</ul>
+<h3 id="safety">Safety<a class="headerlink" href="#safety" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] No implicit <code>unsafe</code> generation?</li>
+<li>[ ] If unsafe, user explicitly opts in?</li>
+<li>[ ] Complete <code>// SAFETY:</code> comments present?</li>
+<li>[ ] Listed separately in code review?</li>
+</ul>
+<h3 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Passed <code>cargo-expand</code> audit? (standard/strict)</li>
+<li>[ ] Passed <code>clippy</code> checks on expanded code? (strict)</li>
+<li>[ ] Compile time monitored? (strict)</li>
+<li>[ ] Binary size checked? (strict)</li>
+</ul>
+<hr />
+<h2 id="9-trade-offs-decision-framework">9. Trade-offs &amp; Decision Framework<a class="headerlink" href="#9-trade-offs-decision-framework" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-use-macros">When to Use Macros<a class="headerlink" href="#when-to-use-macros" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repetitive boilerplate (e.g., trait impls for multiple types)</td>
+<td><strong>Use declarative macro</strong></td>
+<td>P1 &gt; P2: Eliminates human error</td>
+</tr>
+<tr>
+<td>Custom derive for serialization/framework</td>
+<td><strong>Use derive macro</strong></td>
+<td>P1 &gt; P2: Type-safe abstraction</td>
+</tr>
+<tr>
+<td>DSL for configuration or testing</td>
+<td><strong>Consider proc-macro</strong></td>
+<td>P1 &gt; P2: Improves ergonomics</td>
+</tr>
+<tr>
+<td>Simple code substitution</td>
+<td><strong>Use declarative macro</strong></td>
+<td>P1 &gt; P2: Reduces repetition</td>
+</tr>
+<tr>
+<td>P3 performance optimization</td>
+<td><strong>Evaluate const fn first</strong></td>
+<td>P2 constraint: Macros add compile time</td>
+</tr>
+<tr>
+<td>Complex syntax transformation</td>
+<td><strong>Use proc-macro</strong></td>
+<td>Necessity: Beyond declarative capabilities</td>
+</tr>
+</tbody>
+</table>
+<h3 id="when-not-to-use-macros">When NOT to Use Macros<a class="headerlink" href="#when-not-to-use-macros" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Can be solved with generics/functions</td>
+<td><strong>Reject</strong></td>
+<td>P1 &gt; P2: IDE-friendly code</td>
+</tr>
+<tr>
+<td>Showing off "clever" syntax</td>
+<td><strong>Reject</strong></td>
+<td>P1: Increases cognitive load</td>
+</tr>
+<tr>
+<td>One-off code generation</td>
+<td><strong>Reject</strong></td>
+<td>P2: Not worth compile time cost</td>
+</tr>
+<tr>
+<td>Implicit unsafe generation</td>
+<td><strong>Absolutely Forbidden</strong></td>
+<td>P0: Safety red line</td>
+</tr>
+</tbody>
+</table>
+<h3 id="progressive-complexity-path">Progressive Complexity Path<a class="headerlink" href="#progressive-complexity-path" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Simple repetition
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    ↓
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Declarative macro (macro_rules!)
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    ↓
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Complex syntax / custom derive
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    ↓
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Procedural macro (separate crate)
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    ↓
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>Strict mode validation (cargo-expand, trybuild, timing)
+</code></pre></div>
+<hr />
+<h2 id="10-related">10. Related<a class="headerlink" href="#10-related" title="Permanent link">&para;</a></h2>
+<h3 id="within-rust-architecture-guide">Within rust-architecture-guide<a class="headerlink" href="#within-rust-architecture-guide" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="../00-mode-guide/"><code>00-mode-guide.md</code></a> — Execution modes governing macro enforcement</li>
+<li><a href="../01-priority-pyramid/"><code>01-priority-pyramid.md</code></a> — Priority framework (P0-P3)</li>
+<li><a href="../05-glossary/"><code>05-glossary.md</code></a> — Metaprogramming terminology</li>
+<li><a href="../17-toolchain/"><code>17-toolchain.md</code></a> — Cargo tools (expand, bloat, timing)</li>
+<li><a href="../26-advanced-testing/"><code>26-advanced-testing.md</code></a> — UI testing with trybuild</li>
+</ul>
+<h3 id="external-resources">External Resources<a class="headerlink" href="#external-resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://veykril.github.io/tlborm/">The Little Book of Rust Macros</a> — Comprehensive macro guide</li>
+<li><a href="https://github.com/dtolnay/proc-macro-workshop">proc-macro-workshop</a> — Learn by building proc-macros</li>
+<li><a href="https://docs.rs/syn">syn crate documentation</a> — Parsing Rust syntax</li>
+</ul>
+<hr />
+<p><strong>Version History</strong>: 
+- v2.0 — Added mode layering, decision tree, review checklist, toolchain integration, terminology links, and safety boundaries
+- v1.0 — Initial metaprogramming specification</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tracking", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

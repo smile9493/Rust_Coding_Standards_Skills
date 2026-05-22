@@ -1,0 +1,1307 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pin/Unpin, Waker mechanism, state machines, and custom runtime architecture">
+      
+      
+      
+        <link rel="canonical" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/12-async-internals/">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="../../../../rust-architecture-guide/references/12-async-internals/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Rust Async Internals & Custom Runtime - Rust Coding Standards Skills</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rust-async-internals-custom-runtime" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../../" title="Rust Coding Standards Skills" class="md-header__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Rust Coding Standards Skills
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Rust Async Internals & Custom Runtime
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../../rust-architecture-guide/references/12-async-internals/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../" title="Rust Coding Standards Skills" class="md-nav__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Rust Coding Standards Skills
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构指南（宪法）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-systems-cloud-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统与云基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-wasm-frontend-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wasm 前端基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-embedded-iot-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入式与物联网指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-data-engineering-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据工程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-networking-protocols-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    网络协议指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-cli-devops-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI 与 DevOps 指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-gamedev-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    游戏开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-blockchain-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    区块链指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-ai-ml-inference-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI/ML 推理指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-future-and-state-machine-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Future and State Machine Dynamics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Future and State Machine Dynamics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-strict-state-size-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Strict State Size Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-eliminating-async-recursion-bombs-boxpin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Eliminating Async Recursion "Bombs" (Box::pin)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-beware-phantom-blocking-blocking-the-executor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Beware "Phantom Blocking" (Blocking the Executor)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-essence-of-pin-and-unpin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Essence of Pin and Unpin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Essence of Pin and Unpin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-understanding-why-pin-is-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Understanding Why Pin is Needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-safely-projecting-through-pin-pin-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Safely Projecting Through Pin (pin-project)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-embrace-unpin-for-flexibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Embrace Unpin for Flexibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-custom-runtimes-and-waker-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Custom Runtimes and Waker Mechanism
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Custom Runtimes and Waker Mechanism">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-golden-rule-of-polling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Golden Rule of Polling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-no-os-async-engine-no_std-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 No-OS Async Engine (no_std Architecture)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-thread-per-core-extreme-performance-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Thread-per-Core Extreme Performance Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-architects-final-word" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Architect's Final Word
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-principles-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Principles Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-performance-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async Performance Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-concurrent-task-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Concurrent Task Composition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Concurrent Task Composition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-tokioselect-race-multiple-futures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 tokio::select! — Race Multiple Futures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-tokiojoin-run-all-futures-concurrently" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 tokio::join! — Run All Futures Concurrently
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-futuresunordered-dynamic-collection-of-futures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 FuturesUnordered — Dynamic Collection of Futures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-select-vs-join-vs-futuresunordered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision: select! vs join! vs FuturesUnordered
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-async-cancellation-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Async Cancellation Semantics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Async Cancellation Semantics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-cancellation-is-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Cancellation is Drop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-cancellation-safe-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Cancellation-Safe Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rust-async-internals-custom-runtime">Rust Async Internals &amp; Custom Runtime<a class="headerlink" href="#rust-async-internals-custom-runtime" title="Permanent link">&para;</a></h1>
+<p>This specification is designed for senior architects who need to break through <code>tokio</code> default barriers, build ultra-low-latency gateways, engage in embedded (<code>no_std</code>) async development, or troubleshoot mysterious concurrency performance bottlenecks.</p>
+<p>The core philosophy is <strong>"Unmasking the Magic"</strong>: Rust's async is not coroutine magic, nor OS threads. It's a pure language-layer abstraction built on <strong>Polling</strong>, <strong>State Machines</strong>, and <strong>Wakers</strong>.</p>
+<hr />
+<h2 id="1-future-and-state-machine-dynamics">1. Future and State Machine Dynamics<a class="headerlink" href="#1-future-and-state-machine-dynamics" title="Permanent link">&para;</a></h2>
+<p><strong>Core Philosophy</strong>: Every <code>async fn</code> is a compiler-generated hidden <code>Enum</code>. Each <code>.await</code> is one state in the enum.</p>
+<h3 id="11-strict-state-size-control">1.1 Strict State Size Control<a class="headerlink" href="#11-strict-state-size-control" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: <strong>Absolutely prohibit</strong> holding large local variables (like <code>[u8; 8192]</code>) across <code>.await</code> boundaries. The compiler saves these cross-<code>.await</code> variables in the generated Future enum, causing enormous Future sizes, severe CPU cache misses, and memory copy overhead.</p>
+<p><strong>Elegant Approach</strong>: If you need large objects after <code>.await</code>, <strong>must</strong> put them in <code>Box</code> (only 8-byte pointer in state machine), or narrow variable scope to ensure they're dropped before <code>.await</code>.</p>
+<h3 id="12-eliminating-async-recursion-bombs-boxpin">1.2 Eliminating Async Recursion "Bombs" (<code>Box::pin</code>)<a class="headerlink" href="#12-eliminating-async-recursion-bombs-boxpin" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: Rust compiler must know the exact Future size at compile time. Therefore, <strong>prohibit</strong> writing directly recursive <code>async fn</code> (causes infinite nested state machine size, uncompilable).</p>
+<p><strong>Must Execute</strong>: Wrap recursive async function return values with <code>Box::pin()</code>, converting to dynamically dispatched <code>Pin&lt;Box&lt;dyn Future&gt;&gt;</code>, breaking infinite size derivation in the state machine.</p>
+<h3 id="13-beware-phantom-blocking-blocking-the-executor">1.3 Beware "Phantom Blocking" (Blocking the Executor)<a class="headerlink" href="#13-beware-phantom-blocking-blocking-the-executor" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: Inside any <code>async</code> block, <strong>absolutely prohibit</strong> calling even millisecond-blocking operations (<code>std::thread::sleep</code>, <code>std::fs::read</code>, or CPU-intensive computations).</p>
+<p><strong>Principle Analysis</strong>: Rust async is cooperative scheduling. If you hold the thread without yielding, thousands of other Futures on that thread will starve. Must dispatch blocking operations to <code>tokio::task::spawn_blocking</code>.</p>
+<hr />
+<h2 id="2-the-essence-of-pin-and-unpin">2. The Essence of Pin and Unpin<a class="headerlink" href="#2-the-essence-of-pin-and-unpin" title="Permanent link">&para;</a></h2>
+<p><strong>Core Philosophy</strong>: <code>Pin</code> isn't for fixing data in cache. It's to protect "self-referential structs" from becoming wild pointers when moved in memory.</p>
+<h3 id="21-understanding-why-pin-is-needed">2.1 Understanding Why Pin is Needed<a class="headerlink" href="#21-understanding-why-pin-is-needed" title="Permanent link">&para;</a></h3>
+<p><strong>Principle</strong>: In <code>async</code> blocks, you often write code like: <code>let a = 1; let ref_a = &amp;a; SomeFuture.await;</code>. In the compiler-generated state machine enum, <code>ref_a</code> is actually a pointer to the internal <code>a</code> field of the same enum (self-reference). If this enum moves in memory, <code>ref_a</code> points to abandoned memory.</p>
+<p><strong>Rule</strong>: <code>Pin&lt;&amp;mut T&gt;</code> provides the compiler an absolute guarantee: <strong>The wrapped data <code>T</code> will never have its memory address changed (cannot be moved) until it's destroyed.</strong></p>
+<h3 id="22-safely-projecting-through-pin-pin-project">2.2 Safely Projecting Through Pin (<code>pin-project</code>)<a class="headerlink" href="#22-safely-projecting-through-pin-pin-project" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: When manually writing <code>Future</code> and implementing <code>poll</code> function, you face <code>self: Pin&lt;&amp;mut Self&gt;</code>. If you need to modify internal fields, <strong>strictly prohibit</strong> using <code>unsafe { Pin::get_unchecked_mut(...) }</code>.</p>
+<p><strong>Compromise</strong>: <strong>Must</strong> use the macro crate <code>pin-project</code>. It generates absolutely safe projection code at compile time, letting you safely obtain <code>Pin</code> or non-<code>Pin</code> references to internal fields like operating on normal structs.</p>
+<h3 id="23-embrace-unpin-for-flexibility">2.3 Embrace <code>Unpin</code> for Flexibility<a class="headerlink" href="#23-embrace-unpin-for-flexibility" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: Most ordinary types (<code>i32</code>, <code>String</code>, <code>Box</code>) are naturally <code>Unpin</code> (they can move freely in memory because they contain no self-references). Leverage this by using <code>Box::pin()</code> to heap-allocate a complex <code>!Unpin</code> Future. The <code>Box</code> itself becomes <code>Unpin</code>, allowing easy passing between functions.</p>
+<hr />
+<h2 id="3-custom-runtimes-and-waker-mechanism">3. Custom Runtimes and Waker Mechanism<a class="headerlink" href="#3-custom-runtimes-and-waker-mechanism" title="Permanent link">&para;</a></h2>
+<p><strong>Core Philosophy</strong>: Futures don't run themselves. Someone must constantly ask "Are you ready yet?" (Executor), and wake them when data is ready (Reactor/Waker).</p>
+<h3 id="31-the-golden-rule-of-polling">3.1 The Golden Rule of Polling<a class="headerlink" href="#31-the-golden-rule-of-polling" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: When manually writing low-level I/O wrappers (hardware serial ports, eBPF sockets) <code>Future::poll</code> function, must follow this iron law:</p>
+<ol>
+<li>Attempt non-blocking data read. If successful, return <code>Poll::Ready(data)</code>.</li>
+<li>If data not ready, <strong>absolutely prohibit</strong> busy-loop retry. Must extract current context's waker: <code>let waker = cx.waker().clone();</code>.</li>
+<li>Register this <code>waker</code> to some event source (Epoll/ISR).</li>
+<li>Immediately return <code>Poll::Pending</code>.</li>
+</ol>
+<h3 id="32-no-os-async-engine-no_std-architecture">3.2 No-OS Async Engine (<code>no_std</code> Architecture)<a class="headerlink" href="#32-no-os-async-engine-no_std-architecture" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: In embedded environments (STM32, ESP32) without OS, <strong>strictly prohibit</strong> introducing <code>tokio</code>.</p>
+<p><strong>Architecture Design</strong>: Use minimal cooperative polling architecture.</p>
+<ul>
+<li><strong>Executor</strong>: Maintain static-allocated Future queue in <code>main</code> loop.</li>
+<li><strong>Waker</strong>: In hardware ISR (Interrupt Service Routine), only execute <code>Waker::wake()</code> (set flag bit, no complex logic).</li>
+<li>Recommended: Directly use mature community zero-overhead framework <code>Embassy</code>, cleverly combining interrupt mechanism with Rust async ecosystem.</li>
+</ul>
+<h3 id="33-thread-per-core-extreme-performance-model">3.3 Thread-per-Core Extreme Performance Model<a class="headerlink" href="#33-thread-per-core-extreme-performance-model" title="Permanent link">&para;</a></h3>
+<p><strong>Trade-off</strong>: Tokio's default "work-stealing" scheduler is powerful, but handling 10-million-level concurrency (C10M problem), cross-thread Future transfer causes CPU cache invalidation and lock overhead as bottlenecks.</p>
+<p><strong>Advanced Rule</strong>: In scenarios needing network card extreme performance (with io_uring or DPDK), abandon Tokio's multi-threaded mode. Turn to <strong><code>monoio</code> or <code>glommio</code></strong> based on Thread-per-Core (single thread exclusive to one core, no cross-core task stealing), achieving complete lock-free and extreme cache locality.</p>
+<hr />
+<h2 id="the-architects-final-word">The Architect's Final Word<a class="headerlink" href="#the-architects-final-word" title="Permanent link">&para;</a></h2>
+<p>At this point, from <strong>system-level architecture (Type-driven &amp; DOD)</strong>, to <strong>micro code style (Idiomatic &amp; Functional)</strong>, to <strong>automated boundary defense (QA &amp; Fuzzing)</strong>, <strong>cross-language breakwaters (FFI)</strong>, and low-level <strong>metaprogramming (Macros)</strong> and <strong>async engine internals</strong>, we've built a complete, three-dimensional Rust master skill tree.</p>
+<p>Rust is not a language you can master by "learning syntax". It's a language that requires you to <strong>deeply understand computer low-level operation rules and rigorously prove your design to the compiler.</strong></p>
+<p>True elegance and efficiency aren't about using how many advanced features. It's about: <strong>always imprisoning the most complex lifetimes and unsafe operations inside the smallest, clearest module boundaries; making business logic at outer layers as simple as plain language, transparent, and impossible to get wrong.</strong></p>
+<hr />
+<h2 id="key-principles-summary">Key Principles Summary<a class="headerlink" href="#key-principles-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Rule</th>
+<th>Critical Point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Future State Size</strong></td>
+<td>No large variables across <code>.await</code></td>
+<td>Box large objects before await</td>
+</tr>
+<tr>
+<td><strong>Async Recursion</strong></td>
+<td>Never directly recursive <code>async fn</code></td>
+<td>Use <code>Box::pin()</code> to break infinite size</td>
+</tr>
+<tr>
+<td><strong>Blocking Operations</strong></td>
+<td>Never block in async context</td>
+<td>Use <code>spawn_blocking</code></td>
+</tr>
+<tr>
+<td><strong>Pin Purpose</strong></td>
+<td>Protect self-referential structs from moving</td>
+<td>Not for cache optimization</td>
+</tr>
+<tr>
+<td><strong>Manual Future</strong></td>
+<td>Never use <code>Pin::get_unchecked_mut</code></td>
+<td>Use <code>pin-project</code> macro</td>
+</tr>
+<tr>
+<td><strong>Polling Rule</strong></td>
+<td>Non-blocking read → register waker → return Pending</td>
+<td>Never busy-loop</td>
+</tr>
+<tr>
+<td><strong>no_std Async</strong></td>
+<td>No tokio, use Embassy or custom minimal executor</td>
+<td>ISR only sets wake flag</td>
+</tr>
+<tr>
+<td><strong>C10M Performance</strong></td>
+<td>Thread-per-core (monoio/glommio) over work-stealing</td>
+<td>Lock-free, cache-local</td>
+</tr>
+</tbody>
+</table>
+<h2 id="async-performance-checklist">Async Performance Checklist<a class="headerlink" href="#async-performance-checklist" title="Permanent link">&para;</a></h2>
+<p>Before deploying async code to production:</p>
+<ul>
+<li>[ ] No large local variables held across <code>.await</code> boundaries</li>
+<li>[ ] Recursive async functions wrapped in <code>Box::pin()</code></li>
+<li>[ ] No blocking operations in async context (use <code>spawn_blocking</code>)</li>
+<li>[ ] Custom <code>Future::poll</code> follows polling rules (non-blocking, waker registration)</li>
+<li>[ ] Embedded (<code>no_std</code>) uses Embassy or custom executor, not tokio</li>
+<li>[ ] High-concurrency scenarios consider Thread-per-Core runtimes</li>
+<li>[ ] Complex self-referential structs use <code>pin-project</code> for safe projection</li>
+</ul>
+<h2 id="4-concurrent-task-composition">4. Concurrent Task Composition<a class="headerlink" href="#4-concurrent-task-composition" title="Permanent link">&para;</a></h2>
+<h3 id="41-tokioselect-race-multiple-futures">4.1 <code>tokio::select!</code> — Race Multiple Futures<a class="headerlink" href="#41-tokioselect-race-multiple-futures" title="Permanent link">&para;</a></h3>
+<p><code>select!</code> completes when <strong>any</strong> branch finishes, cancelling the rest.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">use</span><span class="w"> </span><span class="n">tokio</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">event_loop</span><span class="p">(</span><span class="k">mut</span><span class="w"> </span><span class="n">rx</span><span class="p">:</span><span class="w"> </span><span class="nc">mpsc</span><span class="p">::</span><span class="n">Receiver</span><span class="o">&lt;</span><span class="n">Event</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">shutdown</span><span class="p">:</span><span class="w"> </span><span class="nc">tokio</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">watch</span><span class="p">::</span><span class="n">Receiver</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="k">loop</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="n">tokio</span><span class="p">::</span><span class="n">select</span><span class="o">!</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">            </span><span class="nb">Some</span><span class="p">(</span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rx</span><span class="p">.</span><span class="n">recv</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">                </span><span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">).</span><span class="k">await</span><span class="p">;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">            </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shutdown</span><span class="p">.</span><span class="n">changed</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">                </span><span class="n">tracing</span><span class="p">::</span><span class="n">info</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;shutting down&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">                </span><span class="c1">// All branches returned None/ended</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Rules</strong>:
+- <strong>Always handle the <code>else</code> branch</strong> — prevents silent loop exit when all sources close
+- <strong>Borrowed variables must be <code>&amp;mut</code></strong> — <code>select!</code> takes ownership by default; use <code>&amp;mut</code> for shared state
+- <strong>Never <code>select!</code> with side effects on cancellation</strong> — dropped futures may have started work</p>
+<h3 id="42-tokiojoin-run-all-futures-concurrently">4.2 <code>tokio::join!</code> — Run All Futures Concurrently<a class="headerlink" href="#42-tokiojoin-run-all-futures-concurrently" title="Permanent link">&para;</a></h3>
+<p><code>join!</code> waits for <strong>all</strong> futures to complete. No cancellation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// ✅ All three must complete — no cancellation</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">let</span><span class="w"> </span><span class="p">(</span><span class="n">health</span><span class="p">,</span><span class="w"> </span><span class="n">metrics</span><span class="p">,</span><span class="w"> </span><span class="n">server</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tokio</span><span class="p">::</span><span class="n">join</span><span class="o">!</span><span class="p">(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">health_check</span><span class="p">(),</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="n">collect_metrics</span><span class="p">(),</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="n">run_server</span><span class="p">(),</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">);</span>
+</code></pre></div>
+<p><strong>Rule</strong>: Use <code>join!</code> when all branches must complete (e.g., graceful shutdown).</p>
+<h3 id="43-futuresunordered-dynamic-collection-of-futures">4.3 <code>FuturesUnordered</code> — Dynamic Collection of Futures<a class="headerlink" href="#43-futuresunordered-dynamic-collection-of-futures" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">use</span><span class="w"> </span><span class="n">futures</span><span class="p">::</span><span class="n">stream</span><span class="p">::{</span><span class="n">FuturesUnordered</span><span class="p">,</span><span class="w"> </span><span class="n">StreamExt</span><span class="p">};</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kd">let</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FuturesUnordered</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">for</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">100</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="n">tasks</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">process_item</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">// Process results as they complete (out of order)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">while</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tasks</span><span class="p">.</span><span class="n">next</span><span class="p">().</span><span class="k">await</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="n">handle_result</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Rule</strong>: Use <code>FuturesUnordered</code> when the number of concurrent tasks is dynamic.</p>
+<h3 id="decision-select-vs-join-vs-futuresunordered">Decision: select! vs join! vs FuturesUnordered<a class="headerlink" href="#decision-select-vs-join-vs-futuresunordered" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Use</th>
+<th>Cancellation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First-wins (race)</td>
+<td><code>select!</code></td>
+<td>Yes — losers are dropped</td>
+</tr>
+<tr>
+<td>All-must-complete</td>
+<td><code>join!</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Dynamic task set</td>
+<td><code>FuturesUnordered</code></td>
+<td>Per-task on drop</td>
+</tr>
+<tr>
+<td>Rate-limited fan-out</td>
+<td><code>Stream::buffer_unordered</code></td>
+<td>Per-task on drop</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-async-cancellation-semantics">5. Async Cancellation Semantics<a class="headerlink" href="#5-async-cancellation-semantics" title="Permanent link">&para;</a></h2>
+<h3 id="51-cancellation-is-drop">5.1 Cancellation is Drop<a class="headerlink" href="#51-cancellation-is-drop" title="Permanent link">&para;</a></h3>
+<p>When a future is cancelled (e.g., <code>select!</code> drops the losing branch), its <code>Drop</code> impl runs. This means:</p>
+<ul>
+<li><strong>In-flight I/O may be abandoned</strong> — ensure your I/O library handles partial writes</li>
+<li><strong>Held resources are released</strong> — <code>MutexGuard</code>, <code>JoinHandle</code>, etc. are dropped</li>
+<li><strong>No "cancellation point" concept</strong> — unlike C#, Rust cancellation can happen at any <code>.await</code></li>
+</ul>
+<h3 id="52-cancellation-safe-patterns">5.2 Cancellation-Safe Patterns<a class="headerlink" href="#52-cancellation-safe-patterns" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// ❌ NOT cancellation-safe: if recv() is cancelled, message is lost</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">tokio</span><span class="p">::</span><span class="n">select</span><span class="o">!</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">channel</span><span class="p">.</span><span class="n">recv</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">process</span><span class="p">(</span><span class="n">msg</span><span class="p">),</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shutdown</span><span class="p">.</span><span class="n">changed</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">// ✅ Cancellation-safe: recv() is documented as safe (message stays in channel)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">tokio</span><span class="p">::</span><span class="n">select</span><span class="o">!</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="n">biased</span><span class="p">;</span><span class="w"> </span><span class="c1">// Prefer first branch — check shutdown first</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shutdown</span><span class="p">.</span><span class="n">changed</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">channel</span><span class="p">.</span><span class="n">recv</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">process</span><span class="p">(</span><span class="n">msg</span><span class="p">),</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Rules</strong>:
+- <strong>Check cancellation safety</strong> — read the docs for each future used in <code>select!</code>
+- <strong>Use <code>biased;</code></strong> when branch priority matters (e.g., check shutdown before processing)
+- <strong>Wrap non-cancellation-safe operations</strong> in a spawned task to isolate them</p>
+<h2 id="related-references">Related References<a class="headerlink" href="#related-references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../11-concurrency/">concurrency.md</a> — Concurrency patterns and channel design</li>
+<li><a href="../25-performance-tuning/">performance-tuning.md</a> — Performance optimization principles</li>
+<li><a href="../14-metaprogramming/">metaprogramming.md</a> — Compile-time computing</li>
+<li><a href="../15-ffi-interop/">ffi-interop.md</a> — FFI boundaries and panic containment</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tracking", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1520 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hard constraints for Rust code targeting wasm32-unknown-unknown, covering compilation configuration, cross-language boundary, linear memory management, concurrency model, and general code adaptation. This Skill is the compilation & boundary layer foundation for all Rust+Wasm frontend architectures (including no-DOM rendering engines) and must be inherited and obeyed.
+">
+      
+      
+      
+        <link rel="canonical" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-wasm-frontend-infra-guide/SKILL/">
+      
+      
+        <link rel="prev" href="../../rust-systems-cloud-infra-guide/SKILL/">
+      
+      
+        <link rel="next" href="../../rust-embedded-iot-guide/SKILL/">
+      
+      
+        
+          <link rel="alternate" href="../../../rust-wasm-frontend-infra-guide/SKILL/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Wasm 前端基础设施指南 - Rust Coding Standards Skills</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rust-to-wasm-vertical-compilation-boundary-specification-v410" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../" title="Rust Coding Standards Skills" class="md-header__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Rust Coding Standards Skills
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Wasm 前端基础设施指南
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../rust-wasm-frontend-infra-guide/SKILL/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Rust Coding Standards Skills" class="md-nav__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Rust Coding Standards Skills
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-architecture-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构指南（宪法）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-systems-cloud-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统与云基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wasm 前端基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wasm 前端基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-philosophy-dialectical-materialism-and-jeet-kune-do-with-unity-of-false-and-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-materialist-foundation-reverence-for-physical-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 Materialist Foundation: Reverence for Physical Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-dialectical-core-embrace-and-transform-contradictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 Dialectical Core: Embrace and Transform Contradictions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-jeet-kune-do-essence-economy-directness-and-unity-of-false-and-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 Jeet Kune Do Essence: Economy, Directness, and Unity of False and Real
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iron-rules-derived-from-materialist-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iron Rules Derived from Materialist Foundation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tiered-defense-memory-management-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiered Defense: Memory Management Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-decision-tree-when-faced-with-dilemmas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Decision Tree: When Faced with Dilemmas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-review-smells" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Review "Smells"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-1-compilation-artifact-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1: Compilation &amp; Artifact Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-ffi-cross-language-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2: FFI &amp; Cross-Language Boundary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-3-memory-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 3: Memory &amp; Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-4-concurrency-event-driven" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 4: Concurrency &amp; Event-Driven
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-5-general-code-wasm-adaptation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 5: General Code Wasm Adaptation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prohibitions-compliance-self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prohibitions &amp; Compliance Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changelog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v410" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V4.1.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v400" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V4.0.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-embedded-iot-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入式与物联网指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-data-engineering-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据工程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-networking-protocols-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    网络协议指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-cli-devops-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI 与 DevOps 指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-gamedev-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    游戏开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-blockchain-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    区块链指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-ai-ml-inference-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI/ML 推理指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-philosophy-dialectical-materialism-and-jeet-kune-do-with-unity-of-false-and-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-materialist-foundation-reverence-for-physical-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 Materialist Foundation: Reverence for Physical Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-dialectical-core-embrace-and-transform-contradictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 Dialectical Core: Embrace and Transform Contradictions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-jeet-kune-do-essence-economy-directness-and-unity-of-false-and-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3 Jeet Kune Do Essence: Economy, Directness, and Unity of False and Real
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iron-rules-derived-from-materialist-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iron Rules Derived from Materialist Foundation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tiered-defense-memory-management-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiered Defense: Memory Management Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-decision-tree-when-faced-with-dilemmas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Decision Tree: When Faced with Dilemmas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-review-smells" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Review "Smells"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-1-compilation-artifact-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1: Compilation &amp; Artifact Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-ffi-cross-language-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2: FFI &amp; Cross-Language Boundary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-3-memory-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 3: Memory &amp; Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-4-concurrency-event-driven" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 4: Concurrency &amp; Event-Driven
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-5-general-code-wasm-adaptation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 5: General Code Wasm Adaptation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prohibitions-compliance-self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prohibitions &amp; Compliance Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changelog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v410" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V4.1.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v400" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V4.0.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rust-to-wasm-vertical-compilation-boundary-specification-v410">Rust to Wasm Vertical Compilation &amp; Boundary Specification V4.1.0<a class="headerlink" href="#rust-to-wasm-vertical-compilation-boundary-specification-v410" title="Permanent link">&para;</a></h1>
+<p>This specification inherits the core philosophy from the Rust Architecture Guide and the Rust Project Lifecycle Guide, deepening vertically for the uniqueness of the <code>wasm32-unknown-unknown</code> target (linear memory, single-threaded event loop, cross-language boundary).</p>
+<p>V4.1.0 — <strong>Binary Size Economics &amp; Ecosystem Convergence</strong>:
+- Aligns with Leptos official binary size optimization guide: streaming WASM compilation rationale, <code>twiggy</code> top functions analysis
+- Recommends <code>talc</code> allocator (replacing deprecated <code>wee_alloc</code>) with quantitative baseline (~10KB → ~1KB)
+- References Wasm Component Model proposals for future canonical ABI alignment
+- Adds <code>wasm-tools</code> stripping and <code>wasm-objdump</code> size auditing to the toolchain</p>
+<h2 id="architectural-philosophy-dialectical-materialism-and-jeet-kune-do-with-unity-of-false-and-real">Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real<a class="headerlink" href="#architectural-philosophy-dialectical-materialism-and-jeet-kune-do-with-unity-of-false-and-real" title="Permanent link">&para;</a></h2>
+<p>This specification is the engineering implementation of the "Dialectical Materialism and Jeet Kune Do" architectural philosophy at the compilation and boundary layer. For conflicts with <code>rust-architecture-guide</code>, the architecture guide serves as the <strong>constitutional foundation</strong> (see <a href="../../rust-architecture-guide/references/06-deviation-process.md">constitution conflict resolution</a>). This Wasm specification provides <strong>vertical-default guidance</strong> for <code>wasm32-unknown-unknown</code> targets, not an absolute veto over higher-level rules.</p>
+<h3 id="01-materialist-foundation-reverence-for-physical-boundaries">0.1 Materialist Foundation: Reverence for Physical Boundaries<a class="headerlink" href="#01-materialist-foundation-reverence-for-physical-boundaries" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Linear memory only grows</strong>, must be reclaimed internally.</li>
+<li><strong>FFI boundary is expensive RPC</strong>, any implicit conversion is a performance liability.</li>
+<li><strong>Browser is a sandboxed OS</strong>, event loop, multi-threading limits, and security policies are physical laws that must be complied with.</li>
+</ul>
+<h3 id="02-dialectical-core-embrace-and-transform-contradictions">0.2 Dialectical Core: Embrace and Transform Contradictions<a class="headerlink" href="#02-dialectical-core-embrace-and-transform-contradictions" title="Permanent link">&para;</a></h3>
+<p>Core contradiction: JS's <strong>dynamism (flexible, GC, untyped)</strong> vs Rust's <strong>determinism (static, no GC, strongly typed)</strong>.</p>
+<p>Architectural solution: Through <strong>unidirectional control (Rust is the brain, JS is the dumb brush)</strong>, isolate the two sides. The Rust side pursues extreme determinism, the JS side pursues extreme pure execution. Neither pollutes the other.</p>
+<h3 id="03-jeet-kune-do-essence-economy-directness-and-unity-of-false-and-real">0.3 Jeet Kune Do Essence: Economy, Directness, and Unity of False and Real<a class="headerlink" href="#03-jeet-kune-do-essence-economy-directness-and-unity-of-false-and-real" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Economy</strong>: Retain only necessary bytes, instructions, and abstraction layers. <code>opt-level = "z"</code> is the embodiment of this spirit at the compilation level.</li>
+<li><strong>Directness</strong>: Pursue the shortest physical execution path. Zero-copy views are the exemplar of "real", directly hitting the performance bottleneck of data transfer.</li>
+<li><strong>Unity of False and Real</strong>: The "false" move is not redundant; it is the setup, probing, and rhythm control for the final "real" move. Strong typing constraints, crash-preventing error handling, and phased code organization are the "false" — they consume a small number of bytes and engineer's mental effort, but exchange them for system <strong>determinism, robustness, and maintainability</strong>, creating the stage for the "real" to perform. Without the false, the real has no foundation.</li>
+</ul>
+<p>→ <a href="../references/08-philosophy-v2/">references/08-philosophy-v2.md</a></p>
+<h2 id="iron-rules-derived-from-materialist-foundation">Iron Rules Derived from Materialist Foundation<a class="headerlink" href="#iron-rules-derived-from-materialist-foundation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Iron Rule</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IRON-01</strong></td>
+<td>Binary Size Is Paramount</td>
+<td>Compilation artifacts must be aggressively compressed, all debug info, unwind tables, and redundant sections stripped</td>
+</tr>
+<tr>
+<td><strong>IRON-02</strong></td>
+<td>Zero-Copy at Boundary</td>
+<td>On high-frequency data paths, always pass pointer+length, never serialize; zero-copy view lifetimes must be documented</td>
+</tr>
+<tr>
+<td><strong>IRON-03</strong></td>
+<td>Memory Partitioning</td>
+<td>Global state static residency, per-frame objects ephemeral, prevent dynamic allocation fragmentation</td>
+</tr>
+<tr>
+<td><strong>IRON-04</strong></td>
+<td>Cross-Origin Isolation Documented</td>
+<td>Any use of <code>SharedArrayBuffer</code> must document COOP/COEP header configuration requirements</td>
+</tr>
+</tbody>
+</table>
+<p>→ <a href="../references/01-iron-rules/">references/01-iron-rules.md</a></p>
+<hr />
+<h2 id="tiered-defense-memory-management-philosophy">Tiered Defense: Memory Management Philosophy<a class="headerlink" href="#tiered-defense-memory-management-philosophy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Applicable</th>
+<th>Weapon</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 1: Per-Frame Ephemeral</td>
+<td>Not exceeding a single <code>rAF</code> callback</td>
+<td>Bump Allocator (<code>bumpalo</code>)</td>
+</tr>
+<tr>
+<td>Tier 2: Scene-Level Residency</td>
+<td>Interaction scene lifecycle (drag, modal)</td>
+<td>Nestable or independent Arena pools</td>
+</tr>
+<tr>
+<td>Tier 3: Global Orthogonal Storage</td>
+<td>Cross entire application lifecycle</td>
+<td><code>SlotMap</code>, ECS-style component storage</td>
+</tr>
+</tbody>
+</table>
+<p>→ <a href="../references/08-philosophy-v2/">references/08-philosophy-v2.md</a> §1</p>
+<h2 id="architecture-decision-tree-when-faced-with-dilemmas">Architecture Decision Tree: When Faced with Dilemmas<a class="headerlink" href="#architecture-decision-tree-when-faced-with-dilemmas" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Closer to physical reality?</strong> — Prefer more direct, predictable control over bottom-level memory and instructions, no implicit "magic"</li>
+<li><strong>Does the "false" serve a more fundamental "real"?</strong> — Prefer overhead that clearly exchanges for core value</li>
+<li><strong>Compliant with browser physical laws?</strong> — Prefer not fighting the host environment, leverage its characteristics</li>
+</ol>
+<p>→ <a href="../references/08-philosophy-v2/">references/08-philosophy-v2.md</a> §2</p>
+<h2 id="code-review-smells">Code Review "Smells"<a class="headerlink" href="#code-review-smells" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Smell</th>
+<th>Philosophical Deviation</th>
+<th>Correction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unjustified <code>.unwrap()</code></td>
+<td>Lazy to lay the "false" error handling net</td>
+<td><code>Result&lt;T, JsValue&gt;</code> or <code>expect</code> with clear message</td>
+</tr>
+<tr>
+<td>High-frequency <code>serde_json</code></td>
+<td>"False" move in wrong place</td>
+<td><code>WasmSlice</code> zero-copy</td>
+</tr>
+<tr>
+<td>Exported functions return <code>String</code>/<code>Vec</code></td>
+<td>Ignorance of FFI boundary cost</td>
+<td>Return <code>WasmSlice</code> (pointer+length)</td>
+</tr>
+<tr>
+<td>Business logic <code>if/else</code> on JS side</td>
+<td>Brain leaking to brush</td>
+<td>Logic centralized in Rust, JS pure execution only</td>
+</tr>
+<tr>
+<td>Abandoning all debugging for zero overhead</td>
+<td>Rigid "realism", ignoring "false" value</td>
+<td>Retain <code>tracing_wasm</code> + <code>console_error_panic_hook</code></td>
+</tr>
+</tbody>
+</table>
+<p>→ <a href="../references/08-philosophy-v2/">references/08-philosophy-v2.md</a> §4</p>
+<hr />
+<h2 id="stage-1-compilation-artifact-control">Stage 1: Compilation &amp; Artifact Control<a class="headerlink" href="#stage-1-compilation-artifact-control" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>1.1 Release Profile (MUST)</strong>: <code>opt-level="z"</code>, <code>lto=true</code>, <code>codegen-units=1</code>, <code>panic="abort"</code>, <code>strip=true</code></li>
+<li><strong>1.2 Post-Processing Optimization (MUST)</strong>: <code>wasm-opt -Oz</code> (Binaryen v110+), typically reduces an additional 15-20%</li>
+<li><strong>1.3 Allocator Replacement (SHOULD)</strong>: Deprecate <code>wee_alloc</code>, recommend <code>talc</code> or <code>MiniAlloc</code>, baseline from ~10KB to ~1KB</li>
+</ul>
+<p>→ <a href="../references/02-build-control/">references/02-build-control.md</a></p>
+<hr />
+<h2 id="stage-2-ffi-cross-language-boundary">Stage 2: FFI &amp; Cross-Language Boundary<a class="headerlink" href="#stage-2-ffi-cross-language-boundary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>2.1 Zero-Copy Memory Views (MUST)</strong>: <code>WasmSlice</code> safe encapsulation template, JS-side mandatory consumption within tick</li>
+<li><strong>2.2 Boundary Security Risks</strong>: Dangling pointer risk, lifetimes must be documented in <code># Safety</code> comments</li>
+<li><strong>2.3 Explicit Boundary Type Contracts (MUST)</strong>: Parameters must be scalars or <code>WasmSlice</code>, prohibit <code>JsValue</code> pass-through</li>
+</ul>
+<p>→ <a href="../references/03-ffi-boundary/">references/03-ffi-boundary.md</a></p>
+<hr />
+<h2 id="stage-3-memory-lifecycle">Stage 3: Memory &amp; Lifecycle<a class="headerlink" href="#stage-3-memory-lifecycle" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>3.1 Lifecycle Separation (MUST)</strong>: Global residency (pre-allocated <code>Vec</code>/<code>ArrayVec</code>/<code>SlotMap</code>) vs per-frame ephemeral (<code>bumpalo</code> Arena + per-frame <code>reset()</code>)</li>
+<li><strong>3.2 Physical Defense Against Memory Leaks (MUST)</strong>: Explicit <code>.free()</code> on JS component destruction, <code>WeakRef</code> auxiliary, <code>beforeunload</code> global cleanup</li>
+</ul>
+<p>→ <a href="../references/04-memory-lifecycle/">references/04-memory-lifecycle.md</a></p>
+<hr />
+<h2 id="stage-4-concurrency-event-driven">Stage 4: Concurrency &amp; Event-Driven<a class="headerlink" href="#stage-4-concurrency-event-driven" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>4.1 Seamless Async Mapping (MUST)</strong>: <code>wasm-bindgen-futures</code> (<code>JsFuture</code> + <code>spawn_local</code>)</li>
+<li><strong>4.2 Prohibit Blocking APIs (MUST NOT)</strong>: No <code>std::thread::sleep</code>, blocking <code>Mutex::lock()</code>, busy-waiting</li>
+<li><strong>4.3 Heavy Computation Worker Isolation (SHOULD)</strong>: COOP/COEP prerequisites, <code>#[repr(C)]</code> shared memory, <code>AtomicU32</code>/<code>AtomicU64</code> synchronization</li>
+</ul>
+<p>→ <a href="../references/05-concurrency-events/">references/05-concurrency-events.md</a></p>
+<hr />
+<h2 id="stage-5-general-code-wasm-adaptation">Stage 5: General Code Wasm Adaptation<a class="headerlink" href="#stage-5-general-code-wasm-adaptation" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>5.1 Error Handling (MUST)</strong>: <code>Result&lt;T, JsValue&gt;</code> + <code>thiserror</code>, under <code>panic="abort"</code> must use <code>Result</code> not <code>panic!</code></li>
+<li><strong>5.2 Logging &amp; Observability (MUST)</strong>: <code>console_error_panic_hook::set_once()</code> + <code>tracing_wasm::set_as_global_default()</code></li>
+</ul>
+<p>→ <a href="../references/06-wasm-adaptation/">references/06-wasm-adaptation.md</a></p>
+<hr />
+<h2 id="prohibitions-compliance-self-check">Prohibitions &amp; Compliance Self-Check<a class="headerlink" href="#prohibitions-compliance-self-check" title="Permanent link">&para;</a></h2>
+<p>7 hard prohibitions + 10-item compliance self-check list.</p>
+<p>→ <a href="../references/07-prohibitions-checklist/">references/07-prohibitions-checklist.md</a></p>
+<hr />
+<h2 id="reference-files">Reference Files<a class="headerlink" href="#reference-files" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Topic</th>
+<th>Key Directive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../references/01-iron-rules/">01-iron-rules.md</a></td>
+<td>Iron Rules</td>
+<td>IRON-01~04 iron rules and their physical basis</td>
+</tr>
+<tr>
+<td><a href="../references/02-build-control/">02-build-control.md</a></td>
+<td>Compilation &amp; Artifact Control</td>
+<td><code>Cargo.toml</code> release profile + <code>wasm-opt</code> + allocator replacement</td>
+</tr>
+<tr>
+<td><a href="../references/03-ffi-boundary/">03-ffi-boundary.md</a></td>
+<td>FFI &amp; Cross-Language Boundary</td>
+<td><code>WasmSlice</code> zero-copy encapsulation + explicit type contracts</td>
+</tr>
+<tr>
+<td><a href="../references/04-memory-lifecycle/">04-memory-lifecycle.md</a></td>
+<td>Memory &amp; Lifecycle</td>
+<td>Global residency vs per-frame ephemeral + Arena <code>reset()</code> + leak defense</td>
+</tr>
+<tr>
+<td><a href="../references/05-concurrency-events/">05-concurrency-events.md</a></td>
+<td>Concurrency &amp; Event-Driven</td>
+<td><code>wasm-bindgen-futures</code> + blocking prohibition + Worker isolation</td>
+</tr>
+<tr>
+<td><a href="../references/06-wasm-adaptation/">06-wasm-adaptation.md</a></td>
+<td>General Code Wasm Adaptation</td>
+<td><code>Result&lt;T, JsValue&gt;</code> + <code>console_error_panic_hook</code> + <code>tracing_wasm</code></td>
+</tr>
+<tr>
+<td><a href="../references/07-prohibitions-checklist/">07-prohibitions-checklist.md</a></td>
+<td>Prohibitions &amp; Compliance</td>
+<td>7 hard prohibitions + 10-item self-check list</td>
+</tr>
+<tr>
+<td><a href="../references/08-philosophy-v2/">08-philosophy-v2.md</a></td>
+<td>Architectural Philosophy &amp; Decision Meta-Spec</td>
+<td>Dialectical Materialism + Jeet Kune Do + tiered defense + decision tree + review smells</td>
+</tr>
+<tr>
+<td><a href="../references/09-zero-copy-pool/">09-zero-copy-pool.md</a></td>
+<td>Zero-Copy Resource Pool</td>
+<td>Resource pool topology, JS injection via <code>encodeInto</code>, Wasm resolution with boundary interception, frame lifecycle sync</td>
+</tr>
+<tr>
+<td><a href="../references/10-command-bus-v3/">10-command-bus-v3.md</a></td>
+<td>Zero-Copy Command Bus V3.1</td>
+<td>Double-buffer topology, atomic synchronization (<code>AcqRel</code>), Facade write/consume cycle, lifecycle safety contract, hard constraints [F-08]~[F-11]</td>
+</tr>
+<tr>
+<td><a href="../references/11-toolchain-v3/">11-toolchain-v3.md</a></td>
+<td>Toolchain &amp; Lifecycle Automation V3.2</td>
+<td>Layout assertions, binary size budget, twiggy diagnostics, performance telemetry, lifecycle checkpoints, hard constraints [F-12]~[F-15]</td>
+</tr>
+<tr>
+<td><a href="../references/12-domain-engines-v4/">12-domain-engines-v4.md</a></td>
+<td>Domain Engines V4.1</td>
+<td>Pixel rendering (wgpu/vello/tiny-skia), vector &amp; search (SIMD128), high-density state (CRDT/yrs), time slicing, environment purity, hard constraints [F-16]~[F-20]</td>
+</tr>
+<tr>
+<td><a href="../references/13-cross-platform-isomorphism-v5/">13-cross-platform-isomorphism-v5.md</a></td>
+<td>Cross-Platform Isomorphism V5.1</td>
+<td>Component model vs native dual-track, capability Trait abstraction, SIMD dispatch (<code>edgevec</code>/<code>archmage</code>), atomic semantic alignment, hard constraints [F-21]~[F-24]</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
+<h3 id="v410">V4.1.0<a class="headerlink" href="#v410" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Version bumped to align with universal constitution V9.1.0</li>
+<li>Added binary size diagnostics: twiggy top/dominators/paths workflow, binary size budget tiers, wasm-tools strip, wasm-objdump audit</li>
+<li>Recommends <code>talc</code> allocator (replacing deprecated <code>wee_alloc</code>) with quantitative baseline (~10KB → ~1KB)</li>
+<li>Aligns with Leptos official binary size optimization guide including streaming WASM compilation rationale</li>
+<li>References Wasm Component Model proposals for future canonical ABI alignment</li>
+</ul>
+<h3 id="v400">V4.0.0<a class="headerlink" href="#v400" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Version bumped to align with universal constitution V9.0.0 restructuring</li>
+<li>Philosophy updated to "Dialectical Materialism &amp; Jeet Kune Do — Unity of False and Real"</li>
+<li>Maintains alignment with memory layout transparency, breakwater pattern, and physical feasibility audit paradigms (no new documents required — V3.0.0 already covers the three dimensions through IRON rules, FFI boundary specs, and memory lifecycle)</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tracking", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

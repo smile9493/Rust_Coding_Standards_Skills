@@ -1,0 +1,1791 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Use when building Rust cloud-native infrastructure (database kernels, distributed storage, high-performance gateways, container runtimes, eBPF control planes). Covers I/O model selection, zero-copy pipelines, backpressure, deterministic consensus, lock-free concurrency, SIMD vectorization, advanced memory architecture, breakwater pattern, and physical feasibility audit. Vertical deepening of rust-architecture-guide for long-running systems.">
+      
+      
+      
+        <link rel="canonical" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-systems-cloud-infra-guide/SKILL/">
+      
+      
+        <link rel="prev" href="../../rust-architecture-guide/SKILL/">
+      
+      
+        <link rel="next" href="../../rust-wasm-frontend-infra-guide/SKILL/">
+      
+      
+        
+          <link rel="alternate" href="../../../rust-systems-cloud-infra-guide/SKILL/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>系统与云基础设施指南 - Rust Coding Standards Skills</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rust-systems-cloud-infrastructure-guide-v610" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../" title="Rust Coding Standards Skills" class="md-header__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Rust Coding Standards Skills
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              系统与云基础设施指南
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../rust-systems-cloud-infra-guide/SKILL/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Rust Coding Standards Skills" class="md-nav__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Rust Coding Standards Skills
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-architecture-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构指南（宪法）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统与云基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统与云基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-1-io-model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 1: I/O Model Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-2-zero-copy-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 2: Zero-Copy Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-3-backpressure-bounded-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 3: Backpressure &amp; Bounded Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-4-cancellation-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 4: Cancellation Safety
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-5-graceful-shutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 5: Graceful Shutdown
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-6-deterministic-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 6: Deterministic State Machine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-7-ffi-boundary-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 7: FFI Boundary Safety
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-8-arena-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 8: Arena Allocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-9-physical-addressing-allocator-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 9: Physical Addressing (Allocator API)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-10-slab-pre-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 10: Slab Pre-allocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-11-memory-exhaustion-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 11: Memory Exhaustion Backpressure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-12-lock-free-read-path-rcu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 12: Lock-free Read Path (RCU)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-13-epoch-based-memory-reclamation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 13: Epoch-based Memory Reclamation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-14-memory-ordering-precision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 14: Memory Ordering Precision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-15-simd-vectorized-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 15: SIMD Vectorized Execution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-16-columnar-memory-layout-soa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 16: Columnar Memory Layout (SoA)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mandatory-ci-lints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory CI Lints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prohibitions-quick-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prohibitions Quick List
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#document-relationship-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document Relationship Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changelog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v610" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V6.1.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v600" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V6.0.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-wasm-frontend-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wasm 前端基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-embedded-iot-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入式与物联网指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-data-engineering-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据工程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-networking-protocols-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    网络协议指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-cli-devops-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI 与 DevOps 指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-gamedev-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    游戏开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-blockchain-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    区块链指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-ai-ml-inference-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI/ML 推理指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-1-io-model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 1: I/O Model Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-2-zero-copy-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 2: Zero-Copy Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-3-backpressure-bounded-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 3: Backpressure &amp; Bounded Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-4-cancellation-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 4: Cancellation Safety
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-5-graceful-shutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 5: Graceful Shutdown
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-6-deterministic-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 6: Deterministic State Machine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-7-ffi-boundary-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 7: FFI Boundary Safety
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-8-arena-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 8: Arena Allocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-9-physical-addressing-allocator-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 9: Physical Addressing (Allocator API)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-10-slab-pre-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 10: Slab Pre-allocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-11-memory-exhaustion-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 11: Memory Exhaustion Backpressure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-12-lock-free-read-path-rcu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 12: Lock-free Read Path (RCU)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-13-epoch-based-memory-reclamation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 13: Epoch-based Memory Reclamation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-14-memory-ordering-precision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 14: Memory Ordering Precision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-15-simd-vectorized-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 15: SIMD Vectorized Execution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-16-columnar-memory-layout-soa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action 16: Columnar Memory Layout (SoA)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mandatory-ci-lints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory CI Lints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prohibitions-quick-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prohibitions Quick List
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#document-relationship-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document Relationship Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changelog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v610" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V6.1.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v600" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V6.0.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rust-systems-cloud-infrastructure-guide-v610">Rust Systems &amp; Cloud Infrastructure Guide V6.1.0<a class="headerlink" href="#rust-systems-cloud-infrastructure-guide-v610" title="Permanent link">&para;</a></h1>
+<p>Vertical deepening of <code>rust-architecture-guide</code> for world-class cloud-native infrastructure. Assumes long-running nodes (uptime &gt; 1 year), 10GbE+ network, multi-NUMA architecture.</p>
+<p>V6.0.0 additions:
+1. <strong>Breakwater Pattern</strong> (ref/12): Facade/Core layered architecture for cloud services — high-tolerance external API, zero-overload internal kernel
+2. <strong>Physical Feasibility Audit</strong> (ref/13): Container memory limits, network latency budgets, NUMA topology awareness</p>
+<p>V6.1.0 — <strong>Modern Resilience &amp; Observability</strong>:
+- Integrates <code>tokio-graceful-shutdown</code> and <code>async-shutdown</code> crate patterns for production-grade shutdown
+- Adds <code>tokio::task::JoinSet</code> structured concurrency for task lifecycle management
+- Incorporates Tokio official graceful shutdown best practices and <code>CancellationToken</code> patterns
+- Adds <code>ntex-neon-uring</code> benchmark awareness for io_uring vs epoll trade-off quantification</p>
+<h2 id="core-philosophy">Core Philosophy<a class="headerlink" href="#core-philosophy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mechanical Sympathy</strong></td>
+<td>Align software with hardware physics (CPU cache, NUMA, PMEM, kernel I/O stack)</td>
+</tr>
+<tr>
+<td><strong>Determinism</strong></td>
+<td>Eliminate non-determinism (time, random, HashMap order) for reproducible state machines</td>
+</tr>
+<tr>
+<td><strong>Resilience</strong></td>
+<td>Graceful degradation over crash; backpressure over OOM; structured concurrency over leak</td>
+</tr>
+<tr>
+<td><strong>Jeet Kune Do</strong></td>
+<td>One-strike memory lifecycle (Arena); flow like water to hardware channels (Allocator API)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="action-1-io-model-selection">Action 1: I/O Model Selection<a class="headerlink" href="#action-1-io-model-selection" title="Permanent link">&para;</a></h2>
+<p>Choose async I/O backend to maximize kernel I/O stack utilization.</p>
+<ul>
+<li>Many TCP conns + medium throughput → <code>tokio</code> + <code>epoll</code></li>
+<li>Massive small packets / high disk throughput → <code>monoio</code> / <code>glommio</code> (io_uring)</li>
+<li>Mixed scenario → <code>tokio-uring</code></li>
+<li><strong>Red Line</strong>: If mixing <code>tokio</code> and <code>io_uring</code>, must unify runtime across entire pipeline</li>
+</ul>
+<p>→ <a href="../references/01-io-model/">references/01-io-model.md</a></p>
+<h2 id="action-2-zero-copy-pipeline">Action 2: Zero-Copy Pipeline<a class="headerlink" href="#action-2-zero-copy-pipeline" title="Permanent link">&para;</a></h2>
+<p>Build proxy gateway, storage transport, or RPC framework with zero unnecessary copies.</p>
+<ul>
+<li>Kernel-level: <code>splice</code>, <code>sendfile</code>, <code>copy_file_range</code> (via <code>rustix</code>)</li>
+<li>User-space: Use <code>bytes::Bytes</code> for O(1) clone</li>
+<li>Receiver-side: Use <code>BufMut</code> + <code>read_buf</code> API</li>
+<li><strong>Red Line</strong>: Absolutely prohibit meaningless data copies between user-space and kernel</li>
+</ul>
+<p>→ <a href="../references/01-io-model/">references/01-io-model.md</a></p>
+<h2 id="action-3-backpressure-bounded-resources">Action 3: Backpressure &amp; Bounded Resources<a class="headerlink" href="#action-3-backpressure-bounded-resources" title="Permanent link">&para;</a></h2>
+<p>Cloud-native environment with strict K8s Cgroups limits.</p>
+<ul>
+<li>Use bounded <code>mpsc</code>, <code>Semaphore</code></li>
+<li>Producer handles <code>SendError</code> or blocks</li>
+<li>Propagate backpressure upstream (HTTP 503) or internally</li>
+<li><strong>Red Line</strong>: Absolutely prohibit unbounded channels by default.</li>
+<li><strong>Exception</strong>: Unbounded channels may be used when consumption rate is proven to strictly exceed production rate per <a href="../../rust-architecture-guide/references/11-concurrency/"><code>rust-architecture-guide/references/11-concurrency.md</code></a>. When using this exception, document the capacity proof and monitor channel depth.</li>
+</ul>
+<p>→ <a href="../references/02-backpressure/">references/02-backpressure.md</a></p>
+<h2 id="action-4-cancellation-safety">Action 4: Cancellation Safety<a class="headerlink" href="#action-4-cancellation-safety" title="Permanent link">&para;</a></h2>
+<p>Client may disconnect at any time (timeout or cancel).</p>
+<ul>
+<li>Unsafe operations (non-idempotent writes) must <code>spawn</code> independent task + <code>oneshot</code></li>
+<li>Use <code>tokio_util::sync::CancellationToken</code> with explicit cleanup</li>
+<li><strong>Red Line</strong>: All operations in <code>select!</code> must be cancellation-safe</li>
+</ul>
+<p>→ <a href="../references/02-backpressure/">references/02-backpressure.md</a></p>
+<h2 id="action-5-graceful-shutdown">Action 5: Graceful Shutdown<a class="headerlink" href="#action-5-graceful-shutdown" title="Permanent link">&para;</a></h2>
+<p>Cloud-native process termination must be structured.</p>
+<ol>
+<li>Capture <code>SIGTERM</code> / <code>SIGINT</code></li>
+<li>Trigger <code>CancellationToken</code> → Stop accepting new requests</li>
+<li>Wait for in-flight tasks (with timeout)</li>
+<li>Fsync WAL / persist state</li>
+<li>Release kernel resources</li>
+<li>Exit</li>
+<li><strong>Red Line</strong>: Prohibit <code>kill -9</code> brutal termination</li>
+</ol>
+<p>→ <a href="../references/05-resilience/">references/05-resilience.md</a></p>
+<h2 id="action-6-deterministic-state-machine">Action 6: Deterministic State Machine<a class="headerlink" href="#action-6-deterministic-state-machine" title="Permanent link">&para;</a></h2>
+<p>Implement Raft or Paxos Apply logic with absolute determinism.</p>
+<ul>
+<li><strong>Prohibited</strong>: <code>Instant::now()</code>, <code>SystemTime::now()</code>, <code>rand::random()</code>, <code>HashMap</code>/<code>HashSet</code> iteration order, local disk inode order</li>
+<li><strong>Required</strong>: Leader-proposed timestamp, <code>BTreeMap</code> / <code>IndexMap</code></li>
+<li><strong>Red Line</strong>: State machine absolutely prohibits any non-determinism</li>
+</ul>
+<p>→ <a href="../references/04-consensus/">references/04-consensus.md</a></p>
+<h2 id="action-7-ffi-boundary-safety">Action 7: FFI Boundary Safety<a class="headerlink" href="#action-7-ffi-boundary-safety" title="Permanent link">&para;</a></h2>
+<p>All <code>extern "C"</code> functions exposed to external callers.</p>
+<ul>
+<li>Wrap entire function body with <code>std::panic::catch_unwind</code></li>
+<li>Return error code (-1 or -2) on panic interception</li>
+<li><strong>Red Line</strong>: All <code>extern "C"</code> functions must use <code>catch_unwind</code> to prevent UB</li>
+</ul>
+<p>→ <a href="../references/09-code-style/">references/09-code-style.md</a></p>
+<h2 id="action-8-arena-allocation">Action 8: Arena Allocation<a class="headerlink" href="#action-8-arena-allocation" title="Permanent link">&para;</a></h2>
+<p>Per-Request / Per-Transaction AST trees, execution plan nodes, temporary state machine variables.</p>
+<ul>
+<li>Use <code>bumpalo</code> for O(1) batch reclamation</li>
+<li><strong>Red Line</strong>: Prohibit saving Arena-allocated pointers to external static variables (use-after-free)</li>
+<li><strong>Red Line</strong>: Absolutely prohibit scattered allocation on default global heap</li>
+</ul>
+<p>→ <a href="../references/11-memory-advanced/">references/11-memory-advanced.md</a></p>
+<h2 id="action-9-physical-addressing-allocator-api">Action 9: Physical Addressing (Allocator API)<a class="headerlink" href="#action-9-physical-addressing-allocator-api" title="Permanent link">&para;</a></h2>
+<p>Build database low-level B-Tree, hash table, MemTable.</p>
+<ul>
+<li>Use <code>allocator_api2</code> (stable) instead of nightly <code>std::alloc::Allocator</code></li>
+<li>NUMA-aware: Bind data to local NUMA node memory</li>
+<li>PMEM: Allocate core index on persistent memory</li>
+<li><strong>Red Line</strong>: Core structures must decouple default allocator, allow generic injection</li>
+</ul>
+<p>→ <a href="../references/11-memory-advanced/">references/11-memory-advanced.md</a></p>
+<h2 id="action-10-slab-pre-allocation">Action 10: Slab Pre-allocation<a class="headerlink" href="#action-10-slab-pre-allocation" title="Permanent link">&para;</a></h2>
+<p>Low-level C FFI boundary or I/O buffer pools.</p>
+<ul>
+<li>Use <code>mmap</code> for large contiguous block (e.g., 1GB) at startup</li>
+<li>Combine with <code>mlock</code> to lock physical pages (prevent swap)</li>
+<li>Use <code>crossbeam_queue::ArrayQueue</code> for O(1) lock-free alloc/dealloc</li>
+<li><strong>Red Line</strong>: Prohibit throwing high-frequency tiny allocations directly to OS</li>
+</ul>
+<p>→ <a href="../references/11-memory-advanced/">references/11-memory-advanced.md</a></p>
+<h2 id="action-11-memory-exhaustion-backpressure">Action 11: Memory Exhaustion Backpressure<a class="headerlink" href="#action-11-memory-exhaustion-backpressure" title="Permanent link">&para;</a></h2>
+<p>Custom allocator reaches capacity limit.</p>
+<ol>
+<li>Return <code>Result&lt;T, AllocError&gt;</code></li>
+<li>Upper layer: reject requests (503), evict cold data (LRU), fallback to global heap</li>
+<li>Last resort: Process suicide with K8s restart</li>
+<li><strong>Red Line</strong>: Absolutely prohibit direct <code>panic!</code> or undefined behavior</li>
+</ol>
+<p>→ <a href="../references/11-memory-advanced/">references/11-memory-advanced.md</a></p>
+<h2 id="action-12-lock-free-read-path-rcu">Action 12: Lock-free Read Path (RCU)<a class="headerlink" href="#action-12-lock-free-read-path-rcu" title="Permanent link">&para;</a></h2>
+<p>Read-heavy, write-sparse global routing tables or config trees (10GbE NIC, 128+ core CPU).</p>
+<ul>
+<li>Use <code>arc-swap</code> for zero-blocking reads</li>
+<li>Writer: clone snapshot (Copy), modify in copy (Update), atomic pointer swap (Swap)</li>
+<li>Readers flow like water past writer boulders</li>
+<li><strong>Red Line</strong>: Absolutely prohibit <code>std::sync::RwLock</code> or <code>Mutex</code> in read-heavy paths at scale — cache line contention causes performance collapse</li>
+<li><strong>Scope</strong>: This applies at 100+ core scale with measured contention. For services with &lt;16 cores, follow <a href="../../rust-architecture-guide/references/11-concurrency/"><code>rust-architecture-guide/references/11-concurrency.md</code></a> RwLock guidance. When moving from RwLock to arc-swap, include contention metrics in the decision record.</li>
+</ul>
+<p>→ <a href="../references/07-lock-free/">references/07-lock-free.md</a></p>
+<h2 id="action-13-epoch-based-memory-reclamation">Action 13: Epoch-based Memory Reclamation<a class="headerlink" href="#action-13-epoch-based-memory-reclamation" title="Permanent link">&para;</a></h2>
+<p>Build lock-free concurrent structures (Lock-free Queue, SkipList).</p>
+<ul>
+<li>Use <code>crossbeam-epoch</code> Guard or Hazard Pointers</li>
+<li>Establish epochs on timeline, physically reclaim only after all reader threads cross old epoch</li>
+<li><strong>Red Line</strong>: Prohibit directly dropping shared atomic pointers without concurrent protection</li>
+</ul>
+<p>→ <a href="../references/07-lock-free/">references/07-lock-free.md</a></p>
+<h2 id="action-14-memory-ordering-precision">Action 14: Memory Ordering Precision<a class="headerlink" href="#action-14-memory-ordering-precision" title="Permanent link">&para;</a></h2>
+<p>Atomic variables for lock-free state transitions.</p>
+<ul>
+<li>Publish-subscribe pattern: pair <code>Ordering::Release</code> + <code>Ordering::Acquire</code></li>
+<li>Pure statistical counters: enforce <code>Ordering::Relaxed</code></li>
+<li><strong>Red Line</strong>: Prohibit blind <code>Ordering::SeqCst</code> — CPU memory barrier cost is extremely high</li>
+</ul>
+<p>→ <a href="../references/07-lock-free/">references/07-lock-free.md</a></p>
+<h2 id="action-15-simd-vectorized-execution">Action 15: SIMD Vectorized Execution<a class="headerlink" href="#action-15-simd-vectorized-execution" title="Permanent link">&para;</a></h2>
+<p>Gateway protocol parsing, JSON extraction, bulk memory search (GB/s throughput).</p>
+<ul>
+<li>Use <code>std::simd</code> (Portable SIMD) or <code>core::arch::x86_64</code> (AVX-512)</li>
+<li>Convert control flow to data flow, use Bitmask to eliminate all <code>if-else</code> branches</li>
+<li>Use <code>as_simd::&lt;N&gt;</code> for aligned data, scalar fallback for unaligned tail</li>
+<li><strong>Red Line</strong>: Prohibit byte-by-byte comparison in core parsing loops (branch misprediction collapses performance)</li>
+</ul>
+<p>→ <a href="../references/08-vectorized/">references/08-vectorized.md</a></p>
+<h2 id="action-16-columnar-memory-layout-soa">Action 16: Columnar Memory Layout (SoA)<a class="headerlink" href="#action-16-columnar-memory-layout-soa" title="Permanent link">&para;</a></h2>
+<p>Database executor, large-scale structured data aggregation.</p>
+<ul>
+<li>Use SoA (Struct of Arrays) columnar layout — data contiguous in memory</li>
+<li>Combine with Rust iterators for LLVM auto-vectorization</li>
+<li>Ensure data alignment, cooperate with CPU hardware prefetcher</li>
+<li><strong>Red Line</strong>: Prohibit AoS (Array of Structs) for bulk aggregation — CPU cache fills with useless padding</li>
+</ul>
+<p>→ <a href="../references/08-vectorized/">references/08-vectorized.md</a></p>
+<hr />
+<h2 id="mandatory-ci-lints">Mandatory CI Lints<a class="headerlink" href="#mandatory-ci-lints" title="Permanent link">&para;</a></h2>
+<p>See <a href="../references/10-ci-lints/">references/10-ci-lints.md</a> for the complete and authoritative lint list. Key lints:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">#![deny(clippy::await_holding_lock)]</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="cp">#![deny(clippy::await_holding_refcell_ref)]</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="cp">#![deny(clippy::large_stack_frames)]</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="cp">#![deny(clippy::undocumented_unsafe_blocks)]</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="cp">#![deny(clippy::unwrap_used)]</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="cp">#![deny(clippy::expect_used)]</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="cp">#![deny(clippy::todo)]</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="cp">#![deny(clippy::unimplemented)]</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="cp">#![deny(clippy::dbg_macro)]</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="cp">#![deny(unsafe_op_in_unsafe_fn)]</span>
+</code></pre></div>
+<hr />
+<h2 id="prohibitions-quick-list">Prohibitions Quick List<a class="headerlink" href="#prohibitions-quick-list" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Prohibited</th>
+<th>Mandatory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Queue</td>
+<td><code>std::sync::mpsc::channel()</code> unbounded</td>
+<td><code>tokio::sync::mpsc::channel(LIMIT)</code></td>
+</tr>
+<tr>
+<td>Cancellation</td>
+<td>Direct non-idempotent write in <code>select!</code></td>
+<td><code>spawn</code> + <code>oneshot</code></td>
+</tr>
+<tr>
+<td>Time</td>
+<td><code>Instant::now()</code> in state machine Apply</td>
+<td>Leader-proposed timestamp</td>
+</tr>
+<tr>
+<td>Shutdown</td>
+<td>Exit immediately on <code>SIGTERM</code></td>
+<td>Graceful shutdown flow</td>
+</tr>
+<tr>
+<td>FFI</td>
+<td><code>extern</code> function without <code>catch_unwind</code></td>
+<td>Catch panic + return error code</td>
+</tr>
+<tr>
+<td>Per-Request Alloc</td>
+<td>Global heap for AST nodes</td>
+<td>Arena (<code>bumpalo</code>)</td>
+</tr>
+<tr>
+<td>Arena Escape</td>
+<td>Save Arena ptr to external</td>
+<td>Clone to global heap if needed</td>
+</tr>
+<tr>
+<td>Nightly Allocator</td>
+<td><code>std::alloc::Allocator</code> in production</td>
+<td><code>allocator_api2</code></td>
+</tr>
+<tr>
+<td>Scattered Alloc</td>
+<td>Direct <code>alloc::alloc</code> at FFI</td>
+<td>Pre-allocated Slab</td>
+</tr>
+<tr>
+<td>Alloc Panic</td>
+<td><code>panic!</code> on exhaustion</td>
+<td><code>Result&lt;T, AllocError&gt;</code> + backpressure</td>
+</tr>
+<tr>
+<td>Read-heavy Lock</td>
+<td><code>RwLock</code>/<code>Mutex</code> in read-heavy path</td>
+<td><code>arc-swap</code> (RCU zero-block read)</td>
+</tr>
+<tr>
+<td>Lock-free Reclaim</td>
+<td>Direct <code>drop</code> on shared atomic</td>
+<td><code>crossbeam-epoch</code> Guard</td>
+</tr>
+<tr>
+<td>Memory Ordering</td>
+<td>Blind <code>Ordering::SeqCst</code></td>
+<td><code>Release</code>+<code>Acquire</code> pair; <code>Relaxed</code> for counters</td>
+</tr>
+<tr>
+<td>Byte-by-byte Loop</td>
+<td>Byte-by-byte <code>if byte == b'\n'</code></td>
+<td>SIMD bitmask bulk compare</td>
+</tr>
+<tr>
+<td>AoS Aggregation</td>
+<td>Array of Structs for bulk aggregation</td>
+<td>SoA (Struct of Arrays) columnar layout</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="document-relationship-map">Document Relationship Map<a class="headerlink" href="#document-relationship-map" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>flowchart TD
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    subgraph Foundation[&quot;rust-architecture-guide&quot;]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        ArchSkill[SKILL.md&lt;br/&gt;Constitution]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        Concurrency[11-concurrency.md&lt;br/&gt;Lock Spectrum]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        Async[12-async-internals.md&lt;br/&gt;Async Internals]
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        DataArch[09-data-architecture.md&lt;br/&gt;Zero-Copy]
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    end
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    subgraph Cloud[&quot;rust-systems-cloud-infra-guide (Vertical Deepening)&quot;]
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        CloudSkill[SKILL.md&lt;br/&gt;Cloud Infrastructure]
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        subgraph IOLayer[&quot;I/O &amp; Runtime&quot;]
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>            IOModel[01-io-model.md&lt;br/&gt;epoll/io_uring]
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            Backpressure[02-backpressure.md&lt;br/&gt;Bounded Channels]
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            Resilience[05-resilience.md&lt;br/&gt;Graceful Shutdown]
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        end
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        subgraph MemoryLayer[&quot;Memory Architecture&quot;]
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>            Memory[11-memory-advanced.md&lt;br/&gt;Arena/Slab/NUMA]
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>            Vectorized[08-vectorized.md&lt;br/&gt;SIMD/SoA]
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        end
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        subgraph ConcurrencyLayer[&quot;Lock-free Concurrency&quot;]
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>            LockFree[07-lock-free.md&lt;br/&gt;RCU/Epoch]
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            Consensus[04-consensus.md&lt;br/&gt;Raft/Paxos]
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        end
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    end
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    ArchSkill -.-&gt;|prerequisites| CloudSkill
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    Async --&gt;|deepens| IOModel
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    Concurrency --&gt;|deepens| LockFree
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    DataArch --&gt;|deepens| Memory
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    DataArch --&gt;|deepens| Vectorized
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    Backpressure --&gt; Resilience
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    LockFree --&gt; Consensus
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    style ArchSkill fill:#4a90d9,stroke:#2c5aa0,color:#fff
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    style CloudSkill fill:#d9534f,stroke:#c9302c,color:#fff
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    style IOModel fill:#f0ad4e,stroke:#ec971f,color:#000
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    style Memory fill:#5cb85c,stroke:#4cae4c,color:#fff
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    style LockFree fill:#5bc0de,stroke:#46b8da,color:#000
+</code></pre></div>
+<h2 id="reference-files">Reference Files<a class="headerlink" href="#reference-files" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Topic</th>
+<th>Key Directive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../references/01-io-model/">01-io-model.md</a></td>
+<td>I/O Model Selection</td>
+<td>Tokio epoll vs io_uring decision tree; mixed runtime red line</td>
+</tr>
+<tr>
+<td><a href="../references/02-backpressure/">02-backpressure.md</a></td>
+<td>Backpressure &amp; Bounded Resources</td>
+<td>Prohibit unbounded channels; 503 or internal backpressure</td>
+</tr>
+<tr>
+<td><a href="../references/03-syscall/">03-syscall.md</a></td>
+<td>Syscall Wrappers</td>
+<td>Use <code>rustix</code> instead of direct syscall</td>
+</tr>
+<tr>
+<td><a href="../references/04-consensus/">04-consensus.md</a></td>
+<td>Consensus &amp; Deterministic State</td>
+<td>Prohibit HashMap order, rand, Instant::now</td>
+</tr>
+<tr>
+<td><a href="../references/05-resilience/">05-resilience.md</a></td>
+<td>Resilience Design</td>
+<td>Graceful shutdown, circuit breaker, CancellationToken</td>
+</tr>
+<tr>
+<td><a href="../references/06-observability/">06-observability.md</a></td>
+<td>Observability</td>
+<td>Tracing + Metrics + Panic Hook full chain</td>
+</tr>
+<tr>
+<td><a href="../references/07-lock-free/">07-lock-free.md</a></td>
+<td>Lock-free Concurrency</td>
+<td>RCU zero-block read, Epoch reclamation, memory ordering</td>
+</tr>
+<tr>
+<td><a href="../references/08-vectorized/">08-vectorized.md</a></td>
+<td>Vectorized Execution</td>
+<td>SIMD instructions, SoA columnar layout, auto-vectorization</td>
+</tr>
+<tr>
+<td><a href="../references/09-code-style/">09-code-style.md</a></td>
+<td>Code Standards</td>
+<td>FFI safety, catch_unwind, CI lints</td>
+</tr>
+<tr>
+<td><a href="../references/10-ci-lints/">10-ci-lints.md</a></td>
+<td>CI Checks</td>
+<td>Strict lints configuration</td>
+</tr>
+<tr>
+<td><a href="../references/11-memory-advanced/">11-memory-advanced.md</a></td>
+<td>Advanced Memory Architecture</td>
+<td>Arena, Slab, NUMA/PMEM physical addressing, Allocator API</td>
+</tr>
+<tr>
+<td><a href="../references/12-breakwater-pattern/">12-breakwater-pattern.md</a></td>
+<td>Breakwater Architecture</td>
+<td>Facade/Core layered design, boundary interception, de-oxygenation protocol</td>
+</tr>
+<tr>
+<td><a href="../references/13-physical-audit/">13-physical-audit.md</a></td>
+<td>Physical Feasibility Audit</td>
+<td>Container memory limits, network latency budgets, NUMA topology</td>
+</tr>
+<tr>
+<td><a href="../references/14-ci-modern-cloud/">14-ci-modern-cloud.md</a></td>
+<td>Modern CI/CD for Cloud Infrastructure</td>
+<td>IO_uring benchmarks in CI, deterministic seed testing, long-running soak tests</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
+<h3 id="v610">V6.1.0<a class="headerlink" href="#v610" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Version bumped to align with universal constitution V9.1.0</li>
+<li>Added <code>tokio-graceful-shutdown</code> and <code>async-shutdown</code> crate patterns for production-grade shutdown</li>
+<li>Added <code>tokio::task::JoinSet</code> structured concurrency for task lifecycle management</li>
+<li>Added <code>ntex-neon-uring</code> benchmark awareness for io_uring vs epoll trade-off quantification</li>
+<li>New document: <code>14-ci-modern-cloud.md</code> — IO_uring benchmarks, consensus determinism CI, soak tests</li>
+</ul>
+<h3 id="v600">V6.0.0<a class="headerlink" href="#v600" title="Permanent link">&para;</a></h3>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tracking", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1881 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Mechanical Sympathy principles: Arena, SIMD, cache optimization, and benchmark-driven workflow for P3 performance">
+      
+      
+      
+        <link rel="canonical" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/references/25-performance-tuning/">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="../../../../rust-architecture-guide/references/25-performance-tuning/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Performance Tuning & Low-Level Optimization - Rust Coding Standards Skills</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#performance-tuning-low-level-optimization-mechanical-sympathy" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../../" title="Rust Coding Standards Skills" class="md-header__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Rust Coding Standards Skills
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Performance Tuning & Low-Level Optimization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../../rust-architecture-guide/references/25-performance-tuning/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../" title="Rust Coding Standards Skills" class="md-nav__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Rust Coding Standards Skills
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构指南（宪法）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-systems-cloud-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统与云基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-wasm-frontend-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wasm 前端基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-embedded-iot-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入式与物联网指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-data-engineering-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据工程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-networking-protocols-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    网络协议指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-cli-devops-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI 与 DevOps 指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-gamedev-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    游戏开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-blockchain-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    区块链指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rust-ai-ml-inference-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI/ML 推理指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-positioning-priority-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Positioning &amp; Priority Alignment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. Positioning &amp; Priority Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-mode-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Mode Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scope-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope Boundary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-tuning-constitution-no-data-no-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Tuning Constitution: No Data, No Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Tuning Constitution: No Data, No Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-release-mode-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Release Mode Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-diagnostic-toolchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Diagnostic Toolchain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-benchmark-driven-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Benchmark-Driven Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-memory-allocation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Memory Allocation Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Memory Allocation Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-when-to-consider-arena-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 When to Consider Arena Allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-pre-allocation-discipline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Pre-allocation Discipline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-custom-allocator-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Custom Allocator Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-data-layout-aligning-with-cache-physics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Data Layout: Aligning with Cache Physics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Data Layout: Aligning with Cache Physics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-aos-to-soa-transformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 AoS to SoA Transformation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-eliminate-pointer-chasing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Eliminate Pointer Chasing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-false-sharing-awareness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 False Sharing Awareness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-simd-vectorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. SIMD Vectorization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. SIMD Vectorization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-trust-auto-vectorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Trust Auto-Vectorization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-when-to-consider-manual-simd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 When to Consider Manual SIMD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-atomic-operations-memory-ordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Atomic Operations &amp; Memory Ordering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Atomic Operations &amp; Memory Ordering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-basic-memory-ordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Basic Memory Ordering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-when-to-consider-lock-free-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 When to Consider Lock-Free Structures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-advanced-optimizations-reference-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Advanced Optimizations (Reference Only)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Advanced Optimizations (Reference Only)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-bounds-check-elimination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Bounds Check Elimination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-profile-guided-optimization-pgo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Profile-Guided Optimization (PGO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-bolt-post-link-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 BOLT: Post-Link Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-pgo-bolt-combined-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 PGO + BOLT Combined Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Advanced Topics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-integration-with-overall-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Integration with Overall Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Integration with Overall Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-design-philosophy-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Design Philosophy Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-priority-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Priority Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-terminology-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Terminology Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-testing-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Testing Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-agent-performance-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Agent Performance Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Agent Performance Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory &amp; Allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simd-vectorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIMD &amp; Vectorization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concurrency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concurrency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safety
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-trade-offs-decision-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Trade-offs &amp; Decision Framework
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Trade-offs &amp; Decision Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-not-to-optimize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When NOT to Optimize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progressive-optimization-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progressive Optimization Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Related
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Related">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#within-rust-architecture-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Within rust-architecture-guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rust-systems-cloud-infra-guide-advanced-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rust-systems-cloud-infra-guide (Advanced Scenarios)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="performance-tuning-low-level-optimization-mechanical-sympathy">Performance Tuning &amp; Low-Level Optimization: Mechanical Sympathy<a class="headerlink" href="#performance-tuning-low-level-optimization-mechanical-sympathy" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Core Philosophy — Mechanical Sympathy (硬件同理心, Hardware-Aligned Optimization)</strong>: Ultimate performance comes not from clever tricks, but from deep resonance between code logic and underlying physical hardware — CPU cache lines, pipelines, memory buses, and the kernel I/O stack.</p>
+<p><strong>📋 Document Profile</strong>
+- <strong>Domain</strong>: P3 performance optimization (profiler-proven bottlenecks only)
+- <strong>Priority</strong>: P3 only (constrained by P0-P2)
+- <strong>Modes</strong>: <code>standard</code> (warning) → <code>strict</code> (mandatory benchmark proof)
+- <strong>Prerequisites</strong>: <a href="../09-data-architecture/"><code>09-data-architecture.md</code></a> (data layout), <a href="../11-concurrency/"><code>11-concurrency.md</code></a> (atomics)
+- <strong>Deepened by</strong>: <a href="../../../rust-systems-cloud-infra-guide/references/08-vectorized/"><code>08-vectorized.md</code></a> (SIMD intrinsics), <a href="../../../rust-systems-cloud-infra-guide/references/07-lock-free/"><code>07-lock-free.md</code></a> (lock-free structures)</p>
+</blockquote>
+<hr />
+<h2 id="0-positioning-priority-alignment">0. Positioning &amp; Priority Alignment<a class="headerlink" href="#0-positioning-priority-alignment" title="Permanent link">&para;</a></h2>
+<p><strong>This specification serves P3 (Extreme Performance) exclusively</strong> — only activate when profiler has proven a code path is the system bottleneck.</p>
+<h3 id="execution-mode-integration">Execution Mode Integration<a class="headerlink" href="#execution-mode-integration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Enforcement</th>
+<th>Benchmark Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rapid</code></td>
+<td><strong>Ignore all P3 rules</strong></td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>standard</code></td>
+<td>Warn on violations</td>
+<td>Recommended</td>
+</tr>
+<tr>
+<td><code>strict</code></td>
+<td><strong>MUST attach benchmark report</strong></td>
+<td><code>criterion</code> comparison proving &gt;5% gain</td>
+</tr>
+</tbody>
+</table>
+<p><strong>P3 Iron Law</strong>: Any Arena introduction, SIMD manual implementation, lock-free transformation, or memory layout adjustment <strong>MUST</strong> include <code>criterion</code> benchmark comparison proving benefit &gt; 5%.</p>
+<h3 id="scope-boundary">Scope Boundary<a class="headerlink" href="#scope-boundary" title="Permanent link">&para;</a></h3>
+<p><strong>This guide covers</strong> (Universal Rust Projects):
+- Diagnostic methodology and toolchain
+- Benchmark-driven workflow
+- Data layout principles (AoS → SoA)
+- Basic atomic operations and memory ordering
+- Auto-vectorization techniques
+- When to consider advanced optimizations</p>
+<p><strong>For cloud infrastructure scenarios</strong> (database kernels, HFT, 10GbE+ gateways), refer to:
+- <a href="../rust-systems-cloud-infra-guide/README.md"><code>rust-systems-cloud-infra-guide</code></a> for:
+  - Hand-written SIMD and AVX-512 intrinsics
+  - Lock-free data structures with Epoch reclamation
+  - Arena allocators with Allocator API
+  - NUMA-aware memory placement
+  - Slab pre-allocation with mmap/mlock</p>
+<hr />
+<h2 id="1-tuning-constitution-no-data-no-optimization">1. Tuning Constitution: No Data, No Optimization<a class="headerlink" href="#1-tuning-constitution-no-data-no-optimization" title="Permanent link">&para;</a></h2>
+<h3 id="11-release-mode-configuration">1.1 Release Mode Configuration<a class="headerlink" href="#11-release-mode-configuration" title="Permanent link">&para;</a></h3>
+<p>All benchmarks MUST run under <code>cargo build --release</code> with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Cargo.toml</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">[profile.release]</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">lto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w">          </span><span class="c1"># Link-Time Optimization: enables cross-crate inlining</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">codegen-units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">   </span><span class="c1"># Single codegen unit: maximizes inlining opportunities</span>
+</code></pre></div>
+<p><strong>Why</strong>: Default release settings use 16 codegen units for faster compilation, but this prevents cross-unit inlining and other optimizations.</p>
+<h3 id="12-diagnostic-toolchain">1.2 Diagnostic Toolchain<a class="headerlink" href="#12-diagnostic-toolchain" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Command Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>perf stat</strong></td>
+<td>Hardware performance counters</td>
+<td><code>perf stat -e cache-misses,instructions ./target/release/app</code></td>
+</tr>
+<tr>
+<td><strong>flamegraph</strong></td>
+<td>CPU hotspot visualization</td>
+<td><code>cargo flamegraph --bin app</code></td>
+</tr>
+<tr>
+<td><strong>heaptrack / dhat</strong></td>
+<td>Heap allocation pattern analysis</td>
+<td><code>heaptrack ./target/release/app</code></td>
+</tr>
+<tr>
+<td><strong>cargo asm</strong></td>
+<td>Inspect generated assembly</td>
+<td><code>cargo asm --lib my_crate::hot_function</code></td>
+</tr>
+<tr>
+<td><strong>criterion</strong></td>
+<td>Micro-benchmark framework</td>
+<td><code>cargo bench --bench my_benchmark</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-benchmark-driven-workflow">1.3 Benchmark-Driven Workflow<a class="headerlink" href="#13-benchmark-driven-workflow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Baseline measurement</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cargo<span class="w"> </span>bench<span class="w"> </span>--bench<span class="w"> </span>my_benchmark<span class="w"> </span>--<span class="w"> </span>--save-baseline<span class="w"> </span>main
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Apply optimization</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 3. Compare against baseline</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>cargo<span class="w"> </span>bench<span class="w"> </span>--bench<span class="w"> </span>my_benchmark<span class="w"> </span>--<span class="w"> </span>--baseline<span class="w"> </span>main
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Output:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># my_function             time:   [120.5 ns 121.2 ns 122.0 ns]</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1">#                         change: [-5.2% -4.8% -4.3%] (p = 0.00 &lt; 0.05)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">#                         Performance has improved.</span>
+</code></pre></div>
+<p><strong>Rule</strong>: If improvement &lt; 5%, revert optimization (not worth maintainability cost).</p>
+<hr />
+<h2 id="2-memory-allocation-strategy">2. Memory Allocation Strategy<a class="headerlink" href="#2-memory-allocation-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="21-when-to-consider-arena-allocation">2.1 When to Consider Arena Allocation<a class="headerlink" href="#21-when-to-consider-arena-allocation" title="Permanent link">&para;</a></h3>
+<p><strong>Activation Signal</strong>: <code>perf</code> or <code>heaptrack</code> shows <code>malloc</code>/<code>free</code> occupying &gt; 5% in hot path, AND allocated objects share unified lifecycle (e.g., AST nodes within single request, temporary graph structures).</p>
+<p><strong>Diagnosis</strong>: <code>flamegraph</code> shows <code>__libc_malloc</code> at top of hot path.</p>
+<p><strong>Basic Pattern</strong> (for universal projects):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">use</span><span class="w"> </span><span class="n">bumpalo</span><span class="p">::</span><span class="n">Bump</span><span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">fn</span><span class="w"> </span><span class="nf">handle_request</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">arena</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bump</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="c1">// Allocation is just pointer movement - lock-free, no syscall</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arena</span><span class="p">.</span><span class="n">alloc</span><span class="p">(</span><span class="n">parse_json</span><span class="p">(</span><span class="n">input</span><span class="p">));</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="n">process</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="c1">// When arena drops, all allocations reclaimed at once</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Benefit</strong>: Reduces thousands of <code>malloc</code>/<code>free</code> calls to single pointer offset — O(1) allocation efficiency.</p>
+<p><strong>For advanced scenarios</strong> (per-request AST, NUMA-aware allocation, custom Allocator API):
+→ See <a href="../rust-systems-cloud-infra-guide/references/11-memory-advanced.md"><code>rust-systems-cloud-infra-guide/references/11-memory-advanced.md</code></a></p>
+<h3 id="22-pre-allocation-discipline">2.2 Pre-allocation Discipline<a class="headerlink" href="#22-pre-allocation-discipline" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: Any construction involving <code>Vec</code>, <code>HashMap</code>, <code>String</code> must declare <code>with_capacity()</code> at initialization.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// ❌ Implicit reallocations</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">vec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">// ✅ Pre-allocate with known capacity</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">vec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">with_capacity</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="23-custom-allocator-evaluation">2.3 Custom Allocator Evaluation<a class="headerlink" href="#23-custom-allocator-evaluation" title="Permanent link">&para;</a></h3>
+<p><strong>For high-performance servers</strong>, consider replacing global allocator:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">use</span><span class="w"> </span><span class="n">tikv_jemallocator</span><span class="p">::</span><span class="n">Jemalloc</span><span class="p">;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="cp">#[global_allocator]</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">static</span><span class="w"> </span><span class="n">GLOBAL</span><span class="p">:</span><span class="w"> </span><span class="nc">Jemalloc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Jemalloc</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Expected benefit</strong>: Reduced fragmentation, improved concurrent throughput.</p>
+<hr />
+<h2 id="3-data-layout-aligning-with-cache-physics">3. Data Layout: Aligning with Cache Physics<a class="headerlink" href="#3-data-layout-aligning-with-cache-physics" title="Permanent link">&para;</a></h2>
+<h3 id="31-aos-to-soa-transformation">3.1 AoS to SoA Transformation<a class="headerlink" href="#31-aos-to-soa-transformation" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: When iterating entire collections, refactor <code>Vec&lt;Struct { a, b }&gt;</code> to <code>Struct { a: Vec&lt;..&gt;, b: Vec&lt;..&gt; }</code>.</p>
+<p><strong>Why</strong>: CPU loads cache lines (64 bytes) contiguously. SoA ensures each cache line contains only needed data.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// ❌ AoS (Array of Structures) - cache pollution</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">struct</span><span class="w"> </span><span class="nc">Particle</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">f32</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">:</span><span class="w"> </span><span class="kt">f32</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="p">:</span><span class="w"> </span><span class="kt">f32</span><span class="p">,</span><span class="w"> </span><span class="n">mass</span><span class="p">:</span><span class="w"> </span><span class="kt">f32</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">let</span><span class="w"> </span><span class="n">particles</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Particle</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">// When iterating only x coordinates:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">particles</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">;</span><span class="w">  </span><span class="c1">// Loads y, z, mass into cache unnecessarily</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">}</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1">// ✅ SoA (Structure of Arrays) - cache resonance</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">struct</span><span class="w"> </span><span class="nc">Particles</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">f32</span><span class="o">&gt;</span><span class="p">,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="n">y</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">f32</span><span class="o">&gt;</span><span class="p">,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="n">z</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">f32</span><span class="o">&gt;</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="n">mass</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">f32</span><span class="o">&gt;</span><span class="p">,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">}</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1">// When iterating only x:</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="k">for</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">particles</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w">  </span><span class="c1">// Cache contains only x values</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Benefit</strong>: 4x cache utilization improvement for single-field iteration.</p>
+<h3 id="32-eliminate-pointer-chasing">3.2 Eliminate Pointer Chasing<a class="headerlink" href="#32-eliminate-pointer-chasing" title="Permanent link">&para;</a></h3>
+<p><strong>Prohibited</strong>: <code>Vec&lt;Box&lt;T&gt;&gt;</code> or <code>Vec&lt;Arc&lt;T&gt;&gt;</code> on hot paths. Pointer chasing invalidates CPU prefetcher.</p>
+<p><strong>MUST</strong>: Use flat <code>Vec&lt;T&gt;</code> for contiguous memory layout.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// ❌ Pointer chasing - prefetcher fails</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">struct</span><span class="w"> </span><span class="nc">Engine</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="n">entities</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">Box</span><span class="o">&lt;</span><span class="n">Entity</span><span class="o">&gt;&gt;</span><span class="w">  </span><span class="c1">// Each dereference jumps to random heap location</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">}</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">// ✅ Contiguous memory - prefetcher works perfectly</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">struct</span><span class="w"> </span><span class="nc">Engine</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="n">entities</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Entity</span><span class="o">&gt;</span><span class="w">  </span><span class="c1">// Data laid out sequentially in memory</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Diagnosis</strong>: <code>perf stat -e cache-misses</code> shows high miss rate during iteration.</p>
+<h3 id="33-false-sharing-awareness">3.3 False Sharing Awareness<a class="headerlink" href="#33-false-sharing-awareness" title="Permanent link">&para;</a></h3>
+<p><strong>Principle</strong>: When two threads modify independent variables spaced &lt; 64 bytes apart, CPU cache coherency protocol forces entire cache line to bounce between cores.</p>
+<p><strong>Basic Defense</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="cp">#[repr(align(64))]</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">struct</span><span class="w"> </span><span class="nc">AlignedCounter</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="n">counter</span><span class="p">:</span><span class="w"> </span><span class="nc">AtomicU64</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>For production systems</strong> (using <code>CachePadded</code>, RCU patterns):
+→ See <a href="../rust-systems-cloud-infra-guide/references/07-lock-free.md"><code>rust-systems-cloud-infra-guide/references/07-lock-free.md</code></a></p>
+<hr />
+<h2 id="4-simd-vectorization">4. SIMD Vectorization<a class="headerlink" href="#4-simd-vectorization" title="Permanent link">&para;</a></h2>
+<h3 id="41-trust-auto-vectorization">4.1 Trust Auto-Vectorization<a class="headerlink" href="#41-trust-auto-vectorization" title="Permanent link">&para;</a></h3>
+<p><strong>SHOULD</strong>: First write branch-free, boundary-determined iterator chains to trigger LLVM auto-vectorization.</p>
+<p><strong>Key Techniques</strong>:
+1. Use <code>assert!(a.len() == b.len())</code> to eliminate bounds checks
+2. Use <code>step_by(4)</code> or similar to hint vectorization width
+3. Avoid branches inside loops</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">fn</span><span class="w"> </span><span class="nf">add_vectors</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">f32</span><span class="p">],</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">f32</span><span class="p">],</span><span class="w"> </span><span class="n">out</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="p">[</span><span class="kt">f32</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="fm">assert!</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">out</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="c1">// LLVM often auto-vectorizes this simple loop</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">a</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">        </span><span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Verification</strong>: <code>cargo asm --lib my_crate::add_vectors</code> to check for SIMD instructions (<code>vaddps</code>, <code>paddd</code>, etc.).</p>
+<h3 id="42-when-to-consider-manual-simd">4.2 When to Consider Manual SIMD<a class="headerlink" href="#42-when-to-consider-manual-simd" title="Permanent link">&para;</a></h3>
+<p><strong>MAY</strong>: When auto-vectorization fails AND benchmark proves necessity.</p>
+<p><strong>For portable SIMD</strong> (stable API):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">simd</span><span class="p">::{</span><span class="n">f32x8</span><span class="p">,</span><span class="w"> </span><span class="n">SimdFloat</span><span class="p">};</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">fn</span><span class="w"> </span><span class="nf">simd_add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">f32</span><span class="p">],</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">f32</span><span class="p">],</span><span class="w"> </span><span class="n">out</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="p">[</span><span class="kt">f32</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">chunks</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">va</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f32x8</span><span class="p">::</span><span class="n">from_slice</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="o">..</span><span class="p">]);</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">vb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f32x8</span><span class="p">::</span><span class="n">from_slice</span><span class="p">(</span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="o">..</span><span class="p">]);</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">vc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">va</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">vb</span><span class="p">;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">        </span><span class="n">vc</span><span class="p">.</span><span class="n">copy_to_slice</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="o">..</span><span class="p">]);</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="c1">// Handle remainder</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="n">chunks</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="o">..</span><span class="n">a</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">        </span><span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>P0 Red Line</strong>: <strong>MUST</strong> use runtime feature detection and provide scalar fallback for architecture-specific intrinsics.</p>
+<p><strong>For advanced SIMD</strong> (AVX-512 intrinsics, bitmask branch elimination):
+→ See <a href="../rust-systems-cloud-infra-guide/references/08-vectorized.md"><code>rust-systems-cloud-infra-guide/references/08-vectorized.md</code></a></p>
+<hr />
+<h2 id="5-atomic-operations-memory-ordering">5. Atomic Operations &amp; Memory Ordering<a class="headerlink" href="#5-atomic-operations-memory-ordering" title="Permanent link">&para;</a></h2>
+<h3 id="51-basic-memory-ordering">5.1 Basic Memory Ordering<a class="headerlink" href="#51-basic-memory-ordering" title="Permanent link">&para;</a></h3>
+<p><strong>Default</strong>: Acquire/Release pair for mutual exclusion; Relaxed for counters; <code>Ordering::SeqCst</code> only with explicit justification (full memory barrier cost is extremely high on multi-core systems)</p>
+<p><strong>Common Patterns</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">atomic</span><span class="p">::{</span><span class="n">AtomicBool</span><span class="p">,</span><span class="w"> </span><span class="n">AtomicUsize</span><span class="p">,</span><span class="w"> </span><span class="n">Ordering</span><span class="p">};</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1">// Simple counter (doesn&#39;t affect control flow)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">static</span><span class="w"> </span><span class="n">REQUEST_COUNT</span><span class="p">:</span><span class="w"> </span><span class="nc">AtomicUsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AtomicUsize</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">fn</span><span class="w"> </span><span class="nf">handle_request</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="n">REQUEST_COUNT</span><span class="p">.</span><span class="n">fetch_add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">Ordering</span><span class="p">::</span><span class="n">Relaxed</span><span class="p">);</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1">// Flag synchronization (producer-consumer)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="k">static</span><span class="w"> </span><span class="n">READY</span><span class="p">:</span><span class="w"> </span><span class="nc">AtomicBool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AtomicBool</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="k">fn</span><span class="w"> </span><span class="nf">producer</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span><span class="n">READY</span><span class="p">.</span><span class="n">store</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">Ordering</span><span class="p">::</span><span class="n">Release</span><span class="p">);</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="p">}</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="k">fn</span><span class="w"> </span><span class="nf">consumer</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="o">!</span><span class="n">READY</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">Ordering</span><span class="p">::</span><span class="n">Acquire</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="52-when-to-consider-lock-free-structures">5.2 When to Consider Lock-Free Structures<a class="headerlink" href="#52-when-to-consider-lock-free-structures" title="Permanent link">&para;</a></h3>
+<p><strong>MUST</strong> use battle-tested crates for lock-free operations:
+- <code>crossbeam-channel</code> / <code>flume</code> for lock-free queues
+- <code>dashmap</code> for concurrent hash maps
+- <code>crossbeam::epoch</code> for safe memory reclamation</p>
+<p><strong>Why</strong>: ABA problem, memory reclamation timing, and platform differences are extremely difficult to handle correctly.</p>
+<p><strong>For advanced lock-free patterns</strong> (RCU with arc-swap, Epoch-based reclamation, custom lock-free SkipList):
+→ See <a href="../rust-systems-cloud-infra-guide/references/07-lock-free.md"><code>rust-systems-cloud-infra-guide/references/07-lock-free.md</code></a></p>
+<hr />
+<h2 id="6-advanced-optimizations-reference-only">6. Advanced Optimizations (Reference Only)<a class="headerlink" href="#6-advanced-optimizations-reference-only" title="Permanent link">&para;</a></h2>
+<h3 id="61-bounds-check-elimination">6.1 Bounds Check Elimination<a class="headerlink" href="#61-bounds-check-elimination" title="Permanent link">&para;</a></h3>
+<p><strong>Rule</strong>: In profiler-verified extremely hot loops, if index safety is proven externally:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// SAFETY: i guaranteed in bounds by loop condition</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">vec</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">*</span><span class="n">vec</span><span class="p">.</span><span class="n">get_unchecked</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="n">process</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Verification</strong>: <code>cargo asm</code> shows removal of <code>cmp</code> + <code>jb</code> instructions.</p>
+<h3 id="62-profile-guided-optimization-pgo">6.2 Profile-Guided Optimization (PGO)<a class="headerlink" href="#62-profile-guided-optimization-pgo" title="Permanent link">&para;</a></h3>
+<p><strong>For latency-critical services</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Build with instrumentation</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>cargo<span class="w"> </span>rustc<span class="w"> </span>--release<span class="w"> </span>--<span class="w"> </span>-C<span class="w"> </span>profile-generate<span class="o">=</span>/tmp/pgo
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># 2. Run representative workload</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>./target/release/app<span class="w"> </span>--workload<span class="w"> </span>representative
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># 3. Build with profile data</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>cargo<span class="w"> </span>rustc<span class="w"> </span>--release<span class="w"> </span>--<span class="w"> </span>-C<span class="w"> </span>profile-use<span class="o">=</span>/tmp/pgo
+</code></pre></div>
+<p><strong>Expected gain</strong>: 5-15% for latency-critical services.</p>
+<h3 id="63-bolt-post-link-optimization">6.3 BOLT: Post-Link Optimization<a class="headerlink" href="#63-bolt-post-link-optimization" title="Permanent link">&para;</a></h3>
+<p><strong>For production binaries where LTO + PGO is already applied</strong>:</p>
+<p>BOLT (Binary Optimization and Layout Tool) reorders binary layout based on actual execution profiles, yielding 5-15% additional improvement beyond PGO.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># 1. Build with linker flags preserving relocations</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">RUSTFLAGS</span><span class="o">=</span><span class="s2">&quot;-C link-arg=-Wl,--emit-relocs&quot;</span><span class="w"> </span>cargo<span class="w"> </span>build<span class="w"> </span>--release
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># 2. Profile with perf</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>perf<span class="w"> </span>record<span class="w"> </span>-e<span class="w"> </span>cycles:u<span class="w"> </span>-o<span class="w"> </span>/tmp/perf.data<span class="w"> </span>./target/release/app<span class="w"> </span>--benchmark
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># 3. Convert perf data to BOLT format</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>perf2bolt<span class="w"> </span>-p<span class="w"> </span>/tmp/perf.data<span class="w"> </span>./target/release/app<span class="w"> </span>-o<span class="w"> </span>/tmp/perf.fdata
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># 4. Optimize binary</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>llvm-bolt<span class="w"> </span>./target/release/app<span class="w"> </span>-o<span class="w"> </span>./target/release/app.bolt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span>--data<span class="o">=</span>/tmp/perf.fdata<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">    </span>--reorder-blocks<span class="o">=</span>ext-tsp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">    </span>--reorder-functions<span class="o">=</span>hfsort+<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">    </span>--split-functions<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">    </span>--split-all-cold<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">    </span>--dyno-stats<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span>--hot-func-cutoff-max<span class="o">=</span><span class="m">32768</span>
+</code></pre></div>
+<p><strong>When to apply BOLT</strong>:
+- Binary size &gt; 100MB where I-cache misses dominate
+- Long-running server applications (not CLI tools)
+- After PGO + LTO shows diminishing returns</p>
+<p><strong>Red Line</strong>: BOLT is a <strong>strict mode only</strong> optimization. Requires LLVM 16+ and Linux perf. Not applicable to <code>wasm32</code> targets.</p>
+<h3 id="64-pgo-bolt-combined-pipeline">6.4 PGO + BOLT Combined Pipeline<a class="headerlink" href="#64-pgo-bolt-combined-pipeline" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># CI pipeline order: PGO → BOLT → final binary</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nt">optimizations</span><span class="p">:</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LTO (codegen-units=1, lto=fat)</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PGO (profile-generate → collect → profile-use)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOLT (perf record → perf2bolt → llvm-bolt)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">benchmark comparison vs baseline</span>
+</code></pre></div>
+<h3 id="63-advanced-topics">6.3 Advanced Topics<a class="headerlink" href="#63-advanced-topics" title="Permanent link">&para;</a></h3>
+<p>For the following advanced scenarios, refer to cloud infrastructure guide:</p>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Universal Guide</th>
+<th>Cloud Infrastructure Guide</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Arena Allocation</strong></td>
+<td>Basic <code>bumpalo</code> usage</td>
+<td>Allocator API, NUMA-aware, Slab pre-allocation</td>
+</tr>
+<tr>
+<td><strong>SIMD</strong></td>
+<td>Auto-vectorization, portable SIMD</td>
+<td>AVX-512 intrinsics, bitmask parsing</td>
+</tr>
+<tr>
+<td><strong>Lock-Free</strong></td>
+<td>Basic atomics, crossbeam crates</td>
+<td>RCU, Epoch reclamation, custom structures</td>
+</tr>
+<tr>
+<td><strong>Memory Ordering</strong></td>
+<td>SeqCst, Relaxed, Acquire/Release</td>
+<td>Fine-grained ordering proofs with loom</td>
+</tr>
+<tr>
+<td><strong>Cache Alignment</strong></td>
+<td><code>#[repr(align(64))]</code></td>
+<td><code>CachePadded</code>, false sharing elimination</td>
+</tr>
+</tbody>
+</table>
+<p>→ See <a href="../rust-systems-cloud-infra-guide/README.md"><code>rust-systems-cloud-infra-guide/README.md</code></a></p>
+<hr />
+<h2 id="7-integration-with-overall-architecture">7. Integration with Overall Architecture<a class="headerlink" href="#7-integration-with-overall-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="71-design-philosophy-alignment">7.1 Design Philosophy Alignment<a class="headerlink" href="#71-design-philosophy-alignment" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Performance Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mechanical Sympathy</strong></td>
+<td>Data layout aligned with cache lines</td>
+</tr>
+<tr>
+<td><strong>Economy of Motion</strong></td>
+<td>Pre-allocation, arena for unified lifecycle</td>
+</tr>
+<tr>
+<td><strong>Flow Like Water</strong></td>
+<td>SoA layout adapts to CPU prefetcher</td>
+</tr>
+</tbody>
+</table>
+<h3 id="72-priority-constraints">7.2 Priority Constraints<a class="headerlink" href="#72-priority-constraints" title="Permanent link">&para;</a></h3>
+<p><strong>P3 is constrained by</strong>:
+- <strong>P0 (Correctness)</strong>: Never introduce UB for performance
+- <strong>P1 (Maintainability)</strong>: If optimization &lt; 5%, prefer clarity</p>
+<h3 id="73-terminology-links">7.3 Terminology Links<a class="headerlink" href="#73-terminology-links" title="Permanent link">&para;</a></h3>
+<p>All specialized terms defined in <a href="../05-glossary/"><code>glossary.md</code></a>:
+- Cache Line
+- False Sharing
+- Bump Allocation
+- SIMD
+- Memory Ordering
+- Pointer Chasing
+- SoA vs AoS</p>
+<h3 id="74-testing-integration">7.4 Testing Integration<a class="headerlink" href="#74-testing-integration" title="Permanent link">&para;</a></h3>
+<p>From <a href="../26-advanced-testing/"><code>advanced-testing.md</code></a>:
+- <strong>Loom</strong>: Systematically explore thread interleavings for lock-free code
+- <strong>Miri</strong>: Detect UB in unsafe blocks
+- <strong>cargo-fuzz</strong>: Fuzz test parsers before optimization</p>
+<hr />
+<h2 id="8-agent-performance-checklist">8. Agent Performance Checklist<a class="headerlink" href="#8-agent-performance-checklist" title="Permanent link">&para;</a></h2>
+<p>Before applying any P3 optimization:</p>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Profiler data confirms this is bottleneck (flamegraph, perf)</li>
+<li>[ ] Baseline benchmark established (<code>criterion</code>)</li>
+<li>[ ] Optimization target quantified (&gt;5% improvement)</li>
+</ul>
+<h3 id="memory-allocation">Memory &amp; Allocation<a class="headerlink" href="#memory-allocation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Hot path <code>format!</code> or <code>.to_string()</code> eliminated?</li>
+<li>[ ] <code>Vec</code>/<code>HashMap</code> pre-allocated with capacity?</li>
+<li>[ ] Arena considered for unified-lifecycle objects?</li>
+<li>[ ] Custom allocator evaluated (jemallocator/mimalloc)?</li>
+</ul>
+<h3 id="data-layout">Data Layout<a class="headerlink" href="#data-layout" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] SoA conversion for bulk iteration?</li>
+<li>[ ] Pointer chasing (<code>Vec&lt;Box&lt;T&gt;&gt;</code>) eliminated?</li>
+<li>[ ] False sharing prevented (align 64)?</li>
+</ul>
+<h3 id="simd-vectorization">SIMD &amp; Vectorization<a class="headerlink" href="#simd-vectorization" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Auto-vectorization verified (<code>cargo asm</code>)?</li>
+<li>[ ] Manual SIMD has runtime feature detection?</li>
+<li>[ ] Scalar fallback provided?</li>
+</ul>
+<h3 id="concurrency">Concurrency<a class="headerlink" href="#concurrency" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Lock-free structures use battle-tested crates?</li>
+<li>[ ] Memory ordering justified (not blind SeqCst)?</li>
+<li>[ ] Loom verification for lock-free code?</li>
+</ul>
+<h3 id="safety">Safety<a class="headerlink" href="#safety" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] All <code>unsafe</code> blocks have <code>SAFETY</code> comments?</li>
+<li>[ ] Miri verification for unsafe code?</li>
+<li>[ ] P0 correctness preserved?</li>
+</ul>
+<hr />
+<h2 id="9-trade-offs-decision-framework">9. Trade-offs &amp; Decision Framework<a class="headerlink" href="#9-trade-offs-decision-framework" title="Permanent link">&para;</a></h2>
+<h3 id="when-not-to-optimize">When NOT to Optimize<a class="headerlink" href="#when-not-to-optimize" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cold path (config, init)</td>
+<td><strong>Skip</strong></td>
+<td>P1 &gt; P3: clarity wins</td>
+</tr>
+<tr>
+<td>Improvement &lt; 5%</td>
+<td><strong>Revert</strong></td>
+<td>Not worth maintainability cost</td>
+</tr>
+<tr>
+<td>Adds significant complexity</td>
+<td><strong>Reject</strong></td>
+<td>P1 &gt; P3 unless bottleneck critical</td>
+</tr>
+<tr>
+<td>No profiler data</td>
+<td><strong>Defer</strong></td>
+<td>No data, no optimization</td>
+</tr>
+</tbody>
+</table>
+<h3 id="progressive-optimization-path">Progressive Optimization Path<a class="headerlink" href="#progressive-optimization-path" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>rapid (MVP)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>├─ Use String, Vec, standard allocators
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>└─ No P3 optimizations
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>↓ (Profiler identifies bottleneck)
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>standard (Production)
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>├─ Apply targeted optimizations
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>├─ Document with // P3: reason comments
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>└─ Benchmark reports attached
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>↓ (Extreme performance required)
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    AND cloud infrastructure scenario
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>strict (Ultra-low latency)
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>├─ Arena allocation with Allocator API
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>├─ SIMD manual vectorization (AVX-512)
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>├─ Lock-free data structures with Epoch
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>├─ PGO enabled
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>└─ Full benchmark suite + perf reports
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>    ↓
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>    Refer to rust-systems-cloud-infra-guide
+</code></pre></div>
+<hr />
+<h2 id="10-related">10. Related<a class="headerlink" href="#10-related" title="Permanent link">&para;</a></h2>
+<h3 id="within-rust-architecture-guide">Within rust-architecture-guide<a class="headerlink" href="#within-rust-architecture-guide" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="../00-mode-guide/"><code>00-mode-guide.md</code></a> — Execution modes governing P3 enforcement</li>
+<li><a href="../01-priority-pyramid/"><code>01-priority-pyramid.md</code></a> — Priority framework (P0-P3)</li>
+<li><a href="../05-glossary/"><code>05-glossary.md</code></a> — Terminology: cache line, false sharing, SIMD, etc.</li>
+<li><a href="../11-concurrency/"><code>11-concurrency.md</code></a> — Lock strategies, atomic operations</li>
+<li><a href="../26-advanced-testing/"><code>26-advanced-testing.md</code></a> — Loom, Miri, fuzz testing</li>
+</ul>
+<h3 id="rust-systems-cloud-infra-guide-advanced-scenarios">rust-systems-cloud-infra-guide (Advanced Scenarios)<a class="headerlink" href="#rust-systems-cloud-infra-guide-advanced-scenarios" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="../rust-systems-cloud-infra-guide/references/07-lock-free.md"><code>07-lock-free.md</code></a> — RCU, Epoch reclamation, memory ordering proofs</li>
+<li><a href="../rust-systems-cloud-infra-guide/references/08-vectorized.md"><code>08-vectorized.md</code></a> — SIMD intrinsics, bitmask parsing, SoA columnar</li>
+<li><a href="../rust-systems-cloud-infra-guide/references/11-memory-advanced.md"><code>11-memory-advanced.md</code></a> — Arena allocators, Slab, NUMA, Allocator API</li>
+</ul>
+<hr />
+<p><strong>Version History</strong>: 
+- v2.0 — Clarified scope boundary with cloud infrastructure guide, added diagnostic toolchain, mode layering, anti-pattern diagnosis
+- v1.0 — Initial mechanical sympathy specification</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tracking", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

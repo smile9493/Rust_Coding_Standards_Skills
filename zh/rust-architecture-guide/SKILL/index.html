@@ -1,0 +1,1797 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Comprehensive Rust engineering guide covering priority pyramid, architecture decisions, idiomatic coding style, memory layout transparency, breakwater pattern, and physical feasibility audit. Invoke when starting Rust projects, making trade-offs, writing idiomatic code, or designing system architecture. Based on Jeet Kune Do philosophy — intercept boilerplate, flow with hardware, fold logic to maximum energy density, unity of false and real.">
+      
+      
+      
+        <link rel="canonical" href="https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/rust-architecture-guide/SKILL/">
+      
+      
+        <link rel="prev" href="../../">
+      
+      
+        <link rel="next" href="../../rust-systems-cloud-infra-guide/SKILL/">
+      
+      
+        
+          <link rel="alternate" href="../../../rust-architecture-guide/SKILL/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>架构指南（宪法） - Rust Coding Standards Skills</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rust-architecture-engineering-decision-guide-v910-the-rust-2024-edition" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../" title="Rust Coding Standards Skills" class="md-header__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Rust Coding Standards Skills
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              架构指南（宪法）
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../rust-architecture-guide/SKILL/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="Rust Coding Standards Skills" class="md-nav__button md-logo" aria-label="Rust Coding Standards Skills" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Rust Coding Standards Skills
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/smile9493/Rust_Coding_Standards_Skills" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    smile9493/Rust_Coding_Standards_Skills
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构指南（宪法）
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构指南（宪法）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#execution-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-summary-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Summary Contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-priority-decision-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Priority Decision Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-ownership-memory-architecture-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ownership &amp; Memory Architecture Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Ownership &amp; Memory Architecture Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#business-logic-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Logic Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-hotpaths-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Hotpaths Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-error-handling-layering-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Error Handling Layering Specification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Error Handling Layering Specification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#library-crate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Library Crate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-binary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Binary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-idiomatic-style-jeet-kune-do-coding-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Idiomatic Style: Jeet Kune Do Coding Philosophy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Idiomatic Style: Jeet Kune Do Coding Philosophy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-self-check-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Self-Check List
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduction-directive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reduction Directive
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-agent-execution-self-review-directives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Agent Execution &amp; Self-Review Directives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Agent Execution &amp; Self-Review Directives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trade-off-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-off Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-checklists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Checklists
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-typical-refactoring-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Typical Refactoring Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-production-observability-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Production Observability Specification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-reference-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Reference Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Reference Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#document-relationship-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document Relationship Map
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-strategy-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution &amp; Strategy (7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-patterns-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Patterns (14)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modern-ci-formal-methods-v910-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modern CI &amp; Formal Methods (V9.1.0 additions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idiomatic-style-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idiomatic Style (7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-p3-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep Dive (P3 Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-constitutional-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Constitutional Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-systems-cloud-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统与云基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-wasm-frontend-infra-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wasm 前端基础设施指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-embedded-iot-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    嵌入式与物联网指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-data-engineering-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据工程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-networking-protocols-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    网络协议指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-cli-devops-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI 与 DevOps 指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-gamedev-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    游戏开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-blockchain-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    区块链指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rust-ai-ml-inference-guide/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI/ML 推理指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#execution-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-summary-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Summary Contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-priority-decision-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Priority Decision Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-ownership-memory-architecture-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ownership &amp; Memory Architecture Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Ownership &amp; Memory Architecture Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#business-logic-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Logic Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-hotpaths-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Hotpaths Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-error-handling-layering-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Error Handling Layering Specification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Error Handling Layering Specification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#library-crate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Library Crate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-binary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Binary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-idiomatic-style-jeet-kune-do-coding-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Idiomatic Style: Jeet Kune Do Coding Philosophy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Idiomatic Style: Jeet Kune Do Coding Philosophy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-self-check-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Self-Check List
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduction-directive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reduction Directive
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-agent-execution-self-review-directives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Agent Execution &amp; Self-Review Directives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Agent Execution &amp; Self-Review Directives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trade-off-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-off Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-checklists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Checklists
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-typical-refactoring-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Typical Refactoring Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-production-observability-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Production Observability Specification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-reference-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Reference Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Reference Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#document-relationship-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document Relationship Map
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-strategy-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution &amp; Strategy (7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-patterns-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Patterns (14)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modern-ci-formal-methods-v910-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modern CI &amp; Formal Methods (V9.1.0 additions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idiomatic-style-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idiomatic Style (7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-p3-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep Dive (P3 Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-constitutional-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Constitutional Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rust-architecture-engineering-decision-guide-v910-the-rust-2024-edition">Rust Architecture &amp; Engineering Decision Guide V9.1.0 — The Rust 2024 Edition<a class="headerlink" href="#rust-architecture-engineering-decision-guide-v910-the-rust-2024-edition" title="Permanent link">&para;</a></h1>
+<p>This document serves as the <strong>constitutional foundation</strong> for Rust engineering decisions. It is structured for deterministic, reproducible decision-making suitable for AI-assisted development.</p>
+<p>V9.0.0 introduced three paradigm shifts:
+1. <strong>Memory Layout Transparency</strong> (ref/30): From "ideological safety" to "materialist physics" — struct padding audit, <code>#[repr(C)]</code> mandate, cache-friendly design
+2. <strong>Breakwater Architecture</strong> (ref/31): Facade/Core layered pattern — ergonomic facade absorbs chaos, zero-overhead core maintains determinism
+3. <strong>Physical Feasibility Audit</strong> (ref/32): Mandatory audit between initiation and design — I/O budget, memory ceiling, concurrency true cost</p>
+<p>V9.1.0 — <strong>Rust 2024 Edition Alignment</strong>:
+- Adopts Rust 2024 Edition idioms: <code>unsafe extern</code> blocks, RPIT lifetime capture, <code>impl Trait</code> in return position sugar
+- Aligns with <a href="https://rust-lang.github.io/api-guidelines/">Rust API Guidelines</a> checklist (C-CASE, C-CONV, C-MACRO-VIS, C-EXAMPLE)
+- Integrates <a href="https://github.com/rustfoundation/safety-critical-rust-coding-guidelines">Safety-Critical Rust Coding Guidelines</a> for unsafe code governance
+- Adds <code>cargo-mutants</code> mutation testing, <code>kani</code> formal verification, <code>turmoil</code> network chaos to advanced testing arsenal</p>
+<h3 id="execution-mode">Execution Mode<a class="headerlink" href="#execution-mode" title="Permanent link">&para;</a></h3>
+<p>Before applying any rule, determine the execution mode:</p>
+<ul>
+<li><strong><code>rapid</code></strong> (prototype): Enforce P0 only; <code>anyhow</code> in libraries, unlimited <code>.clone()</code>, no doc-tests</li>
+<li><strong><code>standard</code></strong> (default): Enforce P0+P1; warn on P2 violations</li>
+<li><strong><code>strict</code></strong> (production): Enforce P0-P3; all deviations require formal annotation</li>
+</ul>
+<p>See <a href="../references/00-mode-guide/">references/00-mode-guide.md</a> for full mode definitions.</p>
+<h3 id="decision-summary-contract">Decision Summary Contract<a class="headerlink" href="#decision-summary-contract" title="Permanent link">&para;</a></h3>
+<p><strong>Architecture decisions, security-sensitive changes, and multi-rule conflicts MUST end with a Decision Summary block. For trivial edits (comment fixes, style-only, single-rule clear-cut), the summary is optional.</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gu">## Decision Summary</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Mode**</span>: [rapid|standard|strict]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Edition**</span>: [2021|2024] — as configured in project Cargo.toml
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Rules Applied**</span>: [list specific rules from P0-P3]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Conflicts Resolved**</span>: [PX &gt; PY with justification, or &quot;None&quot;]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Deviations**</span>: [list with <span class="sb">`// DEVIATION: reason`</span> references, or &quot;None&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">-</span><span class="w"> </span><span class="gs">**Trade-offs**</span>: [key trade-off decisions made]
+</code></pre></div>
+<hr />
+<h2 id="1-priority-decision-matrix">1. Priority Decision Matrix<a class="headerlink" href="#1-priority-decision-matrix" title="Permanent link">&para;</a></h2>
+<p>When conflicts arise, apply decisions top-down. Upper levels have absolute veto power.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Level</th>
+<th style="text-align: left;">Core Principle</th>
+<th style="text-align: left;">Accept</th>
+<th style="text-align: left;">Reject</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>P0</strong></td>
+<td style="text-align: left;"><strong>Safety &amp; Correctness</strong></td>
+<td style="text-align: left;">Compile-time borrow checking, Miri-verified unsafe</td>
+<td style="text-align: left;">Any UB, race conditions, unproven unsafe</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>P1</strong></td>
+<td style="text-align: left;"><strong>Maintainability</strong></td>
+<td style="text-align: left;">Semantic naming, ownership transfer, trait decoupling</td>
+<td style="text-align: left;">Deeply nested lifetimes, overly complex generics</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>P2</strong></td>
+<td style="text-align: left;"><strong>Compile Time</strong></td>
+<td style="text-align: left;"><code>Box&lt;dyn Trait&gt;</code>, workspace division, feature isolation</td>
+<td style="text-align: left;">Binary bloat from monomorphization, slow CI builds</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>P3</strong></td>
+<td style="text-align: left;"><strong>Runtime Performance</strong></td>
+<td style="text-align: left;">SoA layout, lock-free, SIMD, profiling-proven</td>
+<td style="text-align: left;">Intuition-based premature optimization</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-ownership-memory-architecture-strategy">2. Ownership &amp; Memory Architecture Strategy<a class="headerlink" href="#2-ownership-memory-architecture-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="business-logic-layer">Business Logic Layer<a class="headerlink" href="#business-logic-layer" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Prefer owned types (<code>String</code>, <code>Vec&lt;T&gt;</code>)</li>
+<li>Allow <code>.clone()</code> to eliminate lifetime interference on non-hotpaths</li>
+<li>Prohibit storing non-<code>'static</code> references in structs, unless struct is transient view</li>
+</ul>
+<h3 id="performance-hotpaths-layer">Performance Hotpaths Layer<a class="headerlink" href="#performance-hotpaths-layer" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Zero-Copy Design: <code>Cow&lt;'a, T&gt;</code> or <code>bytes::Bytes</code> for cross-layer sharing</li>
+<li>Memory Layout: Enforce AoS → SoA conversion for bulk data</li>
+<li>Alignment: <code>#[repr(align(64))]</code> to eliminate false sharing</li>
+</ul>
+<hr />
+<h2 id="3-error-handling-layering-specification">3. Error Handling Layering Specification<a class="headerlink" href="#3-error-handling-layering-specification" title="Permanent link">&para;</a></h2>
+<h3 id="library-crate">Library Crate<a class="headerlink" href="#library-crate" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Required</strong>: <code>thiserror</code> or manual <code>Display</code> + <code>Error</code> trait</li>
+<li><strong>Prohibited</strong>: Never return <code>anyhow::Error</code> from public API</li>
+<li>Error variants must contain sufficient context</li>
+</ul>
+<h3 id="application-binary">Application Binary<a class="headerlink" href="#application-binary" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Use <code>anyhow</code> with <code>?</code> operator for error propagation</li>
+<li>Attach <code>.with_context(|| ...)</code> at error propagation points</li>
+<li>Register global Panic Hook at <code>main</code> entry</li>
+</ul>
+<hr />
+<h2 id="4-idiomatic-style-jeet-kune-do-coding-philosophy">4. Idiomatic Style: Jeet Kune Do Coding Philosophy<a class="headerlink" href="#4-idiomatic-style-jeet-kune-do-coding-philosophy" title="Permanent link">&para;</a></h2>
+<h3 id="core-philosophy">Core Philosophy<a class="headerlink" href="#core-philosophy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Intercepting Boilerplate</strong></td>
+<td>If logic can be expressed in 1 line of pattern matching, never use 5 lines of nesting</td>
+</tr>
+<tr>
+<td><strong>Economy of Motion</strong></td>
+<td>Every line of code should point directly to intent. Eliminate redundant intermediate variables and implicit copies</td>
+</tr>
+<tr>
+<td><strong>Hardware Sympathy</strong></td>
+<td>Leverage iterators and zero-copy types, align with the compiler's inline optimization</td>
+</tr>
+</tbody>
+</table>
+<h3 id="agent-self-check-list">Agent Self-Check List<a class="headerlink" href="#agent-self-check-list" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Are code paths flat?</strong> Can <code>let else</code> or <code>?</code> eliminate <code>if let</code> nesting?</li>
+<li><strong>Are collection operations idiomatic?</strong> Prefer iterator adapters where they improve clarity; a simple <code>for</code> loop is acceptable when it reads more clearly or when early-exit logic is needed.</li>
+<li><strong>Are variable scopes minimized?</strong> Can shadowing remove no-longer-needed <code>mut</code>?</li>
+<li><strong>Are there implicit copies?</strong> Is <code>.to_string()</code> or <code>.clone()</code> misused on hot paths?</li>
+<li><strong>Is naming stuttering?</strong> e.g., <code>user::UserConfig</code> should be <code>user::Config</code>.</li>
+<li><strong>Is Rust 2024 Edition leveraged?</strong> Are <code>unsafe extern</code> blocks used? Are RPIT captures explicit with <code>use&lt;...&gt;</code>?</li>
+<li><strong>Are Clippy pedantic/nursery lints addressed?</strong> For <code>strict</code> mode, no unjustified <code>#[allow]</code> on pedantic lints.</li>
+</ol>
+<h3 id="reduction-directive">Reduction Directive<a class="headerlink" href="#reduction-directive" title="Permanent link">&para;</a></h3>
+<p>When receiving a Rust coding task, aim for high signal-to-noise ratio: eliminate unnecessary ceremony, use idiomatic patterns, and prefer clarity over cleverness. The philosophy labels (Jeet Kune Do, Economy of Motion, Intercepting Boilerplate) are branding metaphors — operational rules are defined by the priority pyramid and execution mode system above.</p>
+<hr />
+<h2 id="5-agent-execution-self-review-directives">5. Agent Execution &amp; Self-Review Directives<a class="headerlink" href="#5-agent-execution-self-review-directives" title="Permanent link">&para;</a></h2>
+<p><strong>MUST</strong> execute the following workflow before outputting any Rust solution:</p>
+<h3 id="trade-off-analysis">Trade-off Analysis<a class="headerlink" href="#trade-off-analysis" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Trade-off Analysis:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">// - P1 (simplicity): Using String.clone() adds ~2KB runtime allocation</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">// - P3 (performance): Acceptable for this cold path (config loading)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">// - Decision: Clone for clarity; revisit if profiling shows bottleneck</span>
+</code></pre></div>
+<h3 id="review-checklists">Review Checklists<a class="headerlink" href="#review-checklists" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Ownership</strong>: Unnecessary lifetime annotations removed? Large objects boxed before <code>.await</code>?</li>
+<li><strong>Concurrency</strong>: <code>std::sync::Mutex</code> held during <code>await</code>? Blocking ops in async context?</li>
+<li><strong>Error Robustness</strong>: All <code>unwrap()</code> have <code>expect("REASON")</code>? External IO handles timeout?</li>
+<li><strong>Safety</strong>: Unsafe blocks have SAFETY comments? FFI uses opaque handles? <code>catch_unwind</code> on <code>extern "C"</code>?</li>
+</ul>
+<hr />
+<h2 id="6-typical-refactoring-paths">6. Typical Refactoring Paths<a class="headerlink" href="#6-typical-refactoring-paths" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>From</th>
+<th>To</th>
+<th>Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Option/bool</code> flags</td>
+<td><code>Enum</code> state machine</td>
+<td>Business model stabilizing</td>
+</tr>
+<tr>
+<td><code>String</code> storage</td>
+<td><code>Cow&lt;'a, str&gt;</code> or <code>Arc&lt;str&gt;</code></td>
+<td>Hot path optimization needed</td>
+</tr>
+<tr>
+<td>Manual <code>for</code> loops</td>
+<td>Iterator chaining</td>
+<td>Collection processing code</td>
+</tr>
+<tr>
+<td>MVP <code>Option</code> fields</td>
+<td>Type-driven state machine</td>
+<td>Core domain logic stable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-production-observability-specification">7. Production Observability Specification<a class="headerlink" href="#7-production-observability-specification" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Tracing</strong>: All <code>pub async fn</code> annotated with <code>#[tracing::instrument]</code>; skip large objects</li>
+<li><strong>Metrics</strong>: Static labels; atomic counters on hot paths; Prometheus pull model</li>
+<li><strong>Panic Hook</strong>: Global hook at <code>main</code>; synchronous write; <code>std::process::abort()</code> over unwinding</li>
+</ul>
+<hr />
+<h2 id="8-reference-files">8. Reference Files<a class="headerlink" href="#8-reference-files" title="Permanent link">&para;</a></h2>
+<h3 id="document-relationship-map">Document Relationship Map<a class="headerlink" href="#document-relationship-map" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>flowchart TD
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    SKILL[SKILL.md&lt;br/&gt;Constitutional Foundation] --&gt; Mode[00-mode-guide.md&lt;br/&gt;Execution Modes]
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    SKILL --&gt; Pyramid[01-priority-pyramid.md&lt;br/&gt;P0-P3 Hierarchy]
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    Pyramid --&gt; Conflict[02-conflict-resolution.md&lt;br/&gt;Conflict Scenarios]
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    Pyramid --&gt; Concurrency[11-concurrency.md&lt;br/&gt;Lock Spectrum]
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    Mode --&gt; Progressive[03-progressive-architecture.md&lt;br/&gt;MVP → Production]
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    Mode --&gt; Deviation[06-deviation-process.md&lt;br/&gt;Rule Exceptions]
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    Concurrency --&gt; StateMachine[07-state-machine.md&lt;br/&gt;Type-Driven States]
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    Concurrency --&gt; Async[12-async-internals.md&lt;br/&gt;Pin/Unpin/Waker]
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    Async --&gt; CloudInfra[Cloud Infra Guide&lt;br/&gt;Vertical Deepening]
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    Pyramid --&gt; DataArch[09-data-architecture.md&lt;br/&gt;Zero-Copy Principles]
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    DataArch --&gt; Performance[25-performance-tuning.md&lt;br/&gt;Mechanical Sympathy]
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    StateMachine --&gt; Newtype[08-newtype.md&lt;br/&gt;Semantic IDs]
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    Conflict --&gt; Tradeoffs[04-trade-offs.md&lt;br/&gt;Decision Framework]
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    style SKILL fill:#4a90d9,stroke:#2c5aa0,color:#fff
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    style Pyramid fill:#5cb85c,stroke:#4cae4c,color:#fff
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    style Concurrency fill:#f0ad4e,stroke:#ec971f,color:#000
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>    style CloudInfra fill:#d9534f,stroke:#c9302c,color:#fff
+</code></pre></div>
+<h3 id="execution-strategy-7">Execution &amp; Strategy (7)<a class="headerlink" href="#execution-strategy-7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="../references/00-mode-guide/">00-mode-guide.md</a> — Execution modes and transition checklists</li>
+<li><a href="../references/01-priority-pyramid/">01-priority-pyramid.md</a> — The four-level hierarchy</li>
+<li><a href="../references/02-conflict-resolution/">02-conflict-resolution.md</a> — Typical conflicts and resolutions</li>
+<li><a href="../references/03-progressive-architecture/">03-progressive-architecture.md</a> — MVP to production migration</li>
+<li><a href="../references/04-trade-offs/">04-trade-offs.md</a> — Decision analysis framework</li>
+<li><a href="../references/05-glossary/">05-glossary.md</a> — Centralized terminology definitions</li>
+<li><a href="../references/06-deviation-process/">06-deviation-process.md</a> — Formal rule exception handling</li>
+</ul>
+<h3 id="architecture-patterns-14">Architecture Patterns (14)<a class="headerlink" href="#architecture-patterns-14" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>State &amp; Types</strong></li>
+<li><a href="../references/07-state-machine/">07-state-machine.md</a> — Type-driven state machines</li>
+<li>
+<p><a href="../references/08-newtype/">08-newtype.md</a> — Type-safe IDs and credentials</p>
+</li>
+<li>
+<p><strong>Data &amp; Memory</strong> (P0-P1)</p>
+</li>
+<li>
+<p><a href="../references/09-data-architecture/">09-data-architecture.md</a> — Ownership, cloning, zero-copy, Arena basics</p>
+</li>
+<li>
+<p><strong>Error Handling</strong> (P0-P1)</p>
+</li>
+<li>
+<p><a href="../references/10-error-handling/">10-error-handling.md</a> — Library (<code>thiserror</code>) vs application (<code>anyhow</code>) strategies</p>
+</li>
+<li>
+<p><strong>Concurrency &amp; Async</strong> (P0-P3)</p>
+</li>
+<li><a href="../references/11-concurrency/">11-concurrency.md</a> — Lock spectrum, decision tree, async isolation (P0-P1)</li>
+<li>
+<p><a href="../references/12-async-internals/">12-async-internals.md</a> — Pin/Unpin, Waker, custom executors (P2-P3)</p>
+</li>
+<li>
+<p><strong>API &amp; Safety</strong></p>
+</li>
+<li><a href="../references/13-api-design/">13-api-design.md</a> — Public API boundaries, <code>#[non_exhaustive]</code>, sealed traits</li>
+<li>
+<p><a href="../references/15-ffi-interop/">15-ffi-interop.md</a> — The Defense Wall: FFI safety boundaries (P0)</p>
+</li>
+<li>
+<p><strong>Metaprogramming</strong> (P1-P2)</p>
+</li>
+<li>
+<p><a href="../references/14-metaprogramming/">14-metaprogramming.md</a> — Declarative/procedural macros, const generics</p>
+</li>
+<li>
+<p><strong>Observability</strong></p>
+</li>
+<li>
+<p><a href="../references/16-observability/">16-observability.md</a> — Tracing, metrics, panic hooks</p>
+</li>
+<li>
+<p><strong>Tooling</strong></p>
+</li>
+<li><a href="../references/17-toolchain/">17-toolchain.md</a> — CI, Clippy, workspace, feature flags, rust-toolchain.toml pinning</li>
+</ul>
+<h3 id="modern-ci-formal-methods-v910-additions">Modern CI &amp; Formal Methods (V9.1.0 additions)<a class="headerlink" href="#modern-ci-formal-methods-v910-additions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="../references/33-ci-modern/">33-ci-modern.md</a> — Modern CI/CD pipeline: cargo-mutants, kani, turmoil, deterministic RNG, rust-toolchain.toml</p>
+</li>
+<li>
+<p><strong>Memory Layout Transparency</strong> (P0)</p>
+</li>
+<li>
+<p><a href="../references/30-memory-layout/">30-memory-layout.md</a> — Struct padding audit, <code>#[repr(C)]</code> mandate, cache-friendly design, false sharing prevention</p>
+</li>
+<li>
+<p><strong>Breakwater Architecture</strong> (P0-P1)</p>
+</li>
+<li>
+<p><a href="../references/31-breakwater-pattern/">31-breakwater-pattern.md</a> — Facade/Core layered pattern, boundary interception protocol, type contraction</p>
+</li>
+<li>
+<p><strong>Physical Feasibility Audit</strong> (P0)</p>
+</li>
+<li><a href="../references/32-physical-audit/">32-physical-audit.md</a> — Pre-design mandatory audit: I/O budget, memory ceiling, concurrency true cost</li>
+</ul>
+<h3 id="idiomatic-style-7">Idiomatic Style (7)<a class="headerlink" href="#idiomatic-style-7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="../references/18-control-flow/">18-control-flow.md</a> — <code>let else</code>, <code>matches!</code>, intercepting deep nesting</li>
+<li><a href="../references/19-iterators/">19-iterators.md</a> — Iterator chains, <code>filter_map</code>, flowing force</li>
+<li><a href="../references/20-traits/">20-traits.md</a> — <code>From</code> vs <code>Into</code>, <code>Default</code>, Hardware Sympathy</li>
+<li><a href="../references/21-errors/">21-errors.md</a> — <code>unwrap_or_else</code>, <code>map_err</code>, <code>and_then</code></li>
+<li><a href="../references/22-data-struct/">22-data-struct.md</a> — Field shorthand, type stuttering</li>
+<li><a href="../references/23-borrowing/">23-borrowing.md</a> — <code>AsRef</code>, <code>Cow</code>, memory economy</li>
+<li><a href="../references/24-refactor/">24-refactor.md</a> — Agent Self-Check List, Reduction Directive</li>
+</ul>
+<h3 id="deep-dive-p3-only">Deep Dive (P3 Only)<a class="headerlink" href="#deep-dive-p3-only" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>⚠️ <strong>Requirement</strong>: All P3 optimizations MUST include profiler data proving bottleneck</p>
+</blockquote>
+<ul>
+<li><a href="../references/25-performance-tuning/">25-performance-tuning.md</a> — Mechanical Sympathy: SoA, SIMD, Arena, PGO (P3 only)</li>
+<li><a href="../references/26-advanced-testing/">26-advanced-testing.md</a> — Formal verification: proptest, fuzz, Loom, Miri, kani, cargo-mutants, turmoil (strict mode)</li>
+<li><a href="../references/27-review/">27-review.md</a> — Production review checklist</li>
+<li><a href="../references/28-usage-examples/">28-usage-examples.md</a> — Real-world scenarios with Decision Summaries</li>
+</ul>
+<hr />
+<h2 id="9-constitutional-summary">9. Constitutional Summary<a class="headerlink" href="#9-constitutional-summary" title="Permanent link">&para;</a></h2>
+<p><strong>No rule is absolute.</strong> The ultimate measure of code quality is whether it matches:
+- Its lifecycle stage (MVP vs production) — governed by <a href="../references/00-mode-guide/">execution mode</a>
+- Business constraints (deadline vs long-term maintenance)
+- Team context (solo vs large organization)</p>
+<p><strong>The Pragmatic Principle</strong>:</p>
+<blockquote>
+<p>Pursue excellence at system boundaries and hot paths; release mental load for internal flows and cold paths.</p>
+</blockquote>
+<p><strong>Deviation Protocol</strong>: When breaking a rule is the correct decision, annotate with <code>// DEVIATION: reason</code> and record in the Decision Summary.</p>
+<p><strong>Terminology</strong>: All specialized terms are defined in <a href="../references/05-glossary/">glossary.md</a>.</p>
+<p><strong>Remember</strong>: This guide is the Agent's <strong>constitutional foundation</strong>. Before each response, generate a <strong>Decision Summary</strong> recording rationale for choosing specific implementation paths, ensuring consistency and professional depth.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tracking", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
