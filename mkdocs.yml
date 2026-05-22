@@ -1,0 +1,70 @@
+site_name: Rust Coding Standards Skills
+site_url: https://smile9493.github.io/Rust_Coding_Standards_Skills/
+site_description: >-
+  A comprehensive set of Rust engineering skill guides covering architecture,
+  systems, Wasm, embedded, data engineering, networking, CLI/devops, gamedev,
+  blockchain, and AI/ML inference.
+repo_url: https://github.com/smile9493/Rust_Coding_Standards_Skills
+repo_name: smile9493/Rust_Coding_Standards_Skills
+
+docs_dir: docs
+
+theme:
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - Guides:
+    - Architecture Guide (Constitution): rust-architecture-guide/SKILL.md
+    - Systems & Cloud Infra Guide: rust-systems-cloud-infra-guide/SKILL.md
+    - Wasm Frontend Infra Guide: rust-wasm-frontend-infra-guide/SKILL.md
+    - Embedded & IoT Guide: rust-embedded-iot-guide/SKILL.md
+    - Data Engineering Guide: rust-data-engineering-guide/SKILL.md
+    - Networking Protocols Guide: rust-networking-protocols-guide/SKILL.md
+    - CLI & DevOps Guide: rust-cli-devops-guide/SKILL.md
+    - Gamedev Guide: rust-gamedev-guide/SKILL.md
+    - Blockchain Guide: rust-blockchain-guide/SKILL.md
+    - AI/ML Inference Guide: rust-ai-ml-inference-guide/SKILL.md
+
+exclude_docs: |
+  **/README.md
+  **/README.zh-CN.md

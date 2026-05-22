@@ -14,6 +14,9 @@ Thumbs.db
 target/
 **/target/
 
+# MkDocs build output
+site/
+
 # Environment
 .env
 .env.local
