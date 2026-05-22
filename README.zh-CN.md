@@ -1,12 +1,12 @@
 # Rust 编码规范 Skills
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Architecture Guide](https://img.shields.io/badge/Architecture%20Guide-v9.0.0-brightgreen.svg)]()
-[![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v6.0.0-orange.svg)]()
-[![Wasm Infra Guide](https://img.shields.io/badge/Wasm%20Infra%20Guide-v4.0.0-purple.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-53%20Docs-orange.svg)]()
+[![Architecture Guide](https://img.shields.io/badge/Architecture%20Guide-v9.1.0-brightgreen.svg)]()
+[![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v6.1.0-orange.svg)]()
+[![Wasm Infra Guide](https://img.shields.io/badge/Wasm%20Infra%20Guide-v4.1.0-purple.svg)]()
+[![Skills](https://img.shields.io/badge/Skills-10-blue.svg)]()
 
-**Rust 工程决策 Wiki — AI 编码助手的宪法性指南，覆盖通用工程决策、云基础设施专用规范与 WebAssembly 前端基建专用规范。**
+**Rust 工程决策 Wiki — 10 个 AI 编码助手的宪法性指南，遵循 [Cursor Agent Skills](https://cursor.com/cn/docs/skills) 格式，覆盖通用工程、云基础设施、Wasm 前端、嵌入式、数据工程、网络协议、CLI/DevOps、游戏开发、区块链、AI/ML 推理。**
 
 [English](README.md) | 简体中文
 
@@ -109,43 +109,149 @@ Rust Coding Standards Skills 是一个面向 AI 编码助手的 **Rust 工程决
 
 ***
 
+### rust-embedded-iot-guide — 嵌入式/IoT 指南
+
+适用于**裸机固件、RTOS 系统（ARM Cortex-M、RISC-V、ESP32）**，无 OS、KB 级 RAM、实时截止期限。通用宪法的垂直深化。
+
+- 🔧 **no_std 架构** — PAC→HAL→BSP→App 五层抽象，`svd2rust` 外设自动生成
+- 🧠 **内存布局控制** — `memory.x` 链接脚本、`.bss/.data` 初始化、`flip-link` 栈溢出保护
+- ⚡ **中断驱动并发** — RTIC 优先级天花板协议、Embassy 裸机异步执行器
+- 🔌 **外设驱动** — SPI/I2C/UART/GPIO/ADC 通过 `embedded-hal` trait 的强类型状态机
+- 🔋 **电源管理** — 睡眠/深度睡眠状态机、时钟门控、< 10µA 深度睡眠目标
+- 🐛 **硬件调试** — probe-rs、defmt、RTT 通道、ITM/SWO 追踪、逻辑分析仪
+- 🧪 **HIL 测试** — defmt-test 测试框架、真机目标硬件在环 CI
+
+📖 **文档索引**：[rust-embedded-iot-guide/SKILL.md](rust-embedded-iot-guide/SKILL.md)
+
+***
+
+### rust-data-engineering-guide — 数据工程指南
+
+适用于**查询引擎、ETL 管道、OLAP 数据库、流处理器**，处理 TB-PB 级数据。通用宪法 + 云基础设施的垂直深化。
+
+- 📊 **Arrow 列式内存模型** — `PrimitiveArray`/`RecordBatch`/`ChunkedArray` 零拷贝分层
+- 🚀 **向量化表达式** — SIMD 批量求值、位图过滤、无分支 null 传播
+- 🧠 **查询优化器** — RBO（谓词下推、投影裁剪）+ CBO（统计信息、连接重排序）
+- 📦 **Parquet 存储** — Row Group 统计信息、谓词下推到存储层、字典/RLE 编码
+- 🌊 **流式 ETL** — `Stream` trait 背压、滚动/滑动窗口、水位线、精确一次检查点
+- 📊 **分区与 Shuffle** — 哈希/范围/广播 Shuffle、数据倾斜检测与加盐缓解
+- 🔗 **跨语言数据交换** — PyO3 Arrow C Data 接口、napi-rs 零拷贝、Flight/Flight SQL
+
+📖 **文档索引**：[rust-data-engineering-guide/SKILL.md](rust-data-engineering-guide/SKILL.md)
+
+***
+
+### rust-networking-protocols-guide — 网络协议指南
+
+适用于 **QUIC/HTTP3 服务器、gRPC 代理、自定义协议实现、DNS 解析器**。通用宪法 + 云基础设施的垂直深化。
+
+- 🔄 **协议状态机** — 类型化状态、`tokio-util` Codec、分层协议栈（L2→L7）
+- ⚡ **零拷贝解析** — `nom`/`winnow` 组合子解析 `&[u8]`，不完整输入的流式解析器
+- 🌐 **QUIC & HTTP/3** — 流多路复用、0-RTT 防重放保护、连接迁移
+- 🔒 **TLS 集成** — rustls + mTLS、ALPN 协商、rustls-acme Let's Encrypt 自动化
+- 📈 **拥塞控制** — BBR/CUBIC、Pacing、ECN、QUIC 流控信用额度
+- 🔗 **连接池** — deadpool/bb8、HPACK 动态表、死连接检测与驱逐
+- 🐞 **Fuzzing** — 每个解析器 cargo-fuzz 结构感知目标、proptest 往返不变性
+
+📖 **文档索引**：[rust-networking-protocols-guide/SKILL.md](rust-networking-protocols-guide/SKILL.md)
+
+***
+
+### rust-cli-devops-guide — CLI/DevOps 指南
+
+适用于**命令行工具、开发者工具链、Kubernetes Operator**。通用宪法的垂直深化。
+
+- 📝 **clap derive** — 子命令枚举、值验证、Shell 补全生成
+- 📦 **跨平台分发** — cargo-dist、Homebrew formula、`curl | sh` 安装脚本、矩阵 CI
+- 🚦 **信号处理** — SIGINT/CTRL_C 优雅关闭、SIGPIPE 抑制、Windows 控制台处理
+- 📊 **进度 UX** — indicatif MultiProgress + ETA、ratatui TUI、tracing 结构化日志
+- ⚙️ **配置级联** — CLI 参数 > 环境变量 > 配置文件 > 默认值、XDG 兼容路径
+- ☸️ **K8s Operator** — kube-rs reconciler 循环、CRD 生成、finalizer、幂等性保证
+- 🧪 **CLI 测试** — assert_cmd 集成测试、trycmd 快照测试、miette 富错误信息
+
+📖 **文档索引**：[rust-cli-devops-guide/SKILL.md](rust-cli-devops-guide/SKILL.md)
+
+***
+
+### rust-gamedev-guide — 游戏开发指南
+
+适用于**游戏引擎、渲染管线、实时交互应用**，16ms 帧预算。通用宪法的垂直深化。
+
+- 🎮 **ECS 架构** — Bevy Entities/Components/Systems/Resources、扁平数据导向设计
+- ⏱️ **帧预算** — 固定时间步物理、插值渲染、帧步调控制、预算性能分析
+- 🖥️ **GPU 资源生命周期** — wgpu Buffer/Texture/BindGroup、staging belt 异步上传
+- 🎨 **渲染管线** — 渲染图、视锥体剔除、LOD 实例化、< 1000 次绘制调用/帧
+- ✨ **着色器** — WGSL、naga 跨平台编译（GLSL/SPIR-V/MSL）、计算着色器热更新
+- 📦 **资产管线** — AssetServer 异步加载、热重载、纹理压缩、图集打包
+- 🏓 **物理** — rapier 刚体/碰撞体、空间划分、固定时间步强制
+
+📖 **文档索引**：[rust-gamedev-guide/SKILL.md](rust-gamedev-guide/SKILL.md)
+
+***
+
+### rust-blockchain-guide — 区块链/Web3 指南
+
+适用于 **Solana 程序、Substrate/Polkadot Pallet、智能合约开发**。通用宪法 + 嵌入式的垂直深化。
+
+- 🗂️ **账户模型** — Solana 无状态程序 + 账户状态、Substrate FRAME StorageMap
+- 🔑 **PDA 派生地址** — 确定性派生、bump seed、托管/金库模式
+- 🧱 **BPF 约束** — 无 `std`、无浮点、无动态分发、200KB 限制、CU 预算
+- ⚓ **Anchor 框架** — `#[program]`、`#[derive(Accounts)]` 校验、`#[account]` 数据
+- 🔗 **跨程序调用 (CPI)** — SPL Token CPI、`invoke_signed` PDA 授权
+- 🛡️ **安全** — 检查-效果-交互、checked 数学、访问控制、trident fuzzing
+
+📖 **文档索引**：[rust-blockchain-guide/SKILL.md](rust-blockchain-guide/SKILL.md)
+
+***
+
+### rust-ai-ml-inference-guide — AI/ML 推理指南
+
+适用于 **LLM 服务、Embedding 向量搜索、ONNX 模型推理**。通用宪法 + 云基础设施的垂直深化。
+
+- 📥 **模型加载** — GGUF（llama.cpp）、SafeTensors、ONNX 运行时、校验和验证
+- 🔢 **量化** — Q4_0/Q4_K_M/Q8_0 量化、部署前 perplexity 评估
+- 💾 **GPU 显存** — KV-cache 预分配、层卸载、OOM 背压
+- 🔤 **分词器** — HuggingFace tokenizers（BPE/WordPiece）、批量编码、特殊 token 对齐
+- 📊 **连续批处理** — vLLM 风格动态批处理、prefill/decode 分离、padding 消除
+- 🔍 **Embedding 向量搜索** — BERT Embedding、L2 归一化、HNSW 近似最近邻
+- 🌐 **服务 API** — SSE 流式输出、gRPC 双向流、TTFT/吞吐量评估
+
+📖 **文档索引**：[rust-ai-ml-inference-guide/SKILL.md](rust-ai-ml-inference-guide/SKILL.md)
+
+***
+
 ## 快速开始
 
 ### 安装
 
-本项目遵循 [Agent Skills Spec v1.0](https://github.com/agentskills/agentskills/blob/main/docs/specification.mdx) 格式，兼容任何支持 Skills 规范的 AI Agent 平台。
+本项目遵循 [Cursor Agent Skills](https://cursor.com/cn/docs/skills) 格式，这是一个开放标准，兼容任何支持 Skills 规范的 AI Agent 平台。
+
+**Cursor IDE**：
+
+1. 打开 **Cursor Settings → Rules**
+2. 点击 **Add Rule** → **Remote Rule (Github)**
+3. 输入：`https://github.com/smile9493/Rust_Coding_Standards_Skills`
+
+或手动克隆到 skills 目录：
 
 ```bash
-# 克隆仓库
 git clone https://github.com/smile9493/Rust_Coding_Standards_Skills.git
 
-# 安装到你的 Agent skills 目录
-# Trae IDE
-cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
-cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills/
-cp -r Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide ~/.trae/skills/
+# 复制到 Cursor skills 目录（用户级，全局可用）
+cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.cursor/skills/
+cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.cursor/skills/
+cp -r Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide ~/.cursor/skills/
 
-# Claude Code / 其他 Agent Skills 兼容平台
-# 将两个 skill 目录复制到你 Agent 的 skills 配置路径下
+# 或复制到项目级（仅当前项目可见）
+cp -r Rust_Coding_Standards_Skills/rust-architecture-guide your-project/.cursor/skills/
+cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide your-project/.cursor/skills/
+cp -r Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide your-project/.cursor/skills/
+
+# 同样兼容 Claude Code / Codex
+cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.claude/skills/
 ```
 
 ### 使用
-
-**Skill 调用**（语法因平台而异）：
-
-```
-# Trae IDE
-/rust-architecture-guide priority my_conflict
-/rust-architecture-guide state-machine Order
-/rust-systems-cloud-infra-guide io-model
-/rust-systems-cloud-infra-guide backpressure
-/rust-wasm-frontend-infra-guide build-control
-/rust-wasm-frontend-infra-guide ffi-boundary
-
-# Claude Code / 其他平台 — 在提示中引用 skill 名称
-# "According to rust-architecture-guide, what priority should I assign?"
-# "Follow rust-systems-cloud-infra-guide to select the I/O model for this gateway"
-```
 
 **自然语言触发** — Agent 根据上下文自动匹配 Skill：
 
@@ -160,28 +266,35 @@ cp -r Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide ~/.trae/skills
 设计一个零拷贝的 JS-WASM 边界用于图像处理
 ```
 
+**斜杠命令调用** — 显式调用 skill：
+
+```
+/rust-architecture-guide
+/rust-systems-cloud-infra-guide
+/rust-wasm-frontend-infra-guide
+```
+
 ### Skill 格式
 
-每个 Skill 遵循 Agent Skills Spec v1.0 结构：
+每个 Skill 遵循 [Cursor Agent Skills](https://cursor.com/cn/docs/skills) 格式：
 
 ```
 skill-name/
 ├── SKILL.md              # 入口文件（YAML 前置信息 + Agent 指令）
-└── references/            # 深度参考文档
-    ├── 01-topic.md
-    ├── 02-topic.md
-    └── ...
+├── references/            # 深度参考文档（按需加载）
+├── scripts/               # Agent 可执行代码（可选）
+└── assets/                # 静态资源：模板、图片、数据文件（可选）
 ```
 
 **SKILL.md 前置信息字段**：
 
 | 字段 | 必需 | 描述 |
 |------|------|------|
-| `name` | ✅ | Skill 标识符（hyphen-case，与目录名匹配） |
-| `description` | ✅ | 何时调用此 Skill（最大 1024 字符） |
-| `license` | ❌ | 许可证标识 |
-| `metadata` | ❌ | 扩展元数据（版本、哲学、领域等） |
-| `allowed-tools` | ❌ | Skill 允许使用的工具 |
+| `name` | ✅ | Skill 标识符（hyphen-case，必须与目录名一致） |
+| `description` | ✅ | 描述技能的作用及使用场景（由 Agent 判断相关性） |
+| `paths` | ❌ | Glob 模式，限定技能仅作用于匹配的文件 |
+| `disable-model-invocation` | ❌ | 为 `true` 时，仅通过 `/skill-name` 显式调用，不自动触发 |
+| `metadata` | ❌ | 任意键值映射，存放扩展元数据 |
 
 ***
 
@@ -231,9 +344,9 @@ rust-architecture-guide (通用宪法)
                       └── 合规（7 条禁令 + 10 项自检清单）
 ```
 
-- **`rust-architecture-guide`**（v9.0.0）：所有 Rust 工程的宪法基础 — 新增内存布局透明化、防波堤架构、物理可行性审计三大范式
-- **`rust-systems-cloud-infra-guide`**（v6.0.0）：云原生场景的**附加条款**，在 P0 安全之上增加系统级红线、Facade/Core 架构与部署物理审计
-- **`rust-wasm-frontend-infra-guide`**（v4.0.0）：`wasm32-unknown-unknown` 场景的**附加条款**，在 P0 安全之上增加编译与边界层硬约束
+- **`rust-architecture-guide`**（v9.1.0）：所有 Rust 工程的宪法基础 — 新增内存布局透明化、防波堤架构、物理可行性审计、Rust 2024 Edition 对齐
+- **`rust-systems-cloud-infra-guide`**（v6.1.0）：云原生场景的**附加条款**，在 P0 安全之上增加系统级红线、Facade/Core 架构、部署物理审计与现代韧性模式
+- **`rust-wasm-frontend-infra-guide`**（v4.1.0）：`wasm32-unknown-unknown` 场景的**附加条款**，在 P0 安全之上增加编译与边界层硬约束、二进制体积经济学与生态收敛
 - 两者互补使用：通用宪法提供优先级框架，垂直深化指南增加领域专用红线
 
 ***
@@ -318,26 +431,48 @@ NIC Ring Buffer → Kernel TCP Stack → User Space
 ## 项目结构
 
 ```
-├── rust-architecture-guide/
-│   ├── SKILL.md                          # Skill 入口
-│   ├── README.md                         # 文档索引（英文）
-│   ├── README.zh-CN.md                   # 文档索引（中文）
-│   └── references/                        # 29 份参考文档
+├── rust-architecture-guide/           # P0: 通用宪法
+│   ├── SKILL.md
+│   └── references/                    # 33 份参考文档
 │
-├── rust-systems-cloud-infra-guide/
-│   ├── SKILL.md                          # Skill 入口
-│   ├── README.md                         # 文档索引（英文）
-│   ├── README.zh-CN.md                   # 文档索引（中文）
-│   └── references/                        # 13 份参考文档
+├── rust-systems-cloud-infra-guide/    # 云基础设施垂直
+│   ├── SKILL.md
+│   └── references/                    # 14 份参考文档
 │
-├── rust-wasm-frontend-infra-guide/
-│   ├── SKILL.md                          # Skill 入口
-│   ├── README.md                         # 文档索引（英文）
-│   ├── README.zh-CN.md                   # 文档索引（中文）
-│   └── references/                        # 7 份参考文档
+├── rust-wasm-frontend-infra-guide/    # Wasm 前端基建垂直
+│   ├── SKILL.md
+│   └── references/                    # 13 份参考文档
 │
-├── README.md                              # Wiki 索引（英文）
-└── README.zh-CN.md                        # Wiki 索引（中文）
+├── rust-embedded-iot-guide/           # 嵌入式 & IoT 垂直
+│   ├── SKILL.md
+│   └── references/                    # 8 个参考目标
+│
+├── rust-data-engineering-guide/       # 数据工程垂直
+│   ├── SKILL.md
+│   └── references/                    # 8 个参考目标
+│
+├── rust-networking-protocols-guide/   # 网络协议垂直
+│   ├── SKILL.md
+│   └── references/                    # 8 个参考目标
+│
+├── rust-cli-devops-guide/             # CLI & DevOps 垂直
+│   ├── SKILL.md
+│   └── references/                    # 8 个参考目标
+│
+├── rust-gamedev-guide/                # 游戏开发垂直
+│   ├── SKILL.md
+│   └── references/                    # 8 个参考目标
+│
+├── rust-blockchain-guide/             # 区块链 & Web3 垂直
+│   ├── SKILL.md
+│   └── references/                    # 8 个参考目标
+│
+├── rust-ai-ml-inference-guide/        # AI/ML 推理垂直
+│   ├── SKILL.md
+│   └── references/                    # 8 个参考目标
+│
+├── README.md                          # Wiki 索引（英文）
+└── README.zh-CN.md                    # Wiki 索引（中文）
 ```
 
 ***

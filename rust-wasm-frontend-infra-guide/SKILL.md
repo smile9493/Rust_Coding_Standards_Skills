@@ -6,7 +6,6 @@ description: >
   and general code adaptation. This Skill is the compilation & boundary layer foundation
   for all Rust+Wasm frontend architectures (including no-DOM rendering engines) and must
   be inherited and obeyed.
-license: MIT
 metadata:
   version: "4.1.0"
   philosophy: "Dialectical Materialism & Jeet Kune Do — Wasm Vertical Base"

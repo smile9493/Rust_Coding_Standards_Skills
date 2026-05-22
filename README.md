@@ -1,12 +1,12 @@
 # Rust Coding Standards Skills
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Architecture Guide](https://img.shields.io/badge/Architecture%20Guide-v9.0.0-brightgreen.svg)]()
-[![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v6.0.0-orange.svg)]()
-[![Wasm Infra Guide](https://img.shields.io/badge/Wasm%20Infra%20Guide-v4.0.0-purple.svg)]()
-[![Reference Docs](https://img.shields.io/badge/Reference-53%20Docs-orange.svg)]()
+[![Architecture Guide](https://img.shields.io/badge/Architecture%20Guide-v9.1.0-brightgreen.svg)]()
+[![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v6.1.0-orange.svg)]()
+[![Wasm Infra Guide](https://img.shields.io/badge/Wasm%20Infra%20Guide-v4.1.0-purple.svg)]()
+[![Skills](https://img.shields.io/badge/Skills-10-blue.svg)]()
 
-**Rust Engineering Decision Wiki — Constitutional guides for AI coding assistants, covering universal engineering decisions, cloud infrastructure-specific specifications, and WebAssembly frontend infrastructure specifications.**
+**Rust Engineering Decision Wiki — 10 constitutional guides for AI coding assistants, following the [Cursor Agent Skills](https://cursor.com/cn/docs/skills) format, covering universal engineering, cloud infrastructure, Wasm frontend, embedded, data engineering, networking, CLI/DevOps, gamedev, blockchain, and AI/ML inference.**
 
 English | [简体中文](README.zh-CN.md)
 
@@ -125,45 +125,151 @@ Full document index: [rust-wasm-frontend-infra-guide/README.md](rust-wasm-fronte
 
 ---
 
+### rust-embedded-iot-guide — Embedded & IoT Guide
+
+Applicable to **bare-metal firmware, RTOS-based systems (ARM Cortex-M, RISC-V, ESP32)**, where there is no OS, KB of RAM, and real-time deadlines. Vertical deepening of the universal constitution.
+
+- **no_std architecture** — PAC→HAL→BSP→App five-layer abstraction, `svd2rust` peripheral generation
+- **Memory layout control** — `memory.x` linker script, `.bss/.data` init, `flip-link` stack overflow protection
+- **Interrupt-driven concurrency** — RTIC priority ceiling protocol, Embassy async executor on bare-metal
+- **Peripheral drivers** — SPI/I2C/UART/GPIO/ADC typed state machines via `embedded-hal` traits
+- **Power management** — Sleep/deep-sleep state machine, clock gating, < 10µA deep sleep target
+- **Hardware debugging** — probe-rs, defmt, RTT channels, ITM/SWO trace, logic analyzer
+- **HIL testing** — defmt-test harness, hardware-in-the-loop CI on real target hardware
+
+Full document index: [rust-embedded-iot-guide/SKILL.md](rust-embedded-iot-guide/SKILL.md)
+
+---
+
+### rust-data-engineering-guide — Data Engineering Guide
+
+Applicable to **query engines, ETL pipelines, OLAP databases, stream processors** handling TB-PB scale data. Vertical deepening of universal + cloud infra constitutions.
+
+- **Arrow columnar memory model** — `PrimitiveArray`/`RecordBatch`/`ChunkedArray` zero-copy layering
+- **Vectorized expressions** — SIMD bulk evaluation, bitmap filtering, branch-free null propagation
+- **Query optimizer** — RBO (predicate pushdown, projection pruning) + CBO (statistics, join reordering)
+- **Parquet storage** — Row group statistics, predicate pushdown to storage layer, dictionary/RLE encoding
+- **Streaming ETL** — `Stream` trait backpressure, tumbling/sliding windows, watermark, exactly-once checkpoint
+- **Partitioning** — Hash/range/broadcast shuffle, data skew detection and salt mitigation
+- **Cross-language interchange** — PyO3 Arrow C Data Interface, napi-rs zero-copy, Flight/Flight SQL protocol
+
+Full document index: [rust-data-engineering-guide/SKILL.md](rust-data-engineering-guide/SKILL.md)
+
+---
+
+### rust-networking-protocols-guide — Network Protocols Guide
+
+Applicable to **QUIC/HTTP3 servers, gRPC proxies, custom protocol implementations, DNS resolvers**. Vertical deepening of universal + cloud infra constitutions.
+
+- **Protocol state machines** — Typed states, `tokio-util` Codec, layered stacks (L2→L7)
+- **Zero-copy parsing** — `nom`/`winnow` combinator parsing on `&[u8]`, streaming parsers for incomplete input
+- **QUIC & HTTP/3** — Stream multiplexing, 0-RTT with replay protection, connection migration
+- **TLS integration** — rustls with mTLS, ALPN negotiation, Let's Encrypt automation via rustls-acme
+- **Congestion control** — BBR/CUBIC, pacing, ECN, QUIC flow control credits
+- **Connection pooling** — deadpool/bb8, HPACK dynamic tables, dead connection detection
+- **Fuzzing** — cargo-fuzz structure-aware targets per parser, proptest for round-trip invariants
+
+Full document index: [rust-networking-protocols-guide/SKILL.md](rust-networking-protocols-guide/SKILL.md)
+
+---
+
+### rust-cli-devops-guide — CLI & DevOps Guide
+
+Applicable to **command-line tools, developer toolchains, Kubernetes operators**. Vertical deepening of the universal constitution.
+
+- **clap derive** — Subcommand enums, value validation, shell completion generation
+- **Cross-platform distribution** — cargo-dist, Homebrew formulas, `curl | sh` installers, matrix CI
+- **Signal handling** — SIGINT/CTRL_C graceful shutdown, SIGPIPE suppression, Windows console handler
+- **Progress UX** — indicatif MultiProgress with ETA, ratatui TUI widgets, tracing structured logging
+- **Configuration cascade** — CLI args > Env vars > Config file > Defaults, XDG-compliant paths
+- **Kubernetes operator** — kube-rs reconciler loop, CRD generation, finalizers, idempotency guarantee
+- **CLI testing** — assert_cmd integration tests, trycmd snapshot testing, miette rich error messages
+
+Full document index: [rust-cli-devops-guide/SKILL.md](rust-cli-devops-guide/SKILL.md)
+
+---
+
+### rust-gamedev-guide — Game Development Guide
+
+Applicable to **game engines, rendering pipelines, real-time interactive applications** with 16ms frame budgets. Vertical deepening of the universal constitution.
+
+- **ECS architecture** — Bevy Entities/Components/Systems/Resources, flat data-oriented design
+- **Frame budget** — Fixed timestep physics, interpolation rendering, frame pacing, budget profiling
+- **GPU resource lifecycle** — wgpu buffers/textures/bind groups, staging belts, async upload
+- **Rendering pipeline** — Render graph, frustum culling, LOD instancing, < 1000 draw calls/frame
+- **Shaders** — WGSL, naga cross-compilation (GLSL/SPIR-V/MSL), compute shaders, hot-reload
+- **Asset pipeline** — AssetServer async loading, hot-reloading, texture compression, atlas packing
+- **Physics** — rapier rigid bodies/colliders, spatial partitioning, fixed timestep enforcement
+
+Full document index: [rust-gamedev-guide/SKILL.md](rust-gamedev-guide/SKILL.md)
+
+---
+
+### rust-blockchain-guide — Blockchain & Web3 Guide
+
+Applicable to **Solana programs, Substrate/Polkadot pallets, smart contract development**. Vertical deepening of universal + embedded constitutions.
+
+- **Account model** — Solana stateless programs + account state, Substrate FRAME StorageMap
+- **Program Derived Addresses (PDA)** — Deterministic derivation, bump seeds, escrow/vault patterns
+- **BPF constraints** — No `std`, no floating point, no dynamic dispatch, 200KB limit, CU budget
+- **Anchor framework** — `#[program]`, `#[derive(Accounts)]` validation, `#[account]` data, init space
+- **Cross-Program Invocation (CPI)** — SPL Token CPI, `invoke_signed` for PDA authority
+- **Security** — Checks-Effects-Interactions, checked math, access control, trident fuzzing
+
+Full document index: [rust-blockchain-guide/SKILL.md](rust-blockchain-guide/SKILL.md)
+
+---
+
+### rust-ai-ml-inference-guide — AI/ML Inference Guide
+
+Applicable to **LLM serving, embedding vector search, ONNX model inference**. Vertical deepening of universal + cloud infra constitutions.
+
+- **Model loading** — GGUF (llama.cpp), SafeTensors, ONNX runtime, checksum verification
+- **Quantization** — Q4_0/Q4_K_M/Q8_0 quantization, perplexity evaluation before deployment
+- **GPU memory** — KV-cache pre-allocation, layer offloading, OOM backpressure
+- **Tokenizer** — HuggingFace tokenizers (BPE/WordPiece), batched encoding, special token alignment
+- **Continuous batching** — vLLM-style dynamic batching, prefill/decode splitting, padding elimination
+- **Embedding & vector search** — BERT embeddings, L2 normalization, HNSW approximate nearest neighbor
+- **Serving API** — SSE token streaming, gRPC bidirectional, TTFT/throughput evaluation
+
+Full document index: [rust-ai-ml-inference-guide/SKILL.md](rust-ai-ml-inference-guide/SKILL.md)
+
+---
+
 ## Quick Start
 
 ### Installation
 
-This project follows the [Agent Skills Spec v1.0](https://github.com/agentskills/agentskills/blob/main/docs/specification.mdx) format and is compatible with any AI agent platform that supports the Skills specification.
+This project follows the [Cursor Agent Skills](https://cursor.com/cn/docs/skills) format, an open standard compatible with any AI agent platform supporting Skills.
+
+**Cursor IDE**:
+
+1. Open **Cursor Settings → Rules**
+2. Click **Add Rule** → **Remote Rule (Github)**
+3. Enter: `https://github.com/smile9493/Rust_Coding_Standards_Skills`
+
+Or clone manually to your skills directory:
 
 ```bash
-# Clone the repository
 git clone https://github.com/smile9493/Rust_Coding_Standards_Skills.git
 
-# Install to your agent's skills directory
-# Trae IDE
-cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.trae/skills/
-cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.trae/skills/
-cp -r Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide ~/.trae/skills/
+# Copy to Cursor skills directory (user-level, globally available)
+cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.cursor/skills/
+cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide ~/.cursor/skills/
+cp -r Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide ~/.cursor/skills/
 
-# Claude Code / other Agent Skills compatible platforms
-# Copy both skill directories to your agent's skills configuration path
+# Or copy to project-level (project-scoped only)
+cp -r Rust_Coding_Standards_Skills/rust-architecture-guide your-project/.cursor/skills/
+cp -r Rust_Coding_Standards_Skills/rust-systems-cloud-infra-guide your-project/.cursor/skills/
+cp -r Rust_Coding_Standards_Skills/rust-wasm-frontend-infra-guide your-project/.cursor/skills/
+
+# Also compatible with Claude Code / Codex
+cp -r Rust_Coding_Standards_Skills/rust-architecture-guide ~/.claude/skills/
 ```
 
 ### Usage
 
-**Skill Invocation** (platform-specific syntax):
-
-```
-# Trae IDE
-/rust-architecture-guide priority my_conflict
-/rust-architecture-guide state-machine Order
-/rust-systems-cloud-infra-guide io-model
-/rust-systems-cloud-infra-guide backpressure
-/rust-wasm-frontend-infra-guide build-control
-/rust-wasm-frontend-infra-guide ffi-boundary
-
-# Claude Code / other platforms — reference skill name in prompt
-# "According to rust-architecture-guide, what priority should I assign?"
-# "Follow rust-systems-cloud-infra-guide to select the I/O model for this gateway"
-```
-
-**Natural Language Trigger** — The Agent automatically matches skills based on context:
+**Natural Language Trigger** — Agent automatically applies skills based on context:
 
 ```
 Help me refactor the Order entity with type-driven state machine
@@ -176,28 +282,35 @@ Configure my WASM project's Cargo.toml for minimal binary size
 Design a zero-copy JS-WASM boundary for image processing
 ```
 
+**Slash Command Invocation** — Explicitly invoke skills:
+
+```
+/rust-architecture-guide
+/rust-systems-cloud-infra-guide
+/rust-wasm-frontend-infra-guide
+```
+
 ### Skill Format
 
-Each skill follows the Agent Skills Spec v1.0 structure:
+Each skill follows the [Cursor Agent Skills](https://cursor.com/cn/docs/skills) format:
 
 ```
 skill-name/
 ├── SKILL.md              # Entry point (YAML frontmatter + Agent instructions)
-└── references/            # Deep-dive reference documents
-    ├── 01-topic.md
-    ├── 02-topic.md
-    └── ...
+├── references/            # Deep-dive reference documents (loaded on-demand)
+├── scripts/               # Executable code the agent can run (optional)
+└── assets/                # Static resources: templates, images, data files (optional)
 ```
 
 **SKILL.md frontmatter fields**:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `name` | ✅ | Skill identifier (hyphen-case, matches directory name) |
-| `description` | ✅ | When to invoke this skill (max 1024 chars) |
-| `license` | ❌ | License identifier |
-| `metadata` | ❌ | Extended metadata (version, philosophy, domain, etc.) |
-| `allowed-tools` | ❌ | Tools the skill is permitted to use |
+| `name` | ✅ | Skill identifier (hyphen-case, must match directory name) |
+| `description` | ✅ | What the skill does and when to use it (used by agent for relevance) |
+| `paths` | ❌ | Glob pattern(s) to scope the skill to matching files only |
+| `disable-model-invocation` | ❌ | When `true`, skill is only invoked via explicit `/skill-name`, not auto |
+| `metadata` | ❌ | Arbitrary key-value map for extended metadata |
 
 ---
 
@@ -315,9 +428,9 @@ rust-architecture-guide (Universal Constitution)
                       └── Compliance (7 prohibitions + 10-item checklist)
 ```
 
-- **`rust-architecture-guide`** (v9.0.0): Constitutional foundation for all Rust engineering — adds memory layout transparency, breakwater pattern, and physical feasibility audit
-- **`rust-systems-cloud-infra-guide`** (v6.0.0): Cloud-native scenario **amendment**, adds system-level red lines, Facade/Core architecture, and deployment physical audit on top of P0 safety
-- **`rust-wasm-frontend-infra-guide`** (v4.0.0): `wasm32-unknown-unknown` scenario **amendment**, adds compilation & boundary layer hard constraints on top of P0 safety
+- **`rust-architecture-guide`** (v9.1.0): Constitutional foundation for all Rust engineering — adds memory layout transparency, breakwater pattern, physical feasibility audit, and Rust 2024 Edition alignment
+- **`rust-systems-cloud-infra-guide`** (v6.1.0): Cloud-native scenario **amendment**, adds system-level red lines, Facade/Core architecture, deployment physical audit, and modern resilience patterns on top of P0 safety
+- **`rust-wasm-frontend-infra-guide`** (v4.1.0): `wasm32-unknown-unknown` scenario **amendment**, adds compilation & boundary layer hard constraints, binary size economics, and ecosystem convergence on top of P0 safety
 - Complementary use: The universal constitution provides the priority framework; vertical deepening guides add domain-specific red lines
 
 ---
@@ -408,22 +521,48 @@ Each conversation generates a **Decision Summary**, recording:
 ## Project Structure
 
 ```
-├── rust-architecture-guide/
-│   ├── SKILL.md                          # Skill entry
-│   ├── README.md                         # Document index (detailed)
-│   └── references/                        # 29 reference documents
+├── rust-architecture-guide/           # P0: Universal Constitution
+│   ├── SKILL.md
+│   └── references/                    # 33 reference documents
 │
-├── rust-systems-cloud-infra-guide/
-│   ├── SKILL.md                          # Skill entry
-│   ├── README.md                         # Document index (detailed)
-│   └── references/                        # 13 reference documents
+├── rust-systems-cloud-infra-guide/    # Cloud Infrastructure Vertical
+│   ├── SKILL.md
+│   └── references/                    # 14 reference documents
 │
-├── rust-wasm-frontend-infra-guide/
-│   ├── SKILL.md                          # Skill entry
-│   ├── README.md                         # Document index (detailed)
-│   └── references/                        # 7 reference documents
+├── rust-wasm-frontend-infra-guide/    # Wasm Frontend Infrastructure Vertical
+│   ├── SKILL.md
+│   └── references/                    # 13 reference documents
 │
-└── README.md                              # This file — Wiki index (overview)
+├── rust-embedded-iot-guide/           # Embedded & IoT Vertical
+│   ├── SKILL.md
+│   └── references/                    # 8 reference targets
+│
+├── rust-data-engineering-guide/       # Data Engineering Vertical
+│   ├── SKILL.md
+│   └── references/                    # 8 reference targets
+│
+├── rust-networking-protocols-guide/   # Network Protocols Vertical
+│   ├── SKILL.md
+│   └── references/                    # 8 reference targets
+│
+├── rust-cli-devops-guide/             # CLI & DevOps Vertical
+│   ├── SKILL.md
+│   └── references/                    # 8 reference targets
+│
+├── rust-gamedev-guide/                # Game Development Vertical
+│   ├── SKILL.md
+│   └── references/                    # 8 reference targets
+│
+├── rust-blockchain-guide/             # Blockchain & Web3 Vertical
+│   ├── SKILL.md
+│   └── references/                    # 8 reference targets
+│
+├── rust-ai-ml-inference-guide/        # AI/ML Inference Vertical
+│   ├── SKILL.md
+│   └── references/                    # 8 reference targets
+│
+├── README.md                          # This file — Wiki index (overview)
+└── README.zh-CN.md                    # Chinese version
 ```
 
 ---

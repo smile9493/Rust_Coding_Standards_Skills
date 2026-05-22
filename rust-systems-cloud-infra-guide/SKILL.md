@@ -1,7 +1,6 @@
 ---
 name: rust-systems-cloud-infra-guide
 description: Use when building Rust cloud-native infrastructure (database kernels, distributed storage, high-performance gateways, container runtimes, eBPF control planes). Covers I/O model selection, zero-copy pipelines, backpressure, deterministic consensus, lock-free concurrency, SIMD vectorization, advanced memory architecture, breakwater pattern, and physical feasibility audit. Vertical deepening of rust-architecture-guide for long-running systems.
-license: MIT
 metadata:
   version: "6.1.0"
   philosophy: "Mechanical Sympathy, Determinism, Resilience, Jeet Kune Do, Unity of False and Real"

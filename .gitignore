@@ -3,6 +3,8 @@
 .arts/
 .vscode/
 .idea/
+.cursor/
+.agents/
 
 # OS
 .DS_Store

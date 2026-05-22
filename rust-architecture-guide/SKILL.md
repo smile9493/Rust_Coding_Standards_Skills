@@ -1,7 +1,6 @@
 ---
 name: rust-architecture-guide
 description: Comprehensive Rust engineering guide covering priority pyramid, architecture decisions, idiomatic coding style, memory layout transparency, breakwater pattern, and physical feasibility audit. Invoke when starting Rust projects, making trade-offs, writing idiomatic code, or designing system architecture. Based on Jeet Kune Do philosophy — intercept boilerplate, flow with hardware, fold logic to maximum energy density, unity of false and real.
-license: MIT
 metadata:
   version: "9.1.0"
   philosophy: "Dialectical Materialism & Jeet Kune Do — Unity of False and Real"
