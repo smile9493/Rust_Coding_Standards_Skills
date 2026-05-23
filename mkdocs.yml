@@ -28,7 +28,6 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
-    - navigation.instant
     - navigation.tracking
     - navigation.expand
     - navigation.indexes
@@ -50,6 +49,28 @@ markdown_extensions:
 
 plugins:
   - search
+  - i18n:
+      languages:
+        - locale: en
+          name: English
+          build: true
+          default: true
+        - locale: zh
+          name: 中文
+          build: true
+          nav_translations:
+            Home: 首页
+            Guides: 指南
+            Architecture Guide (Constitution): 架构指南（宪法）
+            Systems & Cloud Infra Guide: 系统与云基础设施指南
+            Wasm Frontend Infra Guide: Wasm 前端基础设施指南
+            Embedded & IoT Guide: 嵌入式与物联网指南
+            Data Engineering Guide: 数据工程指南
+            Networking Protocols Guide: 网络协议指南
+            CLI & DevOps Guide: CLI 与 DevOps 指南
+            Gamedev Guide: 游戏开发指南
+            Blockchain Guide: 区块链指南
+            AI/ML Inference Guide: AI/ML 推理指南
 
 nav:
   - Home: index.md
