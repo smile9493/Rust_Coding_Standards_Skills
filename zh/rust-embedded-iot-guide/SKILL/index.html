@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Use when building Rust embedded systems, IoT devices, or bare-metal firmware (ARM Cortex-M, RISC-V, ESP32). Covers no_std architecture, PAC/HAL layering, RTIC/Embassy async, linker script control, power management, and hardware debugging. Vertical deepening of rust-architecture-guide for microcontroller targets.">
+        <meta name="description" content="在构建 Rust 嵌入式系统、物联网设备或裸机固件（ARM Cortex-M、RISC-V、ESP32）时使用。涵盖 no_std 架构、PAC/HAL 分层、RTIC/Embassy 异步、链接脚本控制、电源管理和硬件调试。作为 rust-architecture-guide 对微控制器目标的垂直深化。">
       
       
       
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rust-embedded-iot-guide-v100" class="md-skip">
+        <a href="#rust-v100" class="md-skip">
           跳转至
         </a>
       
@@ -534,162 +534,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-philosophy" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Philosophy
+        核心哲学
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-1-no_std-architecture-crate-layering" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 1: no_std Architecture &amp; Crate Layering
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-2-memory-layout-linker-script-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 2: Memory Layout &amp; Linker Script Control
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-3-interrupt-driven-concurrency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 3: Interrupt-Driven Concurrency
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-4-peripheral-driver-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 4: Peripheral Driver Development
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-5-power-management-battery-life" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 5: Power Management &amp; Battery Life
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-6-hardware-debugging-observability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 6: Hardware Debugging &amp; Observability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-7-build-system-toolchain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 7: Build System &amp; Toolchain
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-8-testing-on-hardware" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 8: Testing on Hardware
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-quick-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions Quick List
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-relationship-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Relationship Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V1.0.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -904,162 +755,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-philosophy" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Philosophy
+        核心哲学
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-1-no_std-architecture-crate-layering" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 1: no_std Architecture &amp; Crate Layering
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-2-memory-layout-linker-script-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 2: Memory Layout &amp; Linker Script Control
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-3-interrupt-driven-concurrency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 3: Interrupt-Driven Concurrency
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-4-peripheral-driver-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 4: Peripheral Driver Development
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-5-power-management-battery-life" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 5: Power Management &amp; Battery Life
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-6-hardware-debugging-observability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 6: Hardware Debugging &amp; Observability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-7-build-system-toolchain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 7: Build System &amp; Toolchain
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-8-testing-on-hardware" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 8: Testing on Hardware
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-quick-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions Quick List
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-relationship-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Relationship Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V1.0.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1083,278 +785,35 @@
   
 
 
-<h1 id="rust-embedded-iot-guide-v100">Rust Embedded &amp; IoT Guide V1.0.0<a class="headerlink" href="#rust-embedded-iot-guide-v100" title="Permanent link">&para;</a></h1>
-<p>Vertical deepening of <code>rust-architecture-guide</code> for bare-metal and RTOS-based embedded systems. Assumes constrained hardware (KB of RAM, MHz of clock), no operating system, real-time deadlines.</p>
-<h2 id="core-philosophy">Core Philosophy<a class="headerlink" href="#core-philosophy" title="Permanent link">&para;</a></h2>
+<h1 id="rust-v100">Rust 嵌入式与物联网指南 V1.0.0<a class="headerlink" href="#rust-v100" title="Permanent link">&para;</a></h1>
+<p>作为 <code>rust-architecture-guide</code> 对裸机和基于 RTOS 的嵌入式系统的垂直深化。假设资源受限的硬件（KB 级 RAM、MHz 级时钟）、无操作系统、实时截止期限。</p>
+<h2 id="_1">核心哲学<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Principle</th>
-<th>Description</th>
+<th>原则</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Mechanical Sympathy</strong></td>
-<td>Code directly maps to MMIO registers — no kernel, no syscall, no page table</td>
+<td><strong>机械同理心</strong></td>
+<td>代码直接映射到 MMIO 寄存器 — 无内核、无系统调用、无页表</td>
 </tr>
 <tr>
-<td><strong>Determinism</strong></td>
-<td>Every instruction cycle is accounted for; interrupt latency is bounded and measured</td>
+<td><strong>确定性</strong></td>
+<td>每个指令周期都可被追踪；中断延迟有界且可测量</td>
 </tr>
 <tr>
-<td><strong>Minimalism</strong></td>
-<td><code>no_std</code> by default; <code>alloc</code> is a luxury decision; every byte of <code>.bss</code> is audited</td>
+<td><strong>极简主义</strong></td>
+<td>默认 <code>no_std</code>；<code>alloc</code> 是奢侈决策；<code>.bss</code> 的每个字节都经过审计</td>
 </tr>
 <tr>
-<td><strong>Jeet Kune Do</strong></td>
-<td>One-strike power cycles; flash-friendly data structures; DMA as the ultimate zero-copy</td>
+<td><strong>截拳道</strong></td>
+<td>一击电源周期；闪存友好的数据结构；DMA 作为终极零拷贝</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="action-1-no_std-architecture-crate-layering">Action 1: no_std Architecture &amp; Crate Layering<a class="headerlink" href="#action-1-no_std-architecture-crate-layering" title="Permanent link">&para;</a></h2>
-<p>Embedded Rust code has no <code>std</code>. The architecture follows a strict five-layer abstraction:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Application → BSP (Board Support) → HAL → PAC → Cortex-M/RISC-V Core
-</code></pre></div>
-<ul>
-<li><strong>PAC</strong> (Peripheral Access Crate): Auto-generated from SVD via <code>svd2rust</code>. Unsafe MMIO.</li>
-<li><strong>HAL</strong>: Implements <code>embedded-hal</code> traits. Safe API over PAC. Hardware-agnostic.</li>
-<li><strong>BSP</strong>: Board-specific pin assignments, clock trees, peripheral configuration.</li>
-<li><strong>Red Line</strong>: Application code must never directly touch PAC registers.</li>
-</ul>
-<p>→ <a href="../references/01-no-std-architecture/">references/01-no-std-architecture.md</a></p>
-<hr />
-<h2 id="action-2-memory-layout-linker-script-control">Action 2: Memory Layout &amp; Linker Script Control<a class="headerlink" href="#action-2-memory-layout-linker-script-control" title="Permanent link">&para;</a></h2>
-<p>In bare-metal, there is no OS to set up <code>.bss</code>/<code>.data</code>. You must:</p>
-<ul>
-<li>Define <code>memory.x</code> linker script: FLASH origin/length, RAM origin/length</li>
-<li>Implement <code>pre_init</code> in assembly: copy <code>.data</code> to RAM, zero <code>.bss</code></li>
-<li>Audit stack usage per function (<code>cargo-call-stack</code>)</li>
-<li><strong>Red Line</strong>: Stack overflow in embedded = undefined behavior. Must use <code>flip-link</code> or MPU stack guard.</li>
-</ul>
-<p>→ <a href="../references/02-memory-layout/">references/02-memory-layout.md</a></p>
-<hr />
-<h2 id="action-3-interrupt-driven-concurrency">Action 3: Interrupt-Driven Concurrency<a class="headerlink" href="#action-3-interrupt-driven-concurrency" title="Permanent link">&para;</a></h2>
-<p>No threads. No <code>std::sync</code>. Concurrency is interrupt-driven.</p>
-<ul>
-<li><strong>RTIC</strong> (Real-Time Interrupt-driven Concurrency): Static priority ceiling protocol, deadlock-free by construction</li>
-<li><strong>Embassy</strong>: Async executor on bare-metal. <code>#[embassy_executor::task]</code>, <code>await</code> on DMA completion</li>
-<li><strong>Red Line</strong>: Prohibit busy-waiting (<code>loop { if flag {} }</code>). Use interrupt or WFI/WFE.</li>
-<li><strong>Red Line</strong>: Unsynchronized shared mutable <code>static mut</code> is UB. Use <code>CriticalSection</code>, RTIC resource locks, <code>portable-atomic</code>, or <code>static_cell</code> patterns.</li>
-</ul>
-<p>→ <a href="../references/03-concurrency/">references/03-concurrency.md</a></p>
-<hr />
-<h2 id="action-4-peripheral-driver-development">Action 4: Peripheral Driver Development<a class="headerlink" href="#action-4-peripheral-driver-development" title="Permanent link">&para;</a></h2>
-<p>Every peripheral is a state machine with hardware-backed constraints.</p>
-<ul>
-<li>SPI/I2C/UART: Implement <code>embedded-hal</code> traits. Use DMA for bulk transfers.</li>
-<li>GPIO: Input/Floating/PullUp/PullDown/Analog/AlternateFunction — typed state machine.</li>
-<li>ADC/DAC: Calibration, sampling rate, DMA double-buffering.</li>
-<li>Timer/PWM: Capture/compare, dead-time insertion for motor control.</li>
-<li><strong>Red Line</strong>: Prohibit bypassing HAL to write raw registers outside PAC crate.</li>
-</ul>
-<p>→ <a href="../references/04-peripheral-drivers/">references/04-peripheral-drivers.md</a></p>
-<hr />
-<h2 id="action-5-power-management-battery-life">Action 5: Power Management &amp; Battery Life<a class="headerlink" href="#action-5-power-management-battery-life" title="Permanent link">&para;</a></h2>
-<p>Every µA matters for battery-powered devices.</p>
-<ul>
-<li>Sleep/Deep-Sleep/Standby state machine. Wake sources: RTC, external interrupt, WDT.</li>
-<li>Clock gating: disable unused peripheral clocks. Dynamic frequency scaling.</li>
-<li><strong>Red Line</strong>: Must measure actual current draw with power profiler (not simulator). Define a product-specific sleep budget based on MCU/board/radio requirements; the &lt;10µA figure is typical for ultra-low-power designs but varies by hardware.</li>
-</ul>
-<p>→ <a href="../references/05-power-management/">references/05-power-management.md</a></p>
-<hr />
-<h2 id="action-6-hardware-debugging-observability">Action 6: Hardware Debugging &amp; Observability<a class="headerlink" href="#action-6-hardware-debugging-observability" title="Permanent link">&para;</a></h2>
-<p>No <code>println!</code> to console. Debugging requires hardware tools.</p>
-<ul>
-<li><strong>probe-rs</strong> / <strong>OpenOCD</strong> + GDB: Flash, debug, RTT (Real-Time Transfer) channels</li>
-<li><strong>defmt</strong>: Binary-efficient logging framework (strings are interned, not transmitted)</li>
-<li><strong>ITM/SWO</strong>: ARM CoreSight trace for performance profiling</li>
-<li>Logic analyzer: Protocol-level debugging for SPI/I2C/UART timing violations</li>
-<li><strong>Red Line</strong>: Release builds must strip debug symbols. Measure binary size after <code>objcopy</code>.</li>
-</ul>
-<p>→ <a href="../references/06-debugging/">references/06-debugging.md</a></p>
-<hr />
-<h2 id="action-7-build-system-toolchain">Action 7: Build System &amp; Toolchain<a class="headerlink" href="#action-7-build-system-toolchain" title="Permanent link">&para;</a></h2>
-<ul>
-<li><code>rust-toolchain.toml</code>: Pin nightly/stable, target (<code>thumbv7em-none-eabi</code>, <code>riscv32imac-unknown-none-elf</code>)</li>
-<li><code>cargo-embed</code> / <code>cargo-flash</code> for consistent flashing</li>
-<li><code>cargo-generate</code> templates for project scaffolding</li>
-<li><strong>Red Line</strong>: Never compile embedded project without target-specific <code>rust-toolchain.toml</code></li>
-</ul>
-<p>→ <a href="../references/07-toolchain/">references/07-toolchain.md</a></p>
-<hr />
-<h2 id="action-8-testing-on-hardware">Action 8: Testing on Hardware<a class="headerlink" href="#action-8-testing-on-hardware" title="Permanent link">&para;</a></h2>
-<p>Unit tests on host (<code>cargo test --target x86_64</code>), integration on target.</p>
-<ul>
-<li><code>defmt-test</code>: Test harness that runs on hardware</li>
-<li>Hardware-in-the-loop (HIL): Automate flash → run → check RTT output</li>
-<li><code>cargo-modules</code>: Audit module graph for PAC leakage</li>
-<li><strong>Red Line</strong>: Critical safety paths (motor control, medical) must pass HIL tests on real hardware</li>
-</ul>
-<p>→ <a href="../references/08-testing/">references/08-testing.md</a></p>
-<hr />
-<h2 id="prohibitions-quick-list">Prohibitions Quick List<a class="headerlink" href="#prohibitions-quick-list" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Prohibited</th>
-<th>Mandatory</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Standard Library</td>
-<td><code>use std::*</code></td>
-<td><code>#![no_std]</code> + optional <code>extern crate alloc</code></td>
-</tr>
-<tr>
-<td>Dynamic Allocation</td>
-<td><code>Box</code>, <code>Vec</code> without allocator</td>
-<td>Static buffers, <code>heapless</code> collections</td>
-</tr>
-<tr>
-<td>Main Function</td>
-<td><code>fn main()</code></td>
-<td><code>#[entry]</code> or <code>#[cortex_m_rt::entry]</code></td>
-</tr>
-<tr>
-<td>Threading</td>
-<td><code>std::thread</code>, <code>tokio::spawn</code></td>
-<td>RTIC tasks or Embassy async</td>
-</tr>
-<tr>
-<td>Shared State</td>
-<td><code>static mut</code></td>
-<td><code>CriticalSection</code>, RTIC resource locks</td>
-</tr>
-<tr>
-<td>Busy-Wait</td>
-<td><code>loop { if flag {} }</code></td>
-<td>WFI/WFE, interrupt-driven wake</td>
-</tr>
-<tr>
-<td>Stack Overflow</td>
-<td>Unaudited recursion/deep frames</td>
-<td><code>flip-link</code>, MPU stack guard, <code>cargo-call-stack</code></td>
-</tr>
-<tr>
-<td>Debug Logging</td>
-<td><code>println!</code>, <code>log</code> crate</td>
-<td><code>defmt</code> / RTT</td>
-</tr>
-<tr>
-<td>Raw Registers</td>
-<td>Direct <code>write_volatile</code> in app</td>
-<td>PAC → HAL → BSP abstraction</td>
-</tr>
-<tr>
-<td>Unmeasured Power</td>
-<td>Guess-based optimization</td>
-<td>Power profiler with µA measurement</td>
-</tr>
-<tr>
-<td>Release Symbols</td>
-<td>Debug info in release</td>
-<td><code>strip = true</code>, <code>opt-level = "z"</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="document-relationship-map">Document Relationship Map<a class="headerlink" href="#document-relationship-map" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>flowchart TD
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    subgraph Foundation[&quot;rust-architecture-guide&quot;]
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        P0[P0 Safety]
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        P1[P1 Maintainability]
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    end
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    subgraph Embedded[&quot;rust-embedded-iot-guide&quot;]
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        NoStd[01-no-std-architecture.md]
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        Memory[02-memory-layout.md]
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        Concurrency[03-concurrency.md]
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        Periph[04-peripheral-drivers.md]
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        Power[05-power-management.md]
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        Debug[06-debugging.md]
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        Toolchain[07-toolchain.md]
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        Testing[08-testing.md]
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    end
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    P0 --&gt;|hardens| NoStd
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    P0 --&gt;|hardens| Memory
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    P1 --&gt;|adapts| Periph
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    NoStd --&gt; Concurrency
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    Periph --&gt; Power
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    Memory --&gt; Debug
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    Debug --&gt; Testing
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    style NoStd fill:#d9534f,stroke:#c9302c,color:#fff
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    style Memory fill:#5cb85c,stroke:#4cae4c,color:#fff
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    style Concurrency fill:#f0ad4e,stroke:#ec971f,color:#000
-</code></pre></div>
-<hr />
-<h2 id="reference-files">Reference Files<a class="headerlink" href="#reference-files" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Topic</th>
-<th>Key Directive</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../references/01-no-std-architecture/">01-no-std-architecture.md</a></td>
-<td>no_std Architecture &amp; Crate Layering</td>
-<td>PAC→HAL→BSP→App five-layer model</td>
-</tr>
-<tr>
-<td><a href="../references/02-memory-layout/">02-memory-layout.md</a></td>
-<td>Memory Layout &amp; Linker Scripts</td>
-<td><code>memory.x</code>, stack audit, <code>flip-link</code></td>
-</tr>
-<tr>
-<td><a href="../references/03-concurrency/">03-concurrency.md</a></td>
-<td>Interrupt-Driven Concurrency</td>
-<td>RTIC priority ceiling, Embassy async</td>
-</tr>
-<tr>
-<td><a href="../references/04-peripheral-drivers/">04-peripheral-drivers.md</a></td>
-<td>Peripheral Driver Development</td>
-<td>SPI/I2C/UART/GPIO/ADC typed state machines</td>
-</tr>
-<tr>
-<td><a href="../references/05-power-management/">05-power-management.md</a></td>
-<td>Power Management</td>
-<td>Sleep states, clock gating, battery budget</td>
-</tr>
-<tr>
-<td><a href="../references/06-debugging/">06-debugging.md</a></td>
-<td>Hardware Debugging</td>
-<td>probe-rs, defmt, RTT, ITM/SWO</td>
-</tr>
-<tr>
-<td><a href="../references/07-toolchain/">07-toolchain.md</a></td>
-<td>Build System &amp; Toolchain</td>
-<td>rust-toolchain.toml, cargo-embed, templates</td>
-</tr>
-<tr>
-<td><a href="../references/08-testing/">08-testing.md</a></td>
-<td>Testing on Hardware</td>
-<td>defmt-test, HIL, hardware-in-the-loop CI</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
-<h3 id="v100">V1.0.0<a class="headerlink" href="#v100" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Initial framework: no_std architecture, memory layout, RTIC/Embassy concurrency</li>
-<li>Peripheral driver development with <code>embedded-hal</code> traits</li>
-<li>Power management, hardware debugging, toolchain, and HIL testing</li>
-<li>Aligned with rust-architecture-guide V9.1.0 as parent constitution</li>
-</ul>
 
 
 

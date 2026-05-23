@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Hard constraints for Rust code targeting wasm32-unknown-unknown, covering compilation configuration, cross-language boundary, linear memory management, concurrency model, and general code adaptation. This Skill is the compilation & boundary layer foundation for all Rust+Wasm frontend architectures (including no-DOM rendering engines) and must be inherited and obeyed.
+        <meta name="description" content="针对 wasm32-unknown-unknown 目标的 Rust 代码的硬约束，涵盖编译配置、跨语言边界、 线性内存管理、并发模型和通用代码适配。本 Skill 是所有 Rust+Wasm 前端架构 （包括无 DOM 渲染引擎）的编译与边界层基础，必须被继承和遵守。
 ">
       
       
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rust-to-wasm-vertical-compilation-boundary-specification-v410" class="md-skip">
+        <a href="#rust-to-wasm-v410" class="md-skip">
           跳转至
         </a>
       
@@ -507,22 +507,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#architectural-philosophy-dialectical-materialism-and-jeet-kune-do-with-unity-of-false-and-real" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real
+        架构哲学：唯物辩证法与截拳道，虚实合一
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real">
+    <nav class="md-nav" aria-label="架构哲学：唯物辩证法与截拳道，虚实合一">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#01-materialist-foundation-reverence-for-physical-boundaries" class="md-nav__link">
+  <a href="#01" class="md-nav__link">
     <span class="md-ellipsis">
       
-        0.1 Materialist Foundation: Reverence for Physical Boundaries
+        0.1 唯物主义基础：敬畏物理边界
       
     </span>
   </a>
@@ -530,181 +530,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#02-dialectical-core-embrace-and-transform-contradictions" class="md-nav__link">
+  <a href="#02" class="md-nav__link">
     <span class="md-ellipsis">
       
-        0.2 Dialectical Core: Embrace and Transform Contradictions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#03-jeet-kune-do-essence-economy-directness-and-unity-of-false-and-real" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        0.3 Jeet Kune Do Essence: Economy, Directness, and Unity of False and Real
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#iron-rules-derived-from-materialist-foundation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Iron Rules Derived from Materialist Foundation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tiered-defense-memory-management-philosophy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tiered Defense: Memory Management Philosophy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-decision-tree-when-faced-with-dilemmas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture Decision Tree: When Faced with Dilemmas
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#code-review-smells" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Review "Smells"
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-1-compilation-artifact-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 1: Compilation &amp; Artifact Control
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-2-ffi-cross-language-boundary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 2: FFI &amp; Cross-Language Boundary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-3-memory-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 3: Memory &amp; Lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-4-concurrency-event-driven" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 4: Concurrency &amp; Event-Driven
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-5-general-code-wasm-adaptation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 5: General Code Wasm Adaptation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-compliance-self-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions &amp; Compliance Self-Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v410" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V4.1.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#v400" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V4.0.0
+        0.2 辩证法核心：拥抱并转化矛盾
       
     </span>
   </a>
@@ -955,22 +784,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#architectural-philosophy-dialectical-materialism-and-jeet-kune-do-with-unity-of-false-and-real" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real
+        架构哲学：唯物辩证法与截拳道，虚实合一
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real">
+    <nav class="md-nav" aria-label="架构哲学：唯物辩证法与截拳道，虚实合一">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#01-materialist-foundation-reverence-for-physical-boundaries" class="md-nav__link">
+  <a href="#01" class="md-nav__link">
     <span class="md-ellipsis">
       
-        0.1 Materialist Foundation: Reverence for Physical Boundaries
+        0.1 唯物主义基础：敬畏物理边界
       
     </span>
   </a>
@@ -978,181 +807,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#02-dialectical-core-embrace-and-transform-contradictions" class="md-nav__link">
+  <a href="#02" class="md-nav__link">
     <span class="md-ellipsis">
       
-        0.2 Dialectical Core: Embrace and Transform Contradictions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#03-jeet-kune-do-essence-economy-directness-and-unity-of-false-and-real" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        0.3 Jeet Kune Do Essence: Economy, Directness, and Unity of False and Real
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#iron-rules-derived-from-materialist-foundation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Iron Rules Derived from Materialist Foundation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tiered-defense-memory-management-philosophy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tiered Defense: Memory Management Philosophy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-decision-tree-when-faced-with-dilemmas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture Decision Tree: When Faced with Dilemmas
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#code-review-smells" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Review "Smells"
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-1-compilation-artifact-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 1: Compilation &amp; Artifact Control
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-2-ffi-cross-language-boundary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 2: FFI &amp; Cross-Language Boundary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-3-memory-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 3: Memory &amp; Lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-4-concurrency-event-driven" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 4: Concurrency &amp; Event-Driven
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stage-5-general-code-wasm-adaptation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stage 5: General Code Wasm Adaptation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-compliance-self-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions &amp; Compliance Self-Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v410" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V4.1.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#v400" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V4.0.0
+        0.2 辩证法核心：拥抱并转化矛盾
       
     </span>
   </a>
@@ -1184,273 +842,26 @@
   
 
 
-<h1 id="rust-to-wasm-vertical-compilation-boundary-specification-v410">Rust to Wasm Vertical Compilation &amp; Boundary Specification V4.1.0<a class="headerlink" href="#rust-to-wasm-vertical-compilation-boundary-specification-v410" title="Permanent link">&para;</a></h1>
-<p>This specification inherits the core philosophy from the Rust Architecture Guide and the Rust Project Lifecycle Guide, deepening vertically for the uniqueness of the <code>wasm32-unknown-unknown</code> target (linear memory, single-threaded event loop, cross-language boundary).</p>
-<p>V4.1.0 — <strong>Binary Size Economics &amp; Ecosystem Convergence</strong>:
-- Aligns with Leptos official binary size optimization guide: streaming WASM compilation rationale, <code>twiggy</code> top functions analysis
-- Recommends <code>talc</code> allocator (replacing deprecated <code>wee_alloc</code>) with quantitative baseline (~10KB → ~1KB)
-- References Wasm Component Model proposals for future canonical ABI alignment
-- Adds <code>wasm-tools</code> stripping and <code>wasm-objdump</code> size auditing to the toolchain</p>
-<h2 id="architectural-philosophy-dialectical-materialism-and-jeet-kune-do-with-unity-of-false-and-real">Architectural Philosophy: Dialectical Materialism and Jeet Kune Do with Unity of False and Real<a class="headerlink" href="#architectural-philosophy-dialectical-materialism-and-jeet-kune-do-with-unity-of-false-and-real" title="Permanent link">&para;</a></h2>
-<p>This specification is the engineering implementation of the "Dialectical Materialism and Jeet Kune Do" architectural philosophy at the compilation and boundary layer. For conflicts with <code>rust-architecture-guide</code>, the architecture guide serves as the <strong>constitutional foundation</strong> (see <a href="../../rust-architecture-guide/references/06-deviation-process.md">constitution conflict resolution</a>). This Wasm specification provides <strong>vertical-default guidance</strong> for <code>wasm32-unknown-unknown</code> targets, not an absolute veto over higher-level rules.</p>
-<h3 id="01-materialist-foundation-reverence-for-physical-boundaries">0.1 Materialist Foundation: Reverence for Physical Boundaries<a class="headerlink" href="#01-materialist-foundation-reverence-for-physical-boundaries" title="Permanent link">&para;</a></h3>
+<h1 id="rust-to-wasm-v410">Rust to Wasm 垂直编译与边界规范 V4.1.0<a class="headerlink" href="#rust-to-wasm-v410" title="Permanent link">&para;</a></h1>
+<p>本规范继承 Rust 架构指南和 Rust 项目生命周期指南的核心哲学，针对 <code>wasm32-unknown-unknown</code> 目标的特殊性（线性内存、单线程事件循环、跨语言边界）进行垂直深化。</p>
+<p>V4.1.0 — <strong>二进制体积经济学与生态收敛</strong>：
+- 对齐 Leptos 官方二进制体积优化指南：流式 WASM 编译原理、<code>twiggy</code> 顶层函数分析
+- 推荐 <code>talc</code> 分配器（替代已废弃的 <code>wee_alloc</code>），附带量化基准线（约 10KB → 约 1KB）
+- 引用 Wasm Component Model 提案，用于未来规范 ABI 对齐
+- 在工具链中新增 <code>wasm-tools</code> 剥离和 <code>wasm-objdump</code> 体积审计</p>
+<h2 id="_1">架构哲学：唯物辩证法与截拳道，虚实合一<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>本规范是"唯物辩证法与截拳道"架构哲学在编译和边界层的工程实现。与 <code>rust-architecture-guide</code> 冲突时，架构指南作为<strong>宪法基础</strong>（参见 <a href="../../rust-architecture-guide/references/06-deviation-process.md">constitution conflict resolution</a>）。本 Wasm 规范为 <code>wasm32-unknown-unknown</code> 目标提供<strong>垂直默认指导</strong>，而非对高级规则的绝对否决权。</p>
+<h3 id="01">0.1 唯物主义基础：敬畏物理边界<a class="headerlink" href="#01" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Linear memory only grows</strong>, must be reclaimed internally.</li>
-<li><strong>FFI boundary is expensive RPC</strong>, any implicit conversion is a performance liability.</li>
-<li><strong>Browser is a sandboxed OS</strong>, event loop, multi-threading limits, and security policies are physical laws that must be complied with.</li>
+<li><strong>线性内存只增不减</strong>，必须在内部回收。</li>
+<li><strong>FFI 边界是昂贵的 RPC</strong>，任何隐式转换都是性能负债。</li>
+<li><strong>浏览器是沙箱化的操作系统</strong>，事件循环、多线程限制和安全策略是必须遵守的物理法则。</li>
 </ul>
-<h3 id="02-dialectical-core-embrace-and-transform-contradictions">0.2 Dialectical Core: Embrace and Transform Contradictions<a class="headerlink" href="#02-dialectical-core-embrace-and-transform-contradictions" title="Permanent link">&para;</a></h3>
-<p>Core contradiction: JS's <strong>dynamism (flexible, GC, untyped)</strong> vs Rust's <strong>determinism (static, no GC, strongly typed)</strong>.</p>
-<p>Architectural solution: Through <strong>unidirectional control (Rust is the brain, JS is the dumb brush)</strong>, isolate the two sides. The Rust side pursues extreme determinism, the JS side pursues extreme pure execution. Neither pollutes the other.</p>
-<h3 id="03-jeet-kune-do-essence-economy-directness-and-unity-of-false-and-real">0.3 Jeet Kune Do Essence: Economy, Directness, and Unity of False and Real<a class="headerlink" href="#03-jeet-kune-do-essence-economy-directness-and-unity-of-false-and-real" title="Permanent link">&para;</a></h3>
+<h3 id="02">0.2 辩证法核心：拥抱并转化矛盾<a class="headerlink" href="#02" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Economy</strong>: Retain only necessary bytes, instructions, and abstraction layers. <code>opt-level = "z"</code> is the embodiment of this spirit at the compilation level.</li>
-<li><strong>Directness</strong>: Pursue the shortest physical execution path. Zero-copy views are the exemplar of "real", directly hitting the performance bottleneck of data transfer.</li>
-<li><strong>Unity of False and Real</strong>: The "false" move is not redundant; it is the setup, probing, and rhythm control for the final "real" move. Strong typing constraints, crash-preventing error handling, and phased code organization are the "false" — they consume a small number of bytes and engineer's mental effort, but exchange them for system <strong>determinism, robustness, and maintainability</strong>, creating the stage for the "real" to perform. Without the false, the real has no foundation.</li>
-</ul>
-<p>→ <a href="../references/08-philosophy-v2/">references/08-philosophy-v2.md</a></p>
-<h2 id="iron-rules-derived-from-materialist-foundation">Iron Rules Derived from Materialist Foundation<a class="headerlink" href="#iron-rules-derived-from-materialist-foundation" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Iron Rule</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>IRON-01</strong></td>
-<td>Binary Size Is Paramount</td>
-<td>Compilation artifacts must be aggressively compressed, all debug info, unwind tables, and redundant sections stripped</td>
-</tr>
-<tr>
-<td><strong>IRON-02</strong></td>
-<td>Zero-Copy at Boundary</td>
-<td>On high-frequency data paths, always pass pointer+length, never serialize; zero-copy view lifetimes must be documented</td>
-</tr>
-<tr>
-<td><strong>IRON-03</strong></td>
-<td>Memory Partitioning</td>
-<td>Global state static residency, per-frame objects ephemeral, prevent dynamic allocation fragmentation</td>
-</tr>
-<tr>
-<td><strong>IRON-04</strong></td>
-<td>Cross-Origin Isolation Documented</td>
-<td>Any use of <code>SharedArrayBuffer</code> must document COOP/COEP header configuration requirements</td>
-</tr>
-</tbody>
-</table>
-<p>→ <a href="../references/01-iron-rules/">references/01-iron-rules.md</a></p>
-<hr />
-<h2 id="tiered-defense-memory-management-philosophy">Tiered Defense: Memory Management Philosophy<a class="headerlink" href="#tiered-defense-memory-management-philosophy" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Tier</th>
-<th>Applicable</th>
-<th>Weapon</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Tier 1: Per-Frame Ephemeral</td>
-<td>Not exceeding a single <code>rAF</code> callback</td>
-<td>Bump Allocator (<code>bumpalo</code>)</td>
-</tr>
-<tr>
-<td>Tier 2: Scene-Level Residency</td>
-<td>Interaction scene lifecycle (drag, modal)</td>
-<td>Nestable or independent Arena pools</td>
-</tr>
-<tr>
-<td>Tier 3: Global Orthogonal Storage</td>
-<td>Cross entire application lifecycle</td>
-<td><code>SlotMap</code>, ECS-style component storage</td>
-</tr>
-</tbody>
-</table>
-<p>→ <a href="../references/08-philosophy-v2/">references/08-philosophy-v2.md</a> §1</p>
-<h2 id="architecture-decision-tree-when-faced-with-dilemmas">Architecture Decision Tree: When Faced with Dilemmas<a class="headerlink" href="#architecture-decision-tree-when-faced-with-dilemmas" title="Permanent link">&para;</a></h2>
-<ol>
-<li><strong>Closer to physical reality?</strong> — Prefer more direct, predictable control over bottom-level memory and instructions, no implicit "magic"</li>
-<li><strong>Does the "false" serve a more fundamental "real"?</strong> — Prefer overhead that clearly exchanges for core value</li>
-<li><strong>Compliant with browser physical laws?</strong> — Prefer not fighting the host environment, leverage its characteristics</li>
-</ol>
-<p>→ <a href="../references/08-philosophy-v2/">references/08-philosophy-v2.md</a> §2</p>
-<h2 id="code-review-smells">Code Review "Smells"<a class="headerlink" href="#code-review-smells" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Smell</th>
-<th>Philosophical Deviation</th>
-<th>Correction</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Unjustified <code>.unwrap()</code></td>
-<td>Lazy to lay the "false" error handling net</td>
-<td><code>Result&lt;T, JsValue&gt;</code> or <code>expect</code> with clear message</td>
-</tr>
-<tr>
-<td>High-frequency <code>serde_json</code></td>
-<td>"False" move in wrong place</td>
-<td><code>WasmSlice</code> zero-copy</td>
-</tr>
-<tr>
-<td>Exported functions return <code>String</code>/<code>Vec</code></td>
-<td>Ignorance of FFI boundary cost</td>
-<td>Return <code>WasmSlice</code> (pointer+length)</td>
-</tr>
-<tr>
-<td>Business logic <code>if/else</code> on JS side</td>
-<td>Brain leaking to brush</td>
-<td>Logic centralized in Rust, JS pure execution only</td>
-</tr>
-<tr>
-<td>Abandoning all debugging for zero overhead</td>
-<td>Rigid "realism", ignoring "false" value</td>
-<td>Retain <code>tracing_wasm</code> + <code>console_error_panic_hook</code></td>
-</tr>
-</tbody>
-</table>
-<p>→ <a href="../references/08-philosophy-v2/">references/08-philosophy-v2.md</a> §4</p>
-<hr />
-<h2 id="stage-1-compilation-artifact-control">Stage 1: Compilation &amp; Artifact Control<a class="headerlink" href="#stage-1-compilation-artifact-control" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>1.1 Release Profile (MUST)</strong>: <code>opt-level="z"</code>, <code>lto=true</code>, <code>codegen-units=1</code>, <code>panic="abort"</code>, <code>strip=true</code></li>
-<li><strong>1.2 Post-Processing Optimization (MUST)</strong>: <code>wasm-opt -Oz</code> (Binaryen v110+), typically reduces an additional 15-20%</li>
-<li><strong>1.3 Allocator Replacement (SHOULD)</strong>: Deprecate <code>wee_alloc</code>, recommend <code>talc</code> or <code>MiniAlloc</code>, baseline from ~10KB to ~1KB</li>
-</ul>
-<p>→ <a href="../references/02-build-control/">references/02-build-control.md</a></p>
-<hr />
-<h2 id="stage-2-ffi-cross-language-boundary">Stage 2: FFI &amp; Cross-Language Boundary<a class="headerlink" href="#stage-2-ffi-cross-language-boundary" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>2.1 Zero-Copy Memory Views (MUST)</strong>: <code>WasmSlice</code> safe encapsulation template, JS-side mandatory consumption within tick</li>
-<li><strong>2.2 Boundary Security Risks</strong>: Dangling pointer risk, lifetimes must be documented in <code># Safety</code> comments</li>
-<li><strong>2.3 Explicit Boundary Type Contracts (MUST)</strong>: Parameters must be scalars or <code>WasmSlice</code>, prohibit <code>JsValue</code> pass-through</li>
-</ul>
-<p>→ <a href="../references/03-ffi-boundary/">references/03-ffi-boundary.md</a></p>
-<hr />
-<h2 id="stage-3-memory-lifecycle">Stage 3: Memory &amp; Lifecycle<a class="headerlink" href="#stage-3-memory-lifecycle" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>3.1 Lifecycle Separation (MUST)</strong>: Global residency (pre-allocated <code>Vec</code>/<code>ArrayVec</code>/<code>SlotMap</code>) vs per-frame ephemeral (<code>bumpalo</code> Arena + per-frame <code>reset()</code>)</li>
-<li><strong>3.2 Physical Defense Against Memory Leaks (MUST)</strong>: Explicit <code>.free()</code> on JS component destruction, <code>WeakRef</code> auxiliary, <code>beforeunload</code> global cleanup</li>
-</ul>
-<p>→ <a href="../references/04-memory-lifecycle/">references/04-memory-lifecycle.md</a></p>
-<hr />
-<h2 id="stage-4-concurrency-event-driven">Stage 4: Concurrency &amp; Event-Driven<a class="headerlink" href="#stage-4-concurrency-event-driven" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>4.1 Seamless Async Mapping (MUST)</strong>: <code>wasm-bindgen-futures</code> (<code>JsFuture</code> + <code>spawn_local</code>)</li>
-<li><strong>4.2 Prohibit Blocking APIs (MUST NOT)</strong>: No <code>std::thread::sleep</code>, blocking <code>Mutex::lock()</code>, busy-waiting</li>
-<li><strong>4.3 Heavy Computation Worker Isolation (SHOULD)</strong>: COOP/COEP prerequisites, <code>#[repr(C)]</code> shared memory, <code>AtomicU32</code>/<code>AtomicU64</code> synchronization</li>
-</ul>
-<p>→ <a href="../references/05-concurrency-events/">references/05-concurrency-events.md</a></p>
-<hr />
-<h2 id="stage-5-general-code-wasm-adaptation">Stage 5: General Code Wasm Adaptation<a class="headerlink" href="#stage-5-general-code-wasm-adaptation" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>5.1 Error Handling (MUST)</strong>: <code>Result&lt;T, JsValue&gt;</code> + <code>thiserror</code>, under <code>panic="abort"</code> must use <code>Result</code> not <code>panic!</code></li>
-<li><strong>5.2 Logging &amp; Observability (MUST)</strong>: <code>console_error_panic_hook::set_once()</code> + <code>tracing_wasm::set_as_global_default()</code></li>
-</ul>
-<p>→ <a href="../references/06-wasm-adaptation/">references/06-wasm-adaptation.md</a></p>
-<hr />
-<h2 id="prohibitions-compliance-self-check">Prohibitions &amp; Compliance Self-Check<a class="headerlink" href="#prohibitions-compliance-self-check" title="Permanent link">&para;</a></h2>
-<p>7 hard prohibitions + 10-item compliance self-check list.</p>
-<p>→ <a href="../references/07-prohibitions-checklist/">references/07-prohibitions-checklist.md</a></p>
-<hr />
-<h2 id="reference-files">Reference Files<a class="headerlink" href="#reference-files" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Topic</th>
-<th>Key Directive</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../references/01-iron-rules/">01-iron-rules.md</a></td>
-<td>Iron Rules</td>
-<td>IRON-01~04 iron rules and their physical basis</td>
-</tr>
-<tr>
-<td><a href="../references/02-build-control/">02-build-control.md</a></td>
-<td>Compilation &amp; Artifact Control</td>
-<td><code>Cargo.toml</code> release profile + <code>wasm-opt</code> + allocator replacement</td>
-</tr>
-<tr>
-<td><a href="../references/03-ffi-boundary/">03-ffi-boundary.md</a></td>
-<td>FFI &amp; Cross-Language Boundary</td>
-<td><code>WasmSlice</code> zero-copy encapsulation + explicit type contracts</td>
-</tr>
-<tr>
-<td><a href="../references/04-memory-lifecycle/">04-memory-lifecycle.md</a></td>
-<td>Memory &amp; Lifecycle</td>
-<td>Global residency vs per-frame ephemeral + Arena <code>reset()</code> + leak defense</td>
-</tr>
-<tr>
-<td><a href="../references/05-concurrency-events/">05-concurrency-events.md</a></td>
-<td>Concurrency &amp; Event-Driven</td>
-<td><code>wasm-bindgen-futures</code> + blocking prohibition + Worker isolation</td>
-</tr>
-<tr>
-<td><a href="../references/06-wasm-adaptation/">06-wasm-adaptation.md</a></td>
-<td>General Code Wasm Adaptation</td>
-<td><code>Result&lt;T, JsValue&gt;</code> + <code>console_error_panic_hook</code> + <code>tracing_wasm</code></td>
-</tr>
-<tr>
-<td><a href="../references/07-prohibitions-checklist/">07-prohibitions-checklist.md</a></td>
-<td>Prohibitions &amp; Compliance</td>
-<td>7 hard prohibitions + 10-item self-check list</td>
-</tr>
-<tr>
-<td><a href="../references/08-philosophy-v2/">08-philosophy-v2.md</a></td>
-<td>Architectural Philosophy &amp; Decision Meta-Spec</td>
-<td>Dialectical Materialism + Jeet Kune Do + tiered defense + decision tree + review smells</td>
-</tr>
-<tr>
-<td><a href="../references/09-zero-copy-pool/">09-zero-copy-pool.md</a></td>
-<td>Zero-Copy Resource Pool</td>
-<td>Resource pool topology, JS injection via <code>encodeInto</code>, Wasm resolution with boundary interception, frame lifecycle sync</td>
-</tr>
-<tr>
-<td><a href="../references/10-command-bus-v3/">10-command-bus-v3.md</a></td>
-<td>Zero-Copy Command Bus V3.1</td>
-<td>Double-buffer topology, atomic synchronization (<code>AcqRel</code>), Facade write/consume cycle, lifecycle safety contract, hard constraints [F-08]~[F-11]</td>
-</tr>
-<tr>
-<td><a href="../references/11-toolchain-v3/">11-toolchain-v3.md</a></td>
-<td>Toolchain &amp; Lifecycle Automation V3.2</td>
-<td>Layout assertions, binary size budget, twiggy diagnostics, performance telemetry, lifecycle checkpoints, hard constraints [F-12]~[F-15]</td>
-</tr>
-<tr>
-<td><a href="../references/12-domain-engines-v4/">12-domain-engines-v4.md</a></td>
-<td>Domain Engines V4.1</td>
-<td>Pixel rendering (wgpu/vello/tiny-skia), vector &amp; search (SIMD128), high-density state (CRDT/yrs), time slicing, environment purity, hard constraints [F-16]~[F-20]</td>
-</tr>
-<tr>
-<td><a href="../references/13-cross-platform-isomorphism-v5/">13-cross-platform-isomorphism-v5.md</a></td>
-<td>Cross-Platform Isomorphism V5.1</td>
-<td>Component model vs native dual-track, capability Trait abstraction, SIMD dispatch (<code>edgevec</code>/<code>archmage</code>), atomic semantic alignment, hard constraints [F-21]~[F-24]</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
-<h3 id="v410">V4.1.0<a class="headerlink" href="#v410" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Version bumped to align with universal constitution V9.1.0</li>
-<li>Added binary size diagnostics: twiggy top/dominators/paths workflow, binary size budget tiers, wasm-tools strip, wasm-objdump audit</li>
-<li>Recommends <code>talc</code> allocator (replacing deprecated <code>wee_alloc</code>) with quantitative baseline (~10KB → ~1KB)</li>
-<li>Aligns with Leptos official binary size optimization guide including streaming WASM compilation rationale</li>
-<li>References Wasm Component Model proposals for future canonical ABI alignment</li>
-</ul>
-<h3 id="v400">V4.0.0<a class="headerlink" href="#v400" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Version bumped to align with universal constitution V9.0.0 restructuring</li>
-<li>Philosophy updated to "Dialectical Materialism &amp; Jeet Kune Do — Unity of False and Real"</li>
-<li>Maintains alignment with memory layout transparency, breakwater pattern, and physical feasibility audit paradigms (no new documents required — V3.0.0 already covers the three dimensions through IRON rules, FFI boundary specs, and memory lifecycle)</li>
+<li><strong><code>unsafe</code> 是安全抽象的物质基础</strong> —— Wasm 边界本质上是 <code>unsafe</code> 的，但这恰恰是零拷贝的物理前提。</li>
+<li><strong>二元对立引导实践</strong> —— 双缓冲区分 Front/Back Buffer。Front Buffer（实）由 Wasm 消耗，Back Buffer（虚）由 JS 写入。<code>AcqRel</code> 交换使虚变实。</li>
+<li><strong>量变到质变</strong> —— Arena 帧级分配积累，通过 <code>reset()</code> 实现批量回收，而非逐个释放。</li>
 </ul>
 
 

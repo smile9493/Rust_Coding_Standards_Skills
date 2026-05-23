@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Use when building Rust data infrastructure (query engines, ETL pipelines, OLAP databases, stream processors). Covers Arrow columnar memory model, vectorized expression evaluation, query optimizer design, partition strategies, streaming pipelines, and cross-language data interchange. Vertical deepening of rust-architecture-guide and rust-systems-cloud-infra-guide for data-intensive systems.">
+        <meta name="description" content="在构建 Rust 数据基础设施（查询引擎、ETL 管道、OLAP 数据库、流处理器）时使用。涵盖 Arrow 列式内存模型、向量化表达式求值、查询优化器设计、分区策略、流式管道和跨语言数据交换。作为 rust-architecture-guide 和 rust-systems-cloud-infra-guide 对数据密集型系统的垂直深化。">
       
       
       
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rust-data-engineering-guide-v100" class="md-skip">
+        <a href="#rust-v100" class="md-skip">
           跳转至
         </a>
       
@@ -562,162 +562,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-philosophy" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Philosophy
+        核心哲学
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-1-apache-arrow-columnar-memory-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 1: Apache Arrow Columnar Memory Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-2-vectorized-expression-evaluation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 2: Vectorized Expression Evaluation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-3-query-optimizer-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 3: Query Optimizer Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-4-parquet-storage-layer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 4: Parquet &amp; Storage Layer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-5-streaming-etl-windowing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 5: Streaming ETL &amp; Windowing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-6-partitioning-shuffling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 6: Partitioning &amp; Shuffling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-7-cross-language-data-interchange" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 7: Cross-Language Data Interchange
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-8-memory-management-for-analytics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 8: Memory Management for Analytics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-quick-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions Quick List
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-relationship-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Relationship Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V1.0.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -904,162 +755,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-philosophy" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Philosophy
+        核心哲学
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-1-apache-arrow-columnar-memory-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 1: Apache Arrow Columnar Memory Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-2-vectorized-expression-evaluation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 2: Vectorized Expression Evaluation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-3-query-optimizer-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 3: Query Optimizer Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-4-parquet-storage-layer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 4: Parquet &amp; Storage Layer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-5-streaming-etl-windowing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 5: Streaming ETL &amp; Windowing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-6-partitioning-shuffling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 6: Partitioning &amp; Shuffling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-7-cross-language-data-interchange" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 7: Cross-Language Data Interchange
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-8-memory-management-for-analytics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 8: Memory Management for Analytics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-quick-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions Quick List
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-relationship-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Relationship Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V1.0.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1083,269 +785,35 @@
   
 
 
-<h1 id="rust-data-engineering-guide-v100">Rust Data Engineering Guide V1.0.0<a class="headerlink" href="#rust-data-engineering-guide-v100" title="Permanent link">&para;</a></h1>
-<p>Vertical deepening of <code>rust-architecture-guide</code> and <code>rust-systems-cloud-infra-guide</code> for data-intensive systems. Assumes TB-PB scale data, columnar execution, and SIMD-accelerated compute.</p>
-<h2 id="core-philosophy">Core Philosophy<a class="headerlink" href="#core-philosophy" title="Permanent link">&para;</a></h2>
+<h1 id="rust-v100">Rust 数据工程指南 V1.0.0<a class="headerlink" href="#rust-v100" title="Permanent link">&para;</a></h1>
+<p>作为 <code>rust-architecture-guide</code> 和 <code>rust-systems-cloud-infra-guide</code> 对数据密集型系统的垂直深化。假设 TB-PB 级数据、列式执行和 SIMD 加速计算。</p>
+<h2 id="_1">核心哲学<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Principle</th>
-<th>Description</th>
+<th>原则</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Columnar Physics</strong></td>
-<td>Data lives in columns, not rows. Cache lines are filled with homogeneous types. Vectorization is natural.</td>
+<td><strong>列式物理</strong></td>
+<td>数据存在于列而非行中。缓存行填充同构类型，向量化是自然而然的结果。</td>
 </tr>
 <tr>
-<td><strong>Parquet-Native</strong></td>
-<td>Storage format is not an afterthought — predicate pushdown, row group pruning, statistics are first-class</td>
+<td><strong>Parquet 原生</strong></td>
+<td>存储格式不是事后考虑的——谓词下推、行组修剪、统计信息是一等公民</td>
 </tr>
 <tr>
-<td><strong>Mechanical Sympathy</strong></td>
-<td>Arrow arrays align with CPU cache lines. String dictionaries fit in L2. Bitmap filters fit in L1.</td>
+<td><strong>机械同理心</strong></td>
+<td>Arrow 数组与 CPU 缓存线对齐。字符串字典适配 L2。位图过滤器适配 L1。</td>
 </tr>
 <tr>
-<td><strong>Jeet Kune Do</strong></td>
-<td>One-pass multi-column projection. Late materialization. No unnecessary deserialization.</td>
+<td><strong>截拳道</strong></td>
+<td>一趟多列投影。延迟物化。不进行不必要的反序列化。</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="action-1-apache-arrow-columnar-memory-model">Action 1: Apache Arrow Columnar Memory Model<a class="headerlink" href="#action-1-apache-arrow-columnar-memory-model" title="Permanent link">&para;</a></h2>
-<p>Arrow defines the physical memory layout that all operators share.</p>
-<ul>
-<li><strong>Arrays</strong>: <code>PrimitiveArray&lt;T&gt;</code>, <code>StringArray</code>, <code>ListArray</code>, <code>StructArray</code> — typed buffers with null bitmaps</li>
-<li><strong>Chunked Arrays</strong> (<code>ChunkedArray&lt;T&gt;</code> from Polars, or <code>LargeListArray</code> / chunked batch patterns in <code>arrow-rs</code>): Zero-copy concatenation of same-type arrays</li>
-<li><strong>RecordBatch</strong>: A table slice — Schema + multiple Arrays with equal length</li>
-<li><strong>Red Line</strong>: Never copy Arrow data between operators. Use <code>Arc&lt;ArrayData&gt;</code> for shared ownership.</li>
-</ul>
-<p>→ <a href="../references/01-arrow-memory-model/">references/01-arrow-memory-model.md</a></p>
-<hr />
-<h2 id="action-2-vectorized-expression-evaluation">Action 2: Vectorized Expression Evaluation<a class="headerlink" href="#action-2-vectorized-expression-evaluation" title="Permanent link">&para;</a></h2>
-<p>Expressions operate on entire columns at once, not row-by-row.</p>
-<ul>
-<li><strong>Columnar Expressions</strong>: <code>col("price") * col("quantity")</code> → vectorized multiply</li>
-<li><strong>SIMD Acceleration</strong>: <code>std::simd</code> for int/float bulk ops (filter, arithmetic, comparison)</li>
-<li><strong>Bitmap Filtering</strong>: <code>BooleanArray</code> + <code>filter()</code> → branch-free selection</li>
-<li><strong>Null Handling</strong>: Null bitmap propagation without branching per element</li>
-<li><strong>Red Line</strong>: Row-by-row evaluation in hot paths collapses performance. Must batch.</li>
-</ul>
-<p>→ <a href="../references/02-vectorized-expressions/">references/02-vectorized-expressions.md</a></p>
-<hr />
-<h2 id="action-3-query-optimizer-design">Action 3: Query Optimizer Design<a class="headerlink" href="#action-3-query-optimizer-design" title="Permanent link">&para;</a></h2>
-<p>Logical plan → Optimized logical plan → Physical plan → Execution.</p>
-<ul>
-<li><strong>Rule-Based Optimization (RBO)</strong>: Predicate pushdown, projection pruning, constant folding, filter merge</li>
-<li><strong>Cost-Based Optimization (CBO)</strong>: Statistics (min/max/null_count/distinct_count), join reordering, cardinality estimation</li>
-<li><strong>Physical Planning</strong>: HashJoin vs SortMergeJoin, broadcast vs shuffle exchange</li>
-<li><strong>Red Line</strong>: Predicate pushdown must reach the storage layer (Parquet row group statistics).</li>
-</ul>
-<p>→ <a href="../references/03-query-optimizer/">references/03-query-optimizer.md</a></p>
-<hr />
-<h2 id="action-4-parquet-storage-layer">Action 4: Parquet &amp; Storage Layer<a class="headerlink" href="#action-4-parquet-storage-layer" title="Permanent link">&para;</a></h2>
-<p>Parquet is the universal columnar storage format. Every data system must read/write it natively.</p>
-<ul>
-<li><strong>Row Groups</strong>: ~128MB chunks, each with column chunks, each with pages</li>
-<li><strong>Statistics</strong>: min/max/null_count per column chunk → skip entire row groups at query time</li>
-<li><strong>Encoding</strong>: Dictionary, RLE, Delta, Bit-Packed — choose based on data distribution</li>
-<li><strong>Red Line</strong>: Never read entire Parquet file when predicate can skip row groups. Use <code>RowSelection</code>.</li>
-</ul>
-<p>→ <a href="../references/04-parquet-storage/">references/04-parquet-storage.md</a></p>
-<hr />
-<h2 id="action-5-streaming-etl-windowing">Action 5: Streaming ETL &amp; Windowing<a class="headerlink" href="#action-5-streaming-etl-windowing" title="Permanent link">&para;</a></h2>
-<p>Infinite data streams require different abstractions than batch processing.</p>
-<ul>
-<li><strong><code>Stream</code> trait</strong>: Async iteration with backpressure. <code>buffered(n)</code> for controlled concurrency.</li>
-<li><strong>Windowing</strong>: Tumbling, sliding, session windows. Watermarks for late-arrival tolerance.</li>
-<li><strong>State Management</strong>: Incremental aggregation with RocksDB/<code>moka</code> state backend</li>
-<li><strong>Exactly-Once</strong>: Checkpoint-based commit protocol (source offset + state snapshot)</li>
-<li><strong>Red Line</strong>: Unbounded state in streaming operators → OOM. Must enforce eviction policy.</li>
-</ul>
-<p>→ <a href="../references/05-streaming-etl/">references/05-streaming-etl.md</a></p>
-<hr />
-<h2 id="action-6-partitioning-shuffling">Action 6: Partitioning &amp; Shuffling<a class="headerlink" href="#action-6-partitioning-shuffling" title="Permanent link">&para;</a></h2>
-<p>Data distribution across nodes/threads is the scaling bottleneck.</p>
-<ul>
-<li><strong>Hash Partitioning</strong>: <code>hash(join_key) % num_partitions</code> → deterministic routing</li>
-<li><strong>Range Partitioning</strong>: Sort-based boundary, cost proportional to data skew</li>
-<li><strong>Broadcast Join</strong>: Small table replicated to all partitions; large table stays local</li>
-<li><strong>Shuffle</strong>: Network transfer + disk spill. Use <code>tokio</code> async I/O for concurrent shuffle streams.</li>
-<li><strong>Red Line</strong>: Data skew (&gt;10x largest partition) must be detected and mitigated (salt, split, or broadcast).</li>
-</ul>
-<p>→ <a href="../references/06-partitioning/">references/06-partitioning.md</a></p>
-<hr />
-<h2 id="action-7-cross-language-data-interchange">Action 7: Cross-Language Data Interchange<a class="headerlink" href="#action-7-cross-language-data-interchange" title="Permanent link">&para;</a></h2>
-<p>Rust engines serve Python/Node.js/Java clients. Zero-copy is critical at language boundaries.</p>
-<ul>
-<li><strong>PyO3 + Arrow</strong>: Pass Arrow C Data Interface (<code>ArrowArrayStream</code>) — zero-copy PyArrow ↔ Rust</li>
-<li><strong>napi-rs</strong>: Node.js Buffer → Arrow <code>Buffer</code> — zero-copy across V8 boundary</li>
-<li><strong>Flight/Flight SQL</strong>: gRPC-based Arrow streaming protocol for network transfer</li>
-<li><strong>Red Line</strong>: Prohibit <code>serde_json</code> for bulk columnar data handoff. Use Arrow IPC/Flight. JSON is permitted for metadata schemas, lineage records, and admin API boundaries.</li>
-</ul>
-<p>→ <a href="../references/07-cross-language/">references/07-cross-language.md</a></p>
-<hr />
-<h2 id="action-8-memory-management-for-analytics">Action 8: Memory Management for Analytics<a class="headerlink" href="#action-8-memory-management-for-analytics" title="Permanent link">&para;</a></h2>
-<p>Analytics workloads have unique memory patterns: large allocations, short-lived intermediates.</p>
-<ul>
-<li><strong>Arena per Query</strong>: <code>bumpalo</code> for intermediate expression results. Batch reclamation at query end.</li>
-<li><strong>Spill-to-Disk</strong>: When memory exceeds budget, sort/join intermediates spill to disk via <code>tempfile</code></li>
-<li><strong>String Interning</strong>: <code>string_cache</code> / <code>lasso</code> for repeated categorical strings (city names, status codes)</li>
-<li><strong>Red Line</strong>: Unbounded memory per query. Must configure <code>memory_limit</code> and enforce spill.</li>
-</ul>
-<p>→ <a href="../references/08-memory-management/">references/08-memory-management.md</a></p>
-<hr />
-<h2 id="prohibitions-quick-list">Prohibitions Quick List<a class="headerlink" href="#prohibitions-quick-list" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Prohibited</th>
-<th>Mandatory</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Row-by-Row Eval</td>
-<td><code>for row in df.iter()</code> on hot paths</td>
-<td>Vectorized columnar expressions</td>
-</tr>
-<tr>
-<td>Arrow Copy</td>
-<td><code>array.clone()</code> between operators</td>
-<td><code>Arc&lt;ArrayData&gt;</code> shared ownership</td>
-</tr>
-<tr>
-<td>JSON Handoff</td>
-<td><code>serde_json</code> for bulk columnar Py↔Rust data</td>
-<td>Arrow C Data Interface / Flight</td>
-</tr>
-<tr>
-<td>Predicate Late</td>
-<td>Filter at application layer</td>
-<td>Pushdown to Parquet row group level</td>
-</tr>
-<tr>
-<td>Unbounded Stream State</td>
-<td>No eviction policy</td>
-<td>TTL / LRU / watermark-based cleanup</td>
-</tr>
-<tr>
-<td>Data Skew Ignored</td>
-<td>Assume uniform distribution</td>
-<td>Detect skew, apply salt/broadcast</td>
-</tr>
-<tr>
-<td>Unbounded Query Mem</td>
-<td>No memory limit per query</td>
-<td><code>memory_limit</code> + spill-to-disk</td>
-</tr>
-<tr>
-<td>String Duplication</td>
-<td><code>String</code> for repeated values</td>
-<td>Dictionary encoding / string interning</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="document-relationship-map">Document Relationship Map<a class="headerlink" href="#document-relationship-map" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>flowchart TD
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    subgraph Foundation[&quot;rust-architecture-guide + cloud-infra-guide&quot;]
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        DataArch[09-data-architecture.md]
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        IOModel[01-io-model.md]
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        Memory[11-memory-advanced.md]
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    end
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    subgraph DataEng[&quot;rust-data-engineering-guide&quot;]
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        Arrow[01-arrow-memory-model.md]
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        Expr[02-vectorized-expressions.md]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        Optimizer[03-query-optimizer.md]
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        Parquet[04-parquet-storage.md]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        Streaming[05-streaming-etl.md]
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        Partition[06-partitioning.md]
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        CrossLang[07-cross-language.md]
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        MemoryMgmt[08-memory-management.md]
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    end
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    DataArch --&gt;|columnar layout| Arrow
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    IOModel --&gt;|async I/O| Streaming
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    Memory --&gt;|arena spill| MemoryMgmt
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    Arrow --&gt; Expr
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    Arrow --&gt; Parquet
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    Expr --&gt; Optimizer
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    Parquet --&gt; Optimizer
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    Optimizer --&gt; Partition
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    Streaming --&gt; Partition
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    CrossLang --&gt; Arrow
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    style Arrow fill:#d9534f,stroke:#c9302c,color:#fff
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    style Expr fill:#5cb85c,stroke:#4cae4c,color:#fff
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    style Optimizer fill:#f0ad4e,stroke:#ec971f,color:#000
-</code></pre></div>
-<hr />
-<h2 id="reference-files">Reference Files<a class="headerlink" href="#reference-files" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Topic</th>
-<th>Key Directive</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../references/01-arrow-memory-model/">01-arrow-memory-model.md</a></td>
-<td>Arrow Columnar Memory Model</td>
-<td>Array/Buffer/RecordBatch zero-copy architecture</td>
-</tr>
-<tr>
-<td><a href="../references/02-vectorized-expressions/">02-vectorized-expressions.md</a></td>
-<td>Vectorized Expression Evaluation</td>
-<td>SIMD bulk ops, bitmap filtering, null propagation</td>
-</tr>
-<tr>
-<td><a href="../references/03-query-optimizer/">03-query-optimizer.md</a></td>
-<td>Query Optimizer Design</td>
-<td>RBO/CBO, predicate pushdown, join reordering</td>
-</tr>
-<tr>
-<td><a href="../references/04-parquet-storage/">04-parquet-storage.md</a></td>
-<td>Parquet &amp; Storage Layer</td>
-<td>Row groups, statistics, encoding, predicate pushdown</td>
-</tr>
-<tr>
-<td><a href="../references/05-streaming-etl/">05-streaming-etl.md</a></td>
-<td>Streaming ETL &amp; Windowing</td>
-<td>Stream trait, windows, watermarks, exactly-once</td>
-</tr>
-<tr>
-<td><a href="../references/06-partitioning/">06-partitioning.md</a></td>
-<td>Partitioning &amp; Shuffling</td>
-<td>Hash/range/broadcast, data skew mitigation</td>
-</tr>
-<tr>
-<td><a href="../references/07-cross-language/">07-cross-language.md</a></td>
-<td>Cross-Language Data Interchange</td>
-<td>PyO3 Arrow, napi-rs, Flight protocol</td>
-</tr>
-<tr>
-<td><a href="../references/08-memory-management/">08-memory-management.md</a></td>
-<td>Memory Management for Analytics</td>
-<td>Arena per query, spill-to-disk, string interning</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
-<h3 id="v100">V1.0.0<a class="headerlink" href="#v100" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Initial framework: Arrow memory model, vectorized expressions, query optimizer</li>
-<li>Parquet storage layer with predicate pushdown and statistics</li>
-<li>Streaming ETL with windowing and exactly-once semantics</li>
-<li>Partitioning strategies, cross-language data interchange, analytics memory management</li>
-<li>Aligned with rust-architecture-guide V9.1.0 and rust-systems-cloud-infra-guide V6.1.0</li>
-</ul>
 
 
 

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Use when building Rust networking protocol implementations (QUIC, HTTP/3, gRPC, custom TCP/UDP protocols, WebSocket, DNS, TLS-terminating proxies). Covers protocol state machine modeling, zero-copy parsing, TLS integration, congestion control, connection pooling, and QUIC multiplexing. Vertical deepening of rust-architecture-guide for network protocol engineering.">
+        <meta name="description" content="在构建 Rust 网络协议实现（QUIC、HTTP/3、gRPC、自定义 TCP/UDP 协议、WebSocket、DNS、TLS 终结代理）时使用。涵盖协议状态机建模、零拷贝解析、TLS 集成、拥塞控制、连接池和 QUIC 多路复用。作为 rust-architecture-guide 对网络协议工程的垂直深化。">
       
       
       
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rust-networking-protocols-guide-v100" class="md-skip">
+        <a href="#rust-v100" class="md-skip">
           跳转至
         </a>
       
@@ -590,162 +590,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-philosophy" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Philosophy
+        核心哲学
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-1-protocol-state-machine-modeling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 1: Protocol State Machine Modeling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-2-zero-copy-wire-parsing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 2: Zero-Copy Wire Parsing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-3-quic-http3-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 3: QUIC &amp; HTTP/3 Implementation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-4-tls-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 4: TLS Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-5-congestion-control-flow-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 5: Congestion Control &amp; Flow Control
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-6-connection-pooling-multiplexing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 6: Connection Pooling &amp; Multiplexing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-7-dns-service-discovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 7: DNS &amp; Service Discovery
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-8-fuzzing-protocol-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 8: Fuzzing &amp; Protocol Security
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-quick-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions Quick List
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-relationship-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Relationship Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V1.0.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -904,162 +755,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-philosophy" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Philosophy
+        核心哲学
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-1-protocol-state-machine-modeling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 1: Protocol State Machine Modeling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-2-zero-copy-wire-parsing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 2: Zero-Copy Wire Parsing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-3-quic-http3-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 3: QUIC &amp; HTTP/3 Implementation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-4-tls-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 4: TLS Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-5-congestion-control-flow-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 5: Congestion Control &amp; Flow Control
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-6-connection-pooling-multiplexing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 6: Connection Pooling &amp; Multiplexing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-7-dns-service-discovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 7: DNS &amp; Service Discovery
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-8-fuzzing-protocol-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 8: Fuzzing &amp; Protocol Security
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-quick-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions Quick List
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-relationship-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Relationship Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V1.0.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1083,274 +785,35 @@
   
 
 
-<h1 id="rust-networking-protocols-guide-v100">Rust Networking Protocols Guide V1.0.0<a class="headerlink" href="#rust-networking-protocols-guide-v100" title="Permanent link">&para;</a></h1>
-<p>Vertical deepening of <code>rust-architecture-guide</code> and <code>rust-systems-cloud-infra-guide</code> for network protocol engineering. Covers the full stack from wire format parsing to application-level protocol state machines.</p>
-<h2 id="core-philosophy">Core Philosophy<a class="headerlink" href="#core-philosophy" title="Permanent link">&para;</a></h2>
+<h1 id="rust-v100">Rust 网络协议指南 V1.0.0<a class="headerlink" href="#rust-v100" title="Permanent link">&para;</a></h1>
+<p>作为 <code>rust-architecture-guide</code> 和 <code>rust-systems-cloud-infra-guide</code> 对网络协议工程的垂直深化。涵盖从线格式解析到应用层协议状态机的完整栈。</p>
+<h2 id="_1">核心哲学<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Principle</th>
-<th>Description</th>
+<th>原则</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Protocol First</strong></td>
-<td>The protocol specification is the source of truth. Code is the executable version of the RFC.</td>
+<td><strong>协议优先</strong></td>
+<td>协议规范是真理之源。代码是 RFC 的可执行版本。</td>
 </tr>
 <tr>
-<td><strong>Mechanical Sympathy</strong></td>
-<td>Wire format parsing aligns with CPU branch predictor. Zero-copy at every layer boundary.</td>
+<td><strong>机械同理心</strong></td>
+<td>线格式解析与 CPU 分支预测器对齐。每一层边界都是零拷贝。</td>
 </tr>
 <tr>
-<td><strong>Defense in Depth</strong></td>
-<td>Every byte from the network is hostile. Validate at ingress. Fuzz at integration.</td>
+<td><strong>纵深防御</strong></td>
+<td>来自网络的每个字节都是敌对的。在入口处验证。在集成处模糊测试。</td>
 </tr>
 <tr>
-<td><strong>Jeet Kune Do</strong></td>
-<td>Parse with one pass. State machines fold all edge cases into a closed set of transitions.</td>
+<td><strong>截拳道</strong></td>
+<td>一趟解析。状态机将所有边界情况折叠为一组封闭转换。</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="action-1-protocol-state-machine-modeling">Action 1: Protocol State Machine Modeling<a class="headerlink" href="#action-1-protocol-state-machine-modeling" title="Permanent link">&para;</a></h2>
-<p>Every protocol is a finite state machine. Model it as such.</p>
-<ul>
-<li><strong>Typed States</strong>: <code>enum State { Handshake, Established, Closing, Closed }</code> — compiler-enforced transitions</li>
-<li><strong>tokio-util Codec</strong>: <code>Encoder</code> + <code>Decoder</code> traits. Frame-level parsing with backpressure.</li>
-<li><strong>Layered Protocol Stacks</strong>: L2 (Ethernet) → L3 (IP) → L4 (TCP/UDP) → L5 (TLS) → L7 (HTTP/gRPC)</li>
-<li><strong>Red Line</strong>: Protocol states must be exhaustive. Missing transitions = panics or hangs.</li>
-</ul>
-<p>→ <a href="../references/01-state-machines/">references/01-state-machines.md</a></p>
-<hr />
-<h2 id="action-2-zero-copy-wire-parsing">Action 2: Zero-Copy Wire Parsing<a class="headerlink" href="#action-2-zero-copy-wire-parsing" title="Permanent link">&para;</a></h2>
-<p>Parse network bytes without allocating intermediate buffers.</p>
-<ul>
-<li><strong><code>nom</code> / <code>winnow</code></strong>: Combinator-based parsing on <code>&amp;[u8]</code>. Zero-copy by default.</li>
-<li><strong>Streaming Parsers</strong>: <code>winnow::Partial</code> for incomplete input — resume parsing when more data arrives</li>
-<li><strong>Binary Protocols</strong>: Fixed-width headers + length-prefixed payloads. Skip fields via <code>seek</code>.</li>
-<li><strong>Red Line</strong>: Never allocate a <code>Vec&lt;u8&gt;</code> copy of parsed fields. References to input buffer.</li>
-</ul>
-<p>→ <a href="../references/02-zero-copy-parsing/">references/02-zero-copy-parsing.md</a></p>
-<hr />
-<h2 id="action-3-quic-http3-implementation">Action 3: QUIC &amp; HTTP/3 Implementation<a class="headerlink" href="#action-3-quic-http3-implementation" title="Permanent link">&para;</a></h2>
-<p>QUIC is TCP+TLS+HTTP/2 reimagined on UDP with 0-RTT and connection migration.</p>
-<ul>
-<li><strong>Quinn / quiche / s2n-quic</strong>: Choose based on platform and feature requirements</li>
-<li><strong>Stream Multiplexing</strong>: Unlimited independent streams per connection, no head-of-line blocking</li>
-<li><strong>0-RTT Data</strong>: Security trade-offs — replay-safe idempotent requests only</li>
-<li><strong>Connection Migration</strong>: Survive IP address changes (mobile/Wi-Fi handoff) via connection IDs</li>
-<li><strong>Red Line</strong>: 0-RTT replay protection must be handled at the application layer.</li>
-</ul>
-<p>→ <a href="../references/03-quic-http3/">references/03-quic-http3.md</a></p>
-<hr />
-<h2 id="action-4-tls-integration">Action 4: TLS Integration<a class="headerlink" href="#action-4-tls-integration" title="Permanent link">&para;</a></h2>
-<p>TLS is not optional for public internet protocols. All internet-facing production protocols must encrypt by default. Internal trusted LAN services, Unix socket control planes, and WireGuard/IPsec mesh endpoints may omit TLS with documented threat model rationale.</p>
-<ul>
-<li><strong>rustls</strong>: Pure-Rust TLS. <code>ServerConfig</code>/<code>ClientConfig</code> with <code>Arc&lt;CryptoProvider&gt;</code>.</li>
-<li><strong>Certificate Management</strong>: <code>rcgen</code> for self-signed, <code>rustls-acme</code> for Let's Encrypt automation</li>
-<li><strong>ALPN Negotiation</strong>: Application-Layer Protocol Negotiation for HTTP/2 vs HTTP/1.1 routing</li>
-<li><strong>mTLS</strong>: Mutual TLS for service-to-service authentication. Client certificate verification.</li>
-<li><strong>Red Line</strong>: Never disable certificate verification in production. Use <code>dangerous_configuration</code> only in tests.</li>
-</ul>
-<p>→ <a href="../references/04-tls-integration/">references/04-tls-integration.md</a></p>
-<hr />
-<h2 id="action-5-congestion-control-flow-control">Action 5: Congestion Control &amp; Flow Control<a class="headerlink" href="#action-5-congestion-control-flow-control" title="Permanent link">&para;</a></h2>
-<p>Protocol performance is bounded by congestion control algorithms.</p>
-<ul>
-<li><strong>BBR / CUBIC</strong>: Implemented in kernel or userspace. BBR for high-BDP paths, CUBIC for compatibility.</li>
-<li><strong>Pacing</strong>: Smooth out bursts to avoid packet loss. Tokens-based rate limiter.</li>
-<li><strong>ECN</strong>: Explicit Congestion Notification — mark instead of drop. Respond with CWR.</li>
-<li><strong>Flow Control Windows</strong>: QUIC stream-level and connection-level flow control credits</li>
-<li><strong>Red Line</strong>: Unbounded send buffers → bufferbloat. Must enforce send window limits.</li>
-</ul>
-<p>→ <a href="../references/05-congestion-control/">references/05-congestion-control.md</a></p>
-<hr />
-<h2 id="action-6-connection-pooling-multiplexing">Action 6: Connection Pooling &amp; Multiplexing<a class="headerlink" href="#action-6-connection-pooling-multiplexing" title="Permanent link">&para;</a></h2>
-<p>Managing thousands of concurrent connections requires pooling.</p>
-<ul>
-<li><strong>Connection Pool</strong>: <code>deadpool</code> / <code>bb8</code> pattern. Max idle, max lifetime, health check on checkout.</li>
-<li><strong>HTTP/2 HPACK</strong>: Header compression dictionary per connection. Dynamic table size limits.</li>
-<li><strong>Multiplexing Strategy</strong>: Stream count limits, stream prioritization (weighted fair queuing)</li>
-<li><strong>Red Line</strong>: Connection pools must detect dead connections (TCP RST, idle timeout) and evict.</li>
-</ul>
-<p>→ <a href="../references/06-connection-pooling/">references/06-connection-pooling.md</a></p>
-<hr />
-<h2 id="action-7-dns-service-discovery">Action 7: DNS &amp; Service Discovery<a class="headerlink" href="#action-7-dns-service-discovery" title="Permanent link">&para;</a></h2>
-<p>Every connection starts with DNS. Get it right.</p>
-<ul>
-<li><strong>hickory-resolver</strong> (formerly trust-dns): Async DNS with caching, DNSSEC, DoH/DoT</li>
-<li><strong>SRV Records</strong>: Service discovery with priority/weight for load distribution</li>
-<li><strong>Happy Eyeballs</strong>: Race IPv6 and IPv4 connections, use whichever succeeds first</li>
-<li><strong>Red Line</strong>: DNS resolution must have timeout (default 5s). Infinite DNS wait = infinite connection wait.</li>
-</ul>
-<p>→ <a href="../references/07-dns-discovery/">references/07-dns-discovery.md</a></p>
-<hr />
-<h2 id="action-8-fuzzing-protocol-security">Action 8: Fuzzing &amp; Protocol Security<a class="headerlink" href="#action-8-fuzzing-protocol-security" title="Permanent link">&para;</a></h2>
-<p>Network protocols are attack surfaces. Fuzz them aggressively.</p>
-<ul>
-<li><strong>cargo-fuzz / libfuzzer</strong>: Structure-aware fuzzing with <code>arbitrary::Arbitrary</code> for wire format structs</li>
-<li><strong>proptest</strong>: Property-based testing for protocol invariants (round-trip, idempotency)</li>
-<li><strong>AFL++ / honggfuzz</strong>: Coverage-guided fuzzing for complex protocol parsers</li>
-<li><strong>Red Line</strong>: P0 wire-format protocol parsers must have a fuzz target. Fixed-structure parsers and internal formats may defer fuzzing to release gates. CI smoke fuzz (60s) acceptable for PRs; long fuzz (hours) reserved for pre-release.</li>
-</ul>
-<p>→ <a href="../references/08-fuzzing-security/">references/08-fuzzing-security.md</a></p>
-<hr />
-<h2 id="prohibitions-quick-list">Prohibitions Quick List<a class="headerlink" href="#prohibitions-quick-list" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Prohibited</th>
-<th>Mandatory</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Wire Parsing</td>
-<td><code>Vec&lt;u8&gt;</code> copies of parsed fields</td>
-<td>Zero-copy <code>&amp;[u8]</code> references</td>
-</tr>
-<tr>
-<td>TLS</td>
-<td>Disabled certificate verification</td>
-<td><code>rustls</code> with CA verification</td>
-</tr>
-<tr>
-<td>0-RTT</td>
-<td>Non-idempotent data in 0-RTT</td>
-<td>Application-level replay protection</td>
-</tr>
-<tr>
-<td>Send Buffer</td>
-<td>Unbounded send window</td>
-<td>Flow control with credit limits</td>
-</tr>
-<tr>
-<td>Protocol State</td>
-<td>Missing state transitions</td>
-<td>Exhaustive enum + <code>match</code></td>
-</tr>
-<tr>
-<td>DNS</td>
-<td>Infinite resolution wait</td>
-<td>Timeout (&lt; 5s)</td>
-</tr>
-<tr>
-<td>Connection Pool</td>
-<td>Blind connection reuse</td>
-<td>Health check + dead connection eviction</td>
-</tr>
-<tr>
-<td>Parser Security</td>
-<td>Parsing without fuzzing</td>
-<td><code>cargo-fuzz</code> target per parser</td>
-</tr>
-<tr>
-<td>ALPN</td>
-<td>No application protocol negotiation</td>
-<td>Explicit ALPN in TLS config</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="document-relationship-map">Document Relationship Map<a class="headerlink" href="#document-relationship-map" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>flowchart TD
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    subgraph Foundation[&quot;rust-architecture-guide + cloud-infra-guide&quot;]
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        StateMachine[07-state-machine.md]
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        IOModel[01-io-model.md]
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        FFI[15-ffi-interop.md]
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    end
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    subgraph Net[&quot;rust-networking-protocols-guide&quot;]
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        States[01-state-machines.md]
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        Parse[02-zero-copy-parsing.md]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        QUIC[03-quic-http3.md]
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        TLS[04-tls-integration.md]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        CC[05-congestion-control.md]
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        Pooling[06-connection-pooling.md]
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        DNS[07-dns-discovery.md]
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        Fuzz[08-fuzzing-security.md]
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    end
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    StateMachine --&gt;|protocol states| States
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    IOModel --&gt;|epoll/io_uring| QUIC
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    FFI --&gt;|FFI safety| Parse
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    States --&gt; QUIC
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    States --&gt; Pooling
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    Parse --&gt; QUIC
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    TLS --&gt; QUIC
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    CC --&gt; QUIC
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    DNS --&gt; Pooling
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    Parse --&gt; Fuzz
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    style States fill:#d9534f,stroke:#c9302c,color:#fff
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    style Parse fill:#5cb85c,stroke:#4cae4c,color:#fff
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    style QUIC fill:#f0ad4e,stroke:#ec971f,color:#000
-</code></pre></div>
-<hr />
-<h2 id="reference-files">Reference Files<a class="headerlink" href="#reference-files" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Topic</th>
-<th>Key Directive</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../references/01-state-machines/">01-state-machines.md</a></td>
-<td>Protocol State Machines</td>
-<td>Typed states, tokio-util Codec, layered stacks</td>
-</tr>
-<tr>
-<td><a href="../references/02-zero-copy-parsing/">02-zero-copy-parsing.md</a></td>
-<td>Zero-Copy Wire Parsing</td>
-<td>nom/winnow, streaming parsers, binary protocols</td>
-</tr>
-<tr>
-<td><a href="../references/03-quic-http3/">03-quic-http3.md</a></td>
-<td>QUIC &amp; HTTP/3</td>
-<td>Multiplexing, 0-RTT, connection migration</td>
-</tr>
-<tr>
-<td><a href="../references/04-tls-integration/">04-tls-integration.md</a></td>
-<td>TLS Integration</td>
-<td>rustls, mTLS, ALPN, certificate management</td>
-</tr>
-<tr>
-<td><a href="../references/05-congestion-control/">05-congestion-control.md</a></td>
-<td>Congestion &amp; Flow Control</td>
-<td>BBR/CUBIC, pacing, ECN, flow control windows</td>
-</tr>
-<tr>
-<td><a href="../references/06-connection-pooling/">06-connection-pooling.md</a></td>
-<td>Connection Pooling</td>
-<td>deadpool/bb8, HPACK, multiplexing strategy</td>
-</tr>
-<tr>
-<td><a href="../references/07-dns-discovery/">07-dns-discovery.md</a></td>
-<td>DNS &amp; Service Discovery</td>
-<td>hickory-resolver, SRV, Happy Eyeballs</td>
-</tr>
-<tr>
-<td><a href="../references/08-fuzzing-security/">08-fuzzing-security.md</a></td>
-<td>Fuzzing &amp; Protocol Security</td>
-<td>cargo-fuzz, proptest, AFL++</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
-<h3 id="v100">V1.0.0<a class="headerlink" href="#v100" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Initial framework: protocol state machines, zero-copy parsing with nom/winnow</li>
-<li>QUIC/HTTP/3 implementation patterns and 0-RTT security considerations</li>
-<li>TLS integration with rustls, mTLS, and certificate automation</li>
-<li>Congestion control, connection pooling, DNS discovery, fuzzing for security</li>
-<li>Aligned with rust-architecture-guide V9.1.0 and rust-systems-cloud-infra-guide V6.1.0</li>
-</ul>
 
 
 

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Use when building Rust AI/ML inference services, model serving infrastructure, or embedded ML pipelines. Covers model loading (GGUF/ONNX/SafeTensors), quantization-aware inference, GPU memory management (CUDA/Metal), tokenizer batching, and embedding vector search. Vertical deepening of rust-architecture-guide for AI inference systems.">
+        <meta name="description" content="在构建 Rust AI/ML 推理服务、模型服务基础设施或嵌入式 ML 管道时使用。涵盖模型加载（GGUF/ONNX/SafeTensors）、量化感知推理、GPU 内存管理（CUDA/Metal）、分词器批处理和嵌入向量搜索。作为 rust-architecture-guide 对 AI 推理系统的垂直深化。">
       
       
       
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rust-aiml-inference-guide-v100" class="md-skip">
+        <a href="#rust-aiml-v100" class="md-skip">
           跳转至
         </a>
       
@@ -700,162 +700,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-philosophy" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Philosophy
+        核心哲学
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-1-model-loading-format-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 1: Model Loading &amp; Format Handling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-2-quantization-aware-inference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 2: Quantization-Aware Inference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-3-gpu-memory-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 3: GPU Memory Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-4-tokenizer-text-processing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 4: Tokenizer &amp; Text Processing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-5-batching-continuous-batching" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 5: Batching &amp; Continuous Batching
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-6-embedding-vector-search" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 6: Embedding &amp; Vector Search
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-7-inference-serving-api-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 7: Inference Serving &amp; API Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-8-evaluation-benchmarking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 8: Evaluation &amp; Benchmarking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-quick-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions Quick List
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-relationship-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Relationship Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V1.0.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -902,162 +753,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-philosophy" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Philosophy
+        核心哲学
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-1-model-loading-format-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 1: Model Loading &amp; Format Handling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-2-quantization-aware-inference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 2: Quantization-Aware Inference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-3-gpu-memory-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 3: GPU Memory Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-4-tokenizer-text-processing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 4: Tokenizer &amp; Text Processing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-5-batching-continuous-batching" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 5: Batching &amp; Continuous Batching
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-6-embedding-vector-search" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 6: Embedding &amp; Vector Search
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-7-inference-serving-api-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 7: Inference Serving &amp; API Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-8-evaluation-benchmarking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action 8: Evaluation &amp; Benchmarking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prohibitions-quick-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prohibitions Quick List
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-relationship-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Relationship Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changelog
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        V1.0.0
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1081,272 +783,35 @@
   
 
 
-<h1 id="rust-aiml-inference-guide-v100">Rust AI/ML Inference Guide V1.0.0<a class="headerlink" href="#rust-aiml-inference-guide-v100" title="Permanent link">&para;</a></h1>
-<p>Vertical deepening of <code>rust-architecture-guide</code> and <code>rust-systems-cloud-infra-guide</code> for model inference, serving, and embedded ML. Assumes GPU acceleration, quantized models, and high-throughput batching.</p>
-<h2 id="core-philosophy">Core Philosophy<a class="headerlink" href="#core-philosophy" title="Permanent link">&para;</a></h2>
+<h1 id="rust-aiml-v100">Rust AI/ML 推理指南 V1.0.0<a class="headerlink" href="#rust-aiml-v100" title="Permanent link">&para;</a></h1>
+<p>作为 <code>rust-architecture-guide</code> 和 <code>rust-systems-cloud-infra-guide</code> 对模型推理、服务端推理和嵌入式 ML 的垂直深化。假设 GPU 加速、量化模型和高吞吐量批处理。</p>
+<h2 id="_1">核心哲学<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Principle</th>
-<th>Description</th>
+<th>原则</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Hardware Synergy</strong></td>
-<td>Matrix multiplication maps to tensor cores. KV-cache fits in HBM. Attention patterns exploit L2.</td>
+<td><strong>硬件协同</strong></td>
+<td>矩阵乘法映射到张量核心。KV-cache 适配 HBM。注意力模式利用 L2。</td>
 </tr>
 <tr>
-<td><strong>Quantization Physics</strong></td>
-<td>Q4_0/Q8_0/K-quant map model weights to hardware-friendly int types. 4-bit = 4x less memory bandwidth.</td>
+<td><strong>量化物理</strong></td>
+<td>Q4_0/Q8_0/K-quant 将模型权重映射到硬件友好的整数类型。4 位 = 4 倍更少的内存带宽。</td>
 </tr>
 <tr>
-<td><strong>Batch Efficiency</strong></td>
-<td>Continuous batching maximizes GPU utilization. Padding waste is minimized via dynamic batching.</td>
+<td><strong>批处理效率</strong></td>
+<td>连续批处理最大化 GPU 利用率。通过动态批处理最小化填充浪费。</td>
 </tr>
 <tr>
-<td><strong>Jeet Kune Do</strong></td>
-<td>One-pass token generation. KV-cache reuse. Speculative decoding for latency hiding.</td>
+<td><strong>截拳道</strong></td>
+<td>一趟 token 生成。KV-cache 复用。投机解码用于延迟隐藏。</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="action-1-model-loading-format-handling">Action 1: Model Loading &amp; Format Handling<a class="headerlink" href="#action-1-model-loading-format-handling" title="Permanent link">&para;</a></h2>
-<p>Models come in multiple formats. Rust inference must handle all of them.</p>
-<ul>
-<li><strong>GGUF</strong> (llama.cpp format): Quantized weights, tokenizer embedded, metadata. <code>candle</code>/<code>llama-cpp-rs</code> for loading.</li>
-<li><strong>SafeTensors</strong>: Safe serialization format. Random access without unsafe deserialization.</li>
-<li><strong>ONNX</strong>: Open Neural Network Exchange. <code>ort</code> crate for ONNX Runtime bindings. Cross-framework.</li>
-<li><strong>Red Line</strong>: Prohibit loading model weights from untrusted pickle/.pt formats. SafeTensors is a safe format but still requires provenance verification + checksum validation before loading.</li>
-</ul>
-<p>→ <a href="../references/01-model-loading/">references/01-model-loading.md</a></p>
-<hr />
-<h2 id="action-2-quantization-aware-inference">Action 2: Quantization-Aware Inference<a class="headerlink" href="#action-2-quantization-aware-inference" title="Permanent link">&para;</a></h2>
-<p>Quantization reduces model size and accelerates inference without significant quality loss.</p>
-<ul>
-<li><strong>GGUF Quant Types</strong>: Q4_0 (4-bit), Q4_K_M (4-bit with K-quant), Q8_0 (8-bit), F16 (half precision)</li>
-<li><strong>Memory Bandwidth Reduction</strong>: 4-bit quantization = ~4x less memory bandwidth for weight loading</li>
-<li><strong><code>candle-quantized</code></strong>: Block-wise quantization. Min/max per block for dequantization.</li>
-<li><strong>Red Line</strong>: Quantization introduces quality loss. Must evaluate perplexity/BLEU before deploying.</li>
-</ul>
-<p>→ <a href="../references/02-quantization/">references/02-quantization.md</a></p>
-<hr />
-<h2 id="action-3-gpu-memory-management">Action 3: GPU Memory Management<a class="headerlink" href="#action-3-gpu-memory-management" title="Permanent link">&para;</a></h2>
-<p>GPU VRAM is the bottleneck. Every MB matters.</p>
-<ul>
-<li><strong>KV-Cache</strong>: Key-Value cache grows with context length. Pre-allocate based on max context.</li>
-<li><strong>Layer Offloading</strong>: Offload some layers to GPU, keep others on CPU (<code>n_gpu_layers</code> in llama.cpp)</li>
-<li><strong>Memory Pool</strong>: Pre-allocate large buffers. Avoid per-request allocation/deallocation on GPU.</li>
-<li><strong>Red Line</strong>: OOM on GPU = inference failure. Must monitor VRAM usage and apply backpressure.</li>
-</ul>
-<p>→ <a href="../references/03-gpu-memory/">references/03-gpu-memory.md</a></p>
-<hr />
-<h2 id="action-4-tokenizer-text-processing">Action 4: Tokenizer &amp; Text Processing<a class="headerlink" href="#action-4-tokenizer-text-processing" title="Permanent link">&para;</a></h2>
-<p>Tokenization is the bridge between raw text and model input.</p>
-<ul>
-<li><strong><code>tokenizers</code> crate</strong> (HuggingFace): BPE/WordPiece/Unigram tokenizers. <code>encode()</code>, <code>decode()</code>.</li>
-<li><strong>Special Tokens</strong>: BOS, EOS, PAD, UNK, chat template tokens. Must match model training config.</li>
-<li><strong>Batched Encoding</strong>: <code>encode_batch()</code> for parallel tokenization. Padding to max length with attention mask.</li>
-<li><strong>Red Line</strong>: Mismatched tokenizer = garbage output. Must verify tokenizer.json matches model.</li>
-</ul>
-<p>→ <a href="../references/04-tokenizer/">references/04-tokenizer.md</a></p>
-<hr />
-<h2 id="action-5-batching-continuous-batching">Action 5: Batching &amp; Continuous Batching<a class="headerlink" href="#action-5-batching-continuous-batching" title="Permanent link">&para;</a></h2>
-<p>Serving multiple requests concurrently maximizes GPU utilization.</p>
-<ul>
-<li><strong>Static Batching</strong>: Pad all requests to same length. Wasteful for variable-length inputs.</li>
-<li><strong>Continuous Batching</strong> (vLLM-style): Requests enter/leave batch dynamically. No padding waste.</li>
-<li><strong>Prefill + Decode Splitting</strong>: Prefill (process prompt) and decode (generate tokens) as separate GPU operations</li>
-<li><strong>Red Line</strong>: Batch requests for throughput serving. For latency-sensitive interactive serving, batch=1 with a continuous batching scheduler is acceptable. Unbatched single-request inference on throughput benchmarks is misleading.</li>
-</ul>
-<p>→ <a href="../references/05-batching/">references/05-batching.md</a></p>
-<hr />
-<h2 id="action-6-embedding-vector-search">Action 6: Embedding &amp; Vector Search<a class="headerlink" href="#action-6-embedding-vector-search" title="Permanent link">&para;</a></h2>
-<p>Embedding models convert text/images to vectors. Vector search finds nearest neighbors.</p>
-<ul>
-<li><strong>Embedding Models</strong>: <code>candle-transformers</code> for BERT/sentence-transformers. Mean pooling for sentence embeddings.</li>
-<li><strong>Vector Database</strong>: <code>qdrant</code>/<code>pgvector</code> for storage. HNSW index for approximate nearest neighbor (ANN).</li>
-<li><strong>Cosine Similarity</strong>: Normalize vectors to unit length → dot product = cosine similarity</li>
-<li><strong>Red Line</strong>: Choose normalization per index type: L2-normalize for cosine/dot-product indexes; do NOT normalize for Euclidean distance indexes. Document the metric per index.</li>
-</ul>
-<p>→ <a href="../references/06-embeddings/">references/06-embeddings.md</a></p>
-<hr />
-<h2 id="action-7-inference-serving-api-design">Action 7: Inference Serving &amp; API Design<a class="headerlink" href="#action-7-inference-serving-api-design" title="Permanent link">&para;</a></h2>
-<p>Model serving requires HTTP/gRPC APIs with streaming support.</p>
-<ul>
-<li><strong>HTTP Streaming</strong>: SSE (Server-Sent Events) for token-by-token streaming. <code>axum</code> + <code>tokio-stream</code>.</li>
-<li><strong>gRPC</strong>: Protobuf service definition. Bidirectional streaming for interactive use cases.</li>
-<li><strong>Load Balancing</strong>: Multiple model replicas. Consistent hashing for KV-cache sticky sessions.</li>
-<li><strong>Red Line</strong>: Timeout per request must be enforced. No single request can block the serving thread.</li>
-</ul>
-<p>→ <a href="../references/07-serving-api/">references/07-serving-api.md</a></p>
-<hr />
-<h2 id="action-8-evaluation-benchmarking">Action 8: Evaluation &amp; Benchmarking<a class="headerlink" href="#action-8-evaluation-benchmarking" title="Permanent link">&para;</a></h2>
-<p>Measure quality and performance before deploying.</p>
-<ul>
-<li><strong>Perplexity</strong>: Measure language model quality. Lower = better. Compare before/after quantization.</li>
-<li><strong>Throughput</strong>: Tokens/second. Measure at batch sizes 1, 4, 8, 16. GPU vs CPU.</li>
-<li><strong>TTFT</strong> (Time to First Token): Latency from request to first token. Critical for UX.</li>
-<li><strong>Red Line</strong>: Quantized model must be evaluated against the FP16 baseline. Perplexity degradation limits are task-specific: ≤2% for safety-critical, ≤5% for most production use, ≤8% for throughput-first pipelines where human eval confirms acceptable quality.</li>
-</ul>
-<p>→ <a href="../references/08-evaluation/">references/08-evaluation.md</a></p>
-<hr />
-<h2 id="prohibitions-quick-list">Prohibitions Quick List<a class="headerlink" href="#prohibitions-quick-list" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Prohibited</th>
-<th>Mandatory</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Model Loading</td>
-<td>Untrusted weights without checksum</td>
-<td>GGUF checksum / SafeTensors validation</td>
-</tr>
-<tr>
-<td>Quantization</td>
-<td>Unmeasured quality degradation</td>
-<td>Perplexity/BLEU benchmark before deploy</td>
-</tr>
-<tr>
-<td>GPU Memory</td>
-<td>Unbounded KV-cache growth</td>
-<td>Pre-allocation + backpressure on OOM</td>
-</tr>
-<tr>
-<td>Tokenizer</td>
-<td>Mismatched tokenizer config</td>
-<td>Verify <code>tokenizer.json</code> matches model</td>
-</tr>
-<tr>
-<td>Batching</td>
-<td>Single-request inference</td>
-<td>Continuous batching for throughput</td>
-</tr>
-<tr>
-<td>Embeddings</td>
-<td>Unnormalized vectors for cosine/dot indexes</td>
-<td>L2-normalize before storing/searching (per index metric type)</td>
-</tr>
-<tr>
-<td>Serving</td>
-<td>Unbounded per-request timeout</td>
-<td>Timeout + cancellation</td>
-</tr>
-<tr>
-<td>Streaming</td>
-<td>Blocking token generation</td>
-<td>SSE/gRPC streaming protocol</td>
-</tr>
-<tr>
-<td>Evaluation</td>
-<td>Unmeasured model quality</td>
-<td>Perplexity + TTFT + throughput benchmarks</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="document-relationship-map">Document Relationship Map<a class="headerlink" href="#document-relationship-map" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>flowchart TD
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    subgraph Foundation[&quot;rust-architecture-guide + cloud-infra-guide&quot;]
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        Perf[25-performance-tuning.md]
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        IOModel[01-io-model.md]
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        Memory[11-memory-advanced.md]
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    end
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    subgraph ML[&quot;rust-ai-ml-inference-guide&quot;]
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        Loading[01-model-loading.md]
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        Quant[02-quantization.md]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        GPUMem[03-gpu-memory.md]
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        Tokenizer[04-tokenizer.md]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        Batching[05-batching.md]
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        Embeddings[06-embeddings.md]
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        Serving[07-serving-api.md]
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        Eval[08-evaluation.md]
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    end
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    Perf --&gt;|SIMD/memory| Quant
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    IOModel --&gt;|async I/O| Serving
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    Memory --&gt;|arena/allocator| GPUMem
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    Loading --&gt; Quant
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    Loading --&gt; Tokenizer
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    Quant --&gt; GPUMem
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    Tokenizer --&gt; Batching
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    Batching --&gt; Serving
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    Batching --&gt; Eval
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    Embeddings --&gt; Serving
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    style Loading fill:#d9534f,stroke:#c9302c,color:#fff
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    style Quant fill:#5cb85c,stroke:#4cae4c,color:#fff
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    style Batching fill:#f0ad4e,stroke:#ec971f,color:#000
-</code></pre></div>
-<hr />
-<h2 id="reference-files">Reference Files<a class="headerlink" href="#reference-files" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Topic</th>
-<th>Key Directive</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../references/01-model-loading/">01-model-loading.md</a></td>
-<td>Model Loading &amp; Formats</td>
-<td>GGUF, SafeTensors, ONNX, checksum verification</td>
-</tr>
-<tr>
-<td><a href="../references/02-quantization/">02-quantization.md</a></td>
-<td>Quantization-Aware Inference</td>
-<td>Q4_0/Q8_0/K-quant, perplexity evaluation requirement</td>
-</tr>
-<tr>
-<td><a href="../references/03-gpu-memory/">03-gpu-memory.md</a></td>
-<td>GPU Memory Management</td>
-<td>KV-cache, layer offloading, memory pool, OOM backpressure</td>
-</tr>
-<tr>
-<td><a href="../references/04-tokenizer/">04-tokenizer.md</a></td>
-<td>Tokenizer &amp; Text Processing</td>
-<td>BPE/WordPiece, special tokens, batched encoding</td>
-</tr>
-<tr>
-<td><a href="../references/05-batching/">05-batching.md</a></td>
-<td>Batching &amp; Continuous Batching</td>
-<td>Static vs continuous, prefill/decode splitting</td>
-</tr>
-<tr>
-<td><a href="../references/06-embeddings/">06-embeddings.md</a></td>
-<td>Embedding &amp; Vector Search</td>
-<td>BERT embeddings, cosine similarity, HNSW, normalization</td>
-</tr>
-<tr>
-<td><a href="../references/07-serving-api/">07-serving-api.md</a></td>
-<td>Inference Serving &amp; API</td>
-<td>SSE streaming, gRPC, load balancing, timeouts</td>
-</tr>
-<tr>
-<td><a href="../references/08-evaluation/">08-evaluation.md</a></td>
-<td>Evaluation &amp; Benchmarking</td>
-<td>Perplexity, TTFT, throughput, quantization quality</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h2>
-<h3 id="v100">V1.0.0<a class="headerlink" href="#v100" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Initial framework: GGUF/SafeTensors/ONNX model loading, quantization (Q4/Q8/K-quant)</li>
-<li>GPU memory management: KV-cache, layer offloading, OOM backpressure</li>
-<li>HuggingFace tokenizers, continuous batching, prefill/decode splitting</li>
-<li>Embedding models, vector search, cosine similarity normalization</li>
-<li>SSE/gRPC serving API, perplexity/TTFT/throughput evaluation</li>
-<li>Aligned with rust-architecture-guide V9.1.0 and rust-systems-cloud-infra-guide V6.1.0</li>
-</ul>
 
 
 
