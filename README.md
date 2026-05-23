@@ -5,8 +5,12 @@
 [![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v6.1.0-orange.svg)]()
 [![Wasm Infra Guide](https://img.shields.io/badge/Wasm%20Infra%20Guide-v4.1.0-purple.svg)]()
 [![Skills](https://img.shields.io/badge/Skills-10-blue.svg)]()
+[![Docs](https://img.shields.io/badge/Docs-MkDocs%20Material-4051b5.svg)](https://smile9493.github.io/Rust_Coding_Standards_Skills/)
+[![Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen.svg)](https://smile9493.github.io/Rust_Coding_Standards_Skills/)
 
 **Rust Engineering Decision Wiki — 10 constitutional guides for AI coding assistants, following the [Cursor Agent Skills](https://cursor.com/cn/docs/skills) format, covering universal engineering, cloud infrastructure, Wasm frontend, embedded, data engineering, networking, CLI/DevOps, gamedev, blockchain, and AI/ML inference.**
+
+🌐 **Online Documentation**: [**English**](https://smile9493.github.io/Rust_Coding_Standards_Skills/) | [**中文**](https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/) — Browse guides with search, dark mode, and bilingual language switcher.
 
 English | [简体中文](README.zh-CN.md)
 
@@ -561,6 +565,13 @@ Each conversation generates a **Decision Summary**, recording:
 │   ├── SKILL.md
 │   └── references/                    # 8 reference targets
 │
+├── docs/                              # MkDocs documentation source
+│   ├── index.md                       # Landing page (English)
+│   ├── index.zh.md                    # Landing page (Chinese)
+│   └── */                             # Symlinks to all 10 guides
+│
+├── mkdocs.yml                         # MkDocs site configuration
+├── .github/workflows/deploy-docs.yml  # CI/CD auto-deployment
 ├── README.md                          # This file — Wiki index (overview)
 └── README.zh-CN.md                    # Chinese version
 ```

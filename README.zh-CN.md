@@ -5,8 +5,12 @@
 [![Cloud Infra Guide](https://img.shields.io/badge/Cloud%20Infra%20Guide-v6.1.0-orange.svg)]()
 [![Wasm Infra Guide](https://img.shields.io/badge/Wasm%20Infra%20Guide-v4.1.0-purple.svg)]()
 [![Skills](https://img.shields.io/badge/Skills-10-blue.svg)]()
+[![Docs](https://img.shields.io/badge/Docs-MkDocs%20Material-4051b5.svg)](https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/)
+[![Pages](https://img.shields.io/badge/GitHub%20Pages-在线-brightgreen.svg)](https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/)
 
 **Rust 工程决策 Wiki — 10 个 AI 编码助手的宪法性指南，遵循 [Cursor Agent Skills](https://cursor.com/cn/docs/skills) 格式，覆盖通用工程、云基础设施、Wasm 前端、嵌入式、数据工程、网络协议、CLI/DevOps、游戏开发、区块链、AI/ML 推理。**
+
+🌐 **在线文档**：[**English**](https://smile9493.github.io/Rust_Coding_Standards_Skills/) | [**中文**](https://smile9493.github.io/Rust_Coding_Standards_Skills/zh/) — 支持搜索、暗色模式和双语切换的完整文档站点。
 
 [English](README.md) | 简体中文
 
@@ -471,6 +475,13 @@ NIC Ring Buffer → Kernel TCP Stack → User Space
 │   ├── SKILL.md
 │   └── references/                    # 8 个参考目标
 │
+├── docs/                              # MkDocs 文档源文件
+│   ├── index.md                       # 首页（英文）
+│   ├── index.zh.md                    # 首页（中文）
+│   └── */                             # 指向 10 个指南的符号链接
+│
+├── mkdocs.yml                         # MkDocs 站点配置
+├── .github/workflows/deploy-docs.yml  # CI/CD 自动部署
 ├── README.md                          # Wiki 索引（英文）
 └── README.zh-CN.md                    # Wiki 索引（中文）
 ```
